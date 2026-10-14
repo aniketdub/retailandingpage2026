@@ -1,19 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0d120c;
+  --background: #090e08;
   --foreground: #f4f6f0;
   --olive-primary: #34532b;
   --olive-light: #4a753d;
   --olive-dark: #1b2e15;
   --cream-accent: #ffecd0;
   --cream-muted: #e6d3b5;
-  --glass-bg: rgba(22, 32, 20, 0.65);
-  --glass-border: rgba(255, 236, 208, 0.12);
+  --glass-bg: rgba(20, 28, 18, 0.7);
+  --glass-border: rgba(255, 236, 208, 0.1);
 }
 
 body {
   background-color: var(--background);
+  /* Organic layered gradient backdrop for rich depth and cinematic atmosphere */
+  background-image: 
+    radial-gradient(ellipse 90% 60% at 50% -15%, rgba(52, 83, 43, 0.45), transparent 75%),
+    radial-gradient(ellipse 70% 50% at 85% 35%, rgba(38, 64, 30, 0.3), transparent 65%),
+    radial-gradient(ellipse 65% 55% at 15% 65%, rgba(45, 75, 36, 0.28), transparent 65%),
+    radial-gradient(ellipse 80% 50% at 50% 95%, rgba(30, 52, 24, 0.35), transparent 70%),
+    linear-gradient(180deg, #080d07 0%, #0c140b 35%, #0e170d 70%, #070b06 100%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   overflow-x: hidden;
@@ -22,34 +30,50 @@ body {
 /* Glass styling utilities */
 .glass-pill {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
 }
 
 .glass-card {
-  background: rgba(24, 34, 21, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 236, 208, 0.1);
+  background: rgba(20, 29, 18, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 236, 208, 0.09);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
   border-color: rgba(74, 117, 61, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6), 0 0 20px -5px rgba(52, 83, 43, 0.25);
 }
 
-/* Gentle subtle float animation */
+/* Scroll Interactive Reveal Animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px) scale(0.98);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Continuous organic float animation */
 @keyframes softFloat {
   0%, 100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-8px);
   }
 }
 
 .animate-float {
-  animation: softFloat 6s ease-in-out infinite;
+  animation: softFloat 5s ease-in-out infinite;
 }
 
 /* Radar pulse for live connections */
@@ -60,7 +84,7 @@ body {
   }
   70% {
     transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(74, 117, 61, 0);
+    box-shadow: 0 0 0 12px rgba(74, 117, 61, 0);
   }
   100% {
     transform: scale(0.95);
@@ -69,5 +93,5 @@ body {
 }
 
 .animate-radar {
-  animation: radarRing 2.4s infinite;
+  animation: radarRing 2s infinite;
 }

@@ -1,7 +1,6 @@
 "use client";
-
 import { useState } from "react";
-import { CheckCircle2, Send, Phone, Mail, MapPin } from "lucide-react";
+import { CheckCircle2, Send, Mail, MapPin } from "lucide-react";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -119,18 +118,14 @@ export default function ContactPage() {
             <h4 className="text-sm font-semibold text-[#ffecd0] uppercase tracking-wider">
               Direct Contact
             </h4>
-            <div className="space-y-2 text-xs text-zinc-300">
-              <div className="flex items-center gap-2">
+            <div className="space-y-2.5 text-xs text-zinc-300">
+              <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#ffecd0]" />
-                <a href="mailto:support@retai.in" className="hover:underline">support@retai.in</a>
+                <a href="mailto:help.retai@gmail.com" className="hover:underline text-white font-medium">help.retai@gmail.com</a>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#ffecd0]" />
-                <span>+91 99000 RETAI</span>
-              </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <MapPin className="w-4 h-4 text-[#ffecd0]" />
-                <span>Bengaluru & Mumbai, India</span>
+                <span className="text-zinc-200">Bengaluru, India</span>
               </div>
             </div>
           </div>

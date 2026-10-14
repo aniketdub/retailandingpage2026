@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PatientJourneyHero from "@/components/PatientJourneyHero";
@@ -14,17 +17,80 @@ import {
   TrendingUp,
   Smartphone,
   CreditCard,
+  ChevronDown,
+  Sparkles,
 } from "lucide-react";
 
 export default function HomeLanding() {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // IntersectionObserver for scroll-triggered popups and fade-in animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    const elements = containerRef.current?.querySelectorAll(".scroll-reveal");
+    elements?.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaq((prev) => (prev === index ? null : index));
+  };
+
+  const faqItems = [
+    {
+      q: "Can RetAI integrate with our existing clinic WhatsApp Business number?",
+      a: "Yes. RetAI integrates directly via the official WhatsApp Business Cloud API without requiring you to change your existing clinic phone number or lose past patient chat histories. Aisha, our conversational clinical AI, handles inquiries, procedure FAQs, and booking 24/7. When your front-desk staff or doctor responds to a thread, Aisha automatically pauses to give your team instant manual takeover. The system also supports sending branded treatment pre-care guidelines, before and after consent forms, and automated GST receipts over the same verified WhatsApp thread.",
+    },
+    {
+      q: "What makes RetAI PRM different from a generic hospital or dental CRM?",
+      a: "Generic CRMs lack aesthetic medicine workflows. RetAI is engineered specifically for dermatology, trichology, and cosmetology clinics. It natively understands multi-session treatment packages (such as Session 3 of 6 for laser hair reduction), clinical intervals (calculating exactly when Botox touch-ups or chemical peel cycles are due), consumable inventory auto-deduction (vial, syringe, and laser tip usage deducted automatically upon procedure completion), and equipment-cabin conflict prevention to ensure two doctors never schedule the same diode laser simultaneously.",
+    },
+    {
+      q: "How does the At-Risk Patient Win-Back engine calculate churn risk?",
+      a: "RetAI calculates procedure interval baselines for every service in your clinic catalog (for example: 12 to 16 weeks for neurotoxins, 4 weeks for HydraFacials, 3 to 4 weeks for PRP). When a patient completes a session, RetAI starts a biological countdown. If the patient does not book their next cycle as the window approaches, they are flagged on the At-Risk Dashboard, ranked by their Lifetime Value (LTV) and revenue at stake. The system can trigger gentle, doctor-personalized WhatsApp check-ins, converting lapses back into booked consultations with zero awkward marketing spam.",
+    },
+    {
+      q: "How does the AI Voice Receptionist handle inbound patient phone calls?",
+      a: "When your front desk is busy attending patients in the waiting lounge or during after-hours, RetAI's AI Voice Receptionist answers in under 1 second. Using clinical conversational intelligence, it greets the patient, answers doctor schedule questions, verifies open slots on the live multi-doctor calendar, and books the appointment directly. An instant audio playback, full AI-transcribed dialogue, and clinical intent summary are logged in your clinic dashboard, followed by an immediate WhatsApp confirmation with clinic directions dispatched to the patient.",
+    },
+    {
+      q: "How does RetAI handle billing, treatment packages, and GST invoicing?",
+      a: "RetAI includes a clinical Point of Sale (POS) and Till ledger. It produces itemized digital GST invoices with correct SAC/HSN codes and handles split-tender transactions across UPI, credit card, cash, and clinic advance balances. When a patient purchases a multi-session package (e.g., 6 sessions of laser hair removal), RetAI tracks redemptions without confusing accountant adjustments. Front-desk staff can reconcile till cash against card settlements with one-click Day-End reports.",
+    },
+    {
+      q: "Is patient medical data, clinical photography, and communication DPDP compliant?",
+      a: "Yes. RetAI is built with strict privacy and security standards in mind, complying with India's Digital Personal Data Protection (DPDP) Act and international healthcare frameworks. All data is encrypted with TLS 1.3 in transit and AES-256 at rest. RetAI enforces strict role-based access controls: receptionists cannot edit medical prescriptions, and administrative accounts cannot access clinical before-and-after photographs without authorized doctor clearance.",
+    },
+    {
+      q: "Can multi-doctor, multi-chair aesthetic clinics manage equipment and room allocations?",
+      a: "Yes. The RetAI Multi-Doctor Calendar supports resource-level constraints. If your clinic operates 4 consultation cabins and 2 specialized laser procedure suites with shared equipment (like a Soprano Titanium diode laser or fractional CO2 laser), RetAI automatically reserves both the doctor and the required equipment upon booking. This eliminates double-booking chaos and incorporates configurable buffer times for cabin sanitization between patient appointments.",
+    },
+    {
+      q: "How quickly can our clinic get started, and is staff training included?",
+      a: "Aesthetic clinics are typically live within 24 to 48 hours. Our team assists with uploading your doctor rosters, service catalogs, package structures, and existing patient records. RetAI's interface is designed for high-stress front desks with zero technical complexity. We conduct live walkthrough sessions with your front-desk coordinators and doctors to ensure complete confidence prior to go-live.",
+    },
+  ];
+
   return (
-    <div className="flex flex-col items-center w-full">
+    <div ref={containerRef} className="flex flex-col items-center w-full">
       {/* PATIENT JOURNEY INTERACTIVE SLIDER (ABOVE BIG MOCKUP) */}
-      <section className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 pt-4 pb-8 flex flex-col items-center">
+      <section className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-8 flex flex-col items-center">
         <PatientJourneyHero />
 
         {/* HERO MOCKUP: BIG SAAS DASHBOARD SCREENSHOT */}
-        <div className="mt-8 w-full rounded-2xl border border-white/10 bg-[#121910] p-3 sm:p-4 shadow-2xl relative overflow-hidden group">
+        <div className="mt-8 w-full rounded-2xl border border-white/10 bg-[#121910] p-3 sm:p-5 shadow-2xl relative overflow-hidden group scroll-reveal">
           <div className="w-full h-8 flex items-center justify-between px-3 border-b border-white/5 mb-3">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
@@ -49,7 +115,7 @@ export default function HomeLanding() {
       </section>
 
       {/* FEATURE SPOTLIGHT 1: BILLING & TILL (Screenshot Left, Text Right) */}
-      <section className="w-full max-w-6xl mx-auto px-6 py-20 border-t border-white/5">
+      <section className="w-full max-w-6xl mx-auto px-6 py-20 border-t border-white/5 scroll-reveal">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Screenshot side */}
           <div className="lg:col-span-7">
@@ -74,7 +140,7 @@ export default function HomeLanding() {
 
           {/* Copy side */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1b2e15] text-[#ffecd0] text-xs font-semibold border border-[#ffecd0]/20">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1b2e15] text-[#ffecd0] text-xs font-semibold border border-[#ffecd0]/20">
               <CreditCard className="w-3.5 h-3.5" />
               <span>Point of Sale & Invoicing</span>
             </div>
@@ -103,11 +169,11 @@ export default function HomeLanding() {
       </section>
 
       {/* FEATURE SPOTLIGHT 2: MOBILE APP & PATIENT ACCESS (Text Left, Screenshot Right) */}
-      <section className="w-full max-w-6xl mx-auto px-6 py-20 border-t border-white/5">
+      <section className="w-full max-w-6xl mx-auto px-6 py-20 border-t border-white/5 scroll-reveal">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Copy side */}
           <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1b2e15] text-[#ffecd0] text-xs font-semibold border border-[#ffecd0]/20">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1b2e15] text-[#ffecd0] text-xs font-semibold border border-[#ffecd0]/20">
               <Smartphone className="w-3.5 h-3.5" />
               <span>Mobile Experience</span>
             </div>
@@ -157,7 +223,7 @@ export default function HomeLanding() {
       </section>
 
       {/* PILLAR 1: INBOUND AUTOMATION */}
-      <section className="w-full max-w-5xl mx-auto px-6 py-20 border-t border-white/5">
+      <section className="w-full max-w-5xl mx-auto px-6 py-20 border-t border-white/5 scroll-reveal">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-xs font-bold text-[#ffecd0] uppercase tracking-widest mb-2">
             Inbound Automation
@@ -206,7 +272,7 @@ export default function HomeLanding() {
       </section>
 
       {/* PILLAR 2: COMPLETE PRM ECOSYSTEM */}
-      <section className="w-full max-w-5xl mx-auto px-6 py-20 border-t border-white/5">
+      <section className="w-full max-w-5xl mx-auto px-6 py-20 border-t border-white/5 scroll-reveal">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-xs font-bold text-[#ffecd0] uppercase tracking-widest mb-2">
             Core PRM Infrastructure
@@ -251,8 +317,8 @@ export default function HomeLanding() {
         </div>
       </section>
 
-      {/* FAQ SECTION */}
-      <section className="w-full max-w-4xl mx-auto px-6 py-20 border-t border-white/5">
+      {/* EXPANDED INTERACTIVE FAQ ACCORDION SECTION */}
+      <section className="w-full max-w-4xl mx-auto px-6 py-20 border-t border-white/5 scroll-reveal">
         <div className="text-center mb-12">
           <h2 className="text-xs font-bold text-[#ffecd0] uppercase tracking-widest mb-2">
             Frequently Asked Questions
@@ -260,37 +326,49 @@ export default function HomeLanding() {
           <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
             Got Questions? We Have Answers.
           </p>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-2 max-w-xl mx-auto">
+            Everything clinical practice directors, dermatologists, and clinic managers need to know about adopting RetAI.
+          </p>
         </div>
 
-        <div className="space-y-4">
-          {[
-            {
-              q: "Can RetAI integrate with our existing clinic WhatsApp number?",
-              a: "Yes. RetAI connects to official WhatsApp Business APIs, enabling automated two-way AI chats while allowing your front desk to intervene at any moment.",
-            },
-            {
-              q: "What makes PRM different from a generic hospital CRM?",
-              a: "Generic CRMs lack clinical context. RetAI PRM natively supports multi-session packages (such as Session 3 of 6), before/after photo consent, dermatological prescriptions, and consumable stock depletion.",
-            },
-            {
-              q: "How does the At-Risk Patient scoring work?",
-              a: "RetAI calculates procedure intervals (such as 12 to 16 weeks for Botox, 4 weeks for HydraFacial) and alerts your team when a patient lapses, ranking them by lifetime value.",
-            },
-            {
-              q: "Is patient medical data protected?",
-              a: "RetAI is engineered with complete role-based permission tiers, TLS 1.3 encryption, and compliance ready for DPDP and healthcare regulations.",
-            },
-          ].map((faq, i) => (
-            <div key={i} className="glass-card p-6 rounded-xl">
-              <h4 className="text-base font-semibold text-white">{faq.q}</h4>
-              <p className="text-sm text-zinc-300 mt-2 leading-relaxed">{faq.a}</p>
-            </div>
-          ))}
+        <div className="space-y-3.5">
+          {faqItems.map((faq, i) => {
+            const isOpen = openFaq === i;
+            return (
+              <div
+                key={i}
+                className="rounded-xl border border-white/10 bg-[#121910]/70 backdrop-blur-xl overflow-hidden transition-all duration-300 hover:border-white/20"
+              >
+                <button
+                  onClick={() => toggleFaq(i)}
+                  className="w-full px-6 py-4.5 text-left flex items-center justify-between gap-4 transition hover:bg-white/[0.02]"
+                  aria-expanded={isOpen}
+                >
+                  <span className="text-sm sm:text-base font-semibold text-white leading-snug">
+                    {faq.q}
+                  </span>
+                  <div
+                    className={`w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0 transition-transform duration-300 ${
+                      isOpen ? "rotate-180 bg-[#1b2e15] border-[#ffecd0]/30" : ""
+                    }`}
+                  >
+                    <ChevronDown className={`w-4 h-4 ${isOpen ? "text-[#ffecd0]" : "text-zinc-400"}`} />
+                  </div>
+                </button>
+
+                {isOpen && (
+                  <div className="px-6 pb-5 pt-1 text-xs sm:text-sm text-zinc-300 leading-relaxed border-t border-white/5 bg-[#0a0e09]/40">
+                    <p>{faq.a}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
 
       {/* BOTTOM CTA BANNER */}
-      <section className="w-full max-w-5xl mx-auto px-6 py-16">
+      <section className="w-full max-w-5xl mx-auto px-6 py-16 scroll-reveal">
         <div className="rounded-3xl bg-[#141d13] border border-white/10 p-10 md:p-16 text-center flex flex-col items-center shadow-2xl">
           <h2 className="text-3xl md:text-5xl font-bold text-white max-w-2xl tracking-tight">
             Upgrade Your Clinic into a High-Retention Powerhouse
