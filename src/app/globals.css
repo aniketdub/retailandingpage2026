@@ -28,12 +28,46 @@ body {
 }
 
 .glass-card {
-  background: rgba(24, 34, 21, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 236, 208, 0.08);
+  background: rgba(24, 34, 21, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 236, 208, 0.1);
 }
 
 .glass-card:hover {
-  border-color: rgba(74, 117, 61, 0.4);
+  border-color: rgba(74, 117, 61, 0.5);
+}
+
+/* Gentle subtle float animation */
+@keyframes softFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: softFloat 6s ease-in-out infinite;
+}
+
+/* Radar pulse for live connections */
+@keyframes radarRing {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(74, 117, 61, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(74, 117, 61, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(74, 117, 61, 0);
+  }
+}
+
+.animate-radar {
+  animation: radarRing 2.4s infinite;
 }
