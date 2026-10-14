@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import PatientJourneyHero from "@/components/PatientJourneyHero";
 import {
   MessageSquare,
   PhoneCall,
@@ -18,49 +19,12 @@ import {
 export default function HomeLanding() {
   return (
     <div className="flex flex-col items-center w-full">
-      {/* HERO SECTION */}
-      <section className="relative w-full max-w-6xl mx-auto px-6 py-16 md:py-24 flex flex-col items-center text-center">
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white max-w-4xl leading-[1.12]">
-          Your Clinic's Operating System. <br />
-          Now Powered by AI.
-        </h1>
-
-        <p className="mt-6 text-base sm:text-lg text-zinc-300 max-w-2xl leading-relaxed">
-          RetAI runs your front desk, clinical records, billing, and treatment packages, with an AI agent that speaks to patients on WhatsApp and voice calls to drive recurring bookings.
-        </p>
-
-        {/* Primary Action Buttons */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-          <Link
-            href="/contact"
-            className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#ffecd0] text-[#0d120c] font-bold text-sm hover:bg-white transition-all shadow-md hover:scale-105"
-          >
-            <span>Schedule 15-Min Demo</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <Link
-            href="/pricing"
-            className="flex items-center justify-center px-8 py-3.5 rounded-full bg-[#1b2e15] text-white border border-white/15 font-semibold text-sm hover:bg-[#253e1e] transition-all"
-          >
-            Explore Pricing
-          </Link>
-        </div>
-
-        {/* Feature Highlights */}
-        <div className="mt-12 flex flex-wrap justify-center items-center gap-6 text-xs text-zinc-400">
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#ffecd0]" /> Zero Missed Calls
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#ffecd0]" /> WhatsApp 2-Way Scheduling
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#ffecd0]" /> DPDP & HIPAA Ready
-          </span>
-        </div>
+      {/* PATIENT JOURNEY INTERACTIVE SLIDER (ABOVE BIG MOCKUP) */}
+      <section className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 pt-4 pb-8 flex flex-col items-center">
+        <PatientJourneyHero />
 
         {/* HERO MOCKUP: BIG SAAS DASHBOARD SCREENSHOT */}
-        <div className="mt-14 w-full rounded-2xl border border-white/10 bg-[#121910] p-3 sm:p-4 shadow-2xl relative overflow-hidden group">
+        <div className="mt-8 w-full rounded-2xl border border-white/10 bg-[#121910] p-3 sm:p-4 shadow-2xl relative overflow-hidden group">
           <div className="w-full h-8 flex items-center justify-between px-3 border-b border-white/5 mb-3">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
