@@ -60,7 +60,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-zinc-400">
               <li><Link href="/contact" className="hover:text-white transition">Book a Clinic Demo</Link></li>
-              <li><Link href="/login" className="hover:text-white transition">Clinic Staff Portal</Link></li>
+              <li><a href="https://retentionos.tech" className="hover:text-white transition">Clinic Staff Portal</a></li>
               <li><a href="mailto:help.retai@gmail.com" className="hover:text-white transition">help.retai@gmail.com</a></li>
               <li className="text-xs text-zinc-500">Bengaluru, India</li>
             </ul>

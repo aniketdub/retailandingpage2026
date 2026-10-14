@@ -12,6 +12,20 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  async redirects() {
+    return [
+      {
+        source: "/login",
+        destination: "https://retentionos.tech",
+        permanent: false,
+      },
+      {
+        source: "/signin",
+        destination: "https://retentionos.tech",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

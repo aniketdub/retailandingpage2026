@@ -74,12 +74,12 @@ export default function Navbar() {
 
         {/* Right Action CTAs */}
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/login"
+          <a
+            href="https://retentionos.tech"
             className="text-sm font-medium text-zinc-300 hover:text-[#ffecd0] px-4 py-2 transition-colors"
           >
             Sign In
-          </Link>
+          </a>
           <Link
             href="/contact"
             className="flex items-center gap-1 text-sm font-semibold text-[#0d120c] bg-[#ffecd0] hover:bg-white px-4 py-2 rounded-full transition-all shadow-md hover:shadow-[#ffecd0]/20"
@@ -116,13 +116,13 @@ export default function Navbar() {
           ))}
           <hr className="border-white/10 my-1" />
           <div className="flex flex-col gap-2">
-            <Link
-              href="/login"
+            <a
+              href="https://retentionos.tech"
               onClick={() => setMobileOpen(false)}
               className="text-center py-2.5 text-sm font-medium text-zinc-300 hover:text-white"
             >
               Sign In
-            </Link>
+            </a>
             <Link
               href="/contact"
               onClick={() => setMobileOpen(false)}
