@@ -36,16 +36,19 @@ export default function Navbar() {
             : "bg-[#162214]/60 backdrop-blur-lg border border-[#ffecd0]/10"
         }`}
       >
-        {/* Brand Logo */}
-        <Link href="/home" className="flex items-center gap-2 group">
+        {/* Brand Logo & Text */}
+        <Link href="/home" className="flex items-center gap-2.5 group">
           <Image
             src="/retai_logo.png"
             alt="RetAI Logo"
-            width={120}
-            height={34}
-            className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
+            width={36}
+            height={36}
+            className="h-8 w-8 object-contain rounded-lg transition-transform group-hover:scale-105"
             priority
           />
+          <span className="font-['Lexend_Peta',sans-serif] text-lg font-bold tracking-tight text-white group-hover:text-[#ffecd0] transition-colors">
+            Ret<span className="text-[#ffecd0]">AI</span>
+          </span>
         </Link>
 
         {/* Desktop Navigation Links */}

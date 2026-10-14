@@ -7,13 +7,18 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-16 flex flex-col md:flex-row justify-between gap-12">
         {/* Brand info */}
         <div className="max-w-sm space-y-4">
-          <Image
-            src="/retai_logo.png"
-            alt="RetAI"
-            width={120}
-            height={34}
-            className="h-8 w-auto object-contain"
-          />
+          <div className="flex items-center gap-2.5">
+            <Image
+              src="/retai_logo.png"
+              alt="RetAI"
+              width={36}
+              height={36}
+              className="h-8 w-8 object-contain rounded-lg"
+            />
+            <span className="font-['Lexend_Peta',sans-serif] text-xl font-bold tracking-tight text-white">
+              Ret<span className="text-[#ffecd0]">AI</span>
+            </span>
+          </div>
           <p className="text-sm text-zinc-400 leading-relaxed">
             The next-generation AI Patient Relationship Management (PRM) system built exclusively for dermatology, skin, and aesthetic practices.
           </p>
