@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -19,6 +19,127 @@ import {
   ExternalLink,
 } from "lucide-react";
 
+// Memoized Markdown renderer to eliminate re-parsing latency
+const MemoizedMarkdown = React.memo(function MemoizedMarkdown({
+  content,
+  onDocClick,
+}: {
+  content: string;
+  onDocClick: (docId: string) => void;
+}) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        h1: ({ children }) => (
+          <h1 className="text-2xl sm:text-3xl font-bold text-white pt-6 pb-2 border-b border-white/10">
+            {children}
+          </h1>
+        ),
+        h2: ({ children }) => (
+          <h2 className="text-xl sm:text-2xl font-bold text-white pt-5 pb-1 border-b border-white/5">
+            {children}
+          </h2>
+        ),
+        h3: ({ children }) => (
+          <h3 className="text-lg font-semibold text-[#ffecd0] pt-4">
+            {children}
+          </h3>
+        ),
+        h4: ({ children }) => (
+          <h4 className="text-base font-semibold text-white pt-3">
+            {children}
+          </h4>
+        ),
+        p: ({ children }) => (
+          <p className="leading-relaxed text-zinc-300">{children}</p>
+        ),
+        ul: ({ children }) => (
+          <ul className="space-y-1.5 pl-5 list-disc marker:text-[#ffecd0]">
+            {children}
+          </ul>
+        ),
+        ol: ({ children }) => (
+          <ol className="space-y-1.5 pl-5 list-decimal marker:text-[#ffecd0]">
+            {children}
+          </ol>
+        ),
+        li: ({ children }) => (
+          <li className="text-zinc-300 pl-1">{children}</li>
+        ),
+        blockquote: ({ children }) => (
+          <blockquote className="border-l-4 border-[#4a753d] bg-[#162214]/80 px-4 py-3 rounded-r-xl text-xs text-zinc-200 my-4 shadow-sm">
+            {children}
+          </blockquote>
+        ),
+        table: ({ children }) => (
+          <div className="overflow-x-auto my-6 rounded-xl border border-white/10 bg-[#0a0f09]">
+            <table className="w-full text-left text-xs border-collapse">
+              {children}
+            </table>
+          </div>
+        ),
+        thead: ({ children }) => (
+          <thead className="bg-[#1b2e15] text-[#ffecd0] border-b border-white/10">
+            {children}
+          </thead>
+        ),
+        th: ({ children }) => (
+          <th className="p-3 font-semibold">{children}</th>
+        ),
+        td: ({ children }) => (
+          <td className="p-3 border-b border-white/5 text-zinc-300">
+            {children}
+          </td>
+        ),
+        code: ({ inline, className, children, ...props }: any) => {
+          if (inline) {
+            return (
+              <code className="px-1.5 py-0.5 rounded bg-[#1b2e15] text-[#ffecd0] font-mono text-[12px] border border-[#ffecd0]/15">
+                {children}
+              </code>
+            );
+          }
+          return (
+            <div className="my-4 rounded-xl bg-[#090d08] border border-white/10 p-4 font-mono text-xs text-zinc-200 overflow-x-auto">
+              <code>{children}</code>
+            </div>
+          );
+        },
+        a: ({ href, children }) => {
+          // If it is an internal doc anchor (#doc-...)
+          if (href?.startsWith("#doc-")) {
+            const targetId = href.replace("#doc-", "");
+            return (
+              <button
+                type="button"
+                onClick={() => onDocClick(targetId)}
+                className="text-[#ffecd0] underline underline-offset-2 decoration-[#ffecd0]/50 hover:decoration-[#ffecd0] hover:text-white transition font-medium inline text-left cursor-pointer"
+              >
+                {children}
+              </button>
+            );
+          }
+
+          // If external or mailto
+          return (
+            <a
+              href={href}
+              target={href?.startsWith("http") ? "_blank" : undefined}
+              rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
+              className="text-[#ffecd0] underline underline-offset-2 decoration-[#ffecd0]/40 hover:decoration-[#ffecd0] transition"
+            >
+              {children}
+            </a>
+          );
+        },
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  );
+});
+
 export default function HelpDocsViewer() {
   const [activeTab, setActiveTab] = useState("Documentation");
   const [activePageId, setActivePageId] = useState("index");
@@ -36,26 +157,44 @@ export default function HelpDocsViewer() {
     content: "Select a topic from the sidebar to view documentation.",
   };
 
-  // Search filter
+  // Callback to find which tab owns a doc and switch automatically
+  const handleDocClick = useCallback((docId: string) => {
+    // Find which tab this doc belongs to
+    for (const tab of tabs) {
+      for (const grp of tab.groups) {
+        for (const p of grp.pages) {
+          if (p === docId) {
+            setActiveTab(tab.tab);
+            break;
+          }
+          if (typeof p === "object" && p.pages?.includes(docId)) {
+            setActiveTab(tab.tab);
+            break;
+          }
+        }
+      }
+    }
+    setActivePageId(docId);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [tabs]);
+
+  // Search index computation - memoized
+  const searchIndex = useMemo(() => {
+    return Object.entries(docsData.docs).map(([id, doc]: [string, any]) => ({
+      id,
+      title: doc.title,
+      desc: doc.description || doc.content.slice(0, 80),
+      raw: `${doc.title} ${doc.description} ${doc.content}`.toLowerCase(),
+    }));
+  }, []);
+
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
-    const q = searchQuery.toLowerCase();
-    const results: { id: string; title: string; desc: string }[] = [];
-    Object.entries(docsData.docs).forEach(([id, doc]: [string, any]) => {
-      if (
-        doc.title.toLowerCase().includes(q) ||
-        doc.description.toLowerCase().includes(q) ||
-        doc.content.toLowerCase().includes(q)
-      ) {
-        results.push({
-          id,
-          title: doc.title,
-          desc: doc.description || doc.content.slice(0, 100) + "...",
-        });
-      }
-    });
-    return results.slice(0, 8);
-  }, [searchQuery]);
+    const q = searchQuery.toLowerCase().trim();
+    return searchIndex
+      .filter((item) => item.raw.includes(q))
+      .slice(0, 6);
+  }, [searchQuery, searchIndex]);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 min-h-[85vh] flex flex-col font-sans">
@@ -64,14 +203,14 @@ export default function HelpDocsViewer() {
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#ffecd0] mb-1">
             <BookOpen className="w-4 h-4" />
-            <span>RetAI Documentation</span>
+            <span>RetAI Knowledge Hub</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
             Clinic Platform & Developer Guides
           </h1>
         </div>
 
-        {/* Search Bar */}
+        {/* Instant Search Bar */}
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -84,12 +223,12 @@ export default function HelpDocsViewer() {
 
           {/* Quick Search Dropdown */}
           {searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-[#141d13] border border-[#ffecd0]/20 rounded-xl p-2 shadow-2xl z-50 max-h-80 overflow-y-auto space-y-1">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-[#141d13] border border-[#ffecd0]/25 rounded-xl p-2 shadow-2xl z-50 max-h-80 overflow-y-auto space-y-1">
               {searchResults.map((res) => (
                 <button
                   key={res.id}
                   onClick={() => {
-                    setActivePageId(res.id);
+                    handleDocClick(res.id);
                     setSearchQuery("");
                   }}
                   className="w-full text-left p-2.5 rounded-lg hover:bg-[#1b2e15] transition flex flex-col"
@@ -144,7 +283,7 @@ export default function HelpDocsViewer() {
         </button>
       </div>
 
-      {/* Main Layout: Sidebar + Clean Document */}
+      {/* Main Layout: Sidebar + Document */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-6 flex-1">
         {/* Left Sidebar */}
         <aside
@@ -188,7 +327,7 @@ export default function HelpDocsViewer() {
                                 <button
                                   key={nested}
                                   onClick={() => {
-                                    setActivePageId(nested);
+                                    handleDocClick(nested);
                                     setMobileSidebarOpen(false);
                                   }}
                                   className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition flex items-center justify-between ${
@@ -212,7 +351,7 @@ export default function HelpDocsViewer() {
                         <button
                           key={p}
                           onClick={() => {
-                            setActivePageId(p);
+                            handleDocClick(p);
                             setMobileSidebarOpen(false);
                           }}
                           className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition flex items-center justify-between ${
@@ -255,98 +394,12 @@ export default function HelpDocsViewer() {
               )}
             </div>
 
-            {/* High-fidelity Clean Markdown Rendering */}
+            {/* High-Performance Memoized Markdown Document */}
             <div className="markdown-doc text-sm text-zinc-300 leading-relaxed space-y-4">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  h1: ({ children }) => (
-                    <h1 className="text-2xl font-bold text-white pt-6 pb-2 border-b border-white/10">
-                      {children}
-                    </h1>
-                  ),
-                  h2: ({ children }) => (
-                    <h2 className="text-xl font-bold text-white pt-5 pb-1 border-b border-white/5">
-                      {children}
-                    </h2>
-                  ),
-                  h3: ({ children }) => (
-                    <h3 className="text-lg font-semibold text-[#ffecd0] pt-4">
-                      {children}
-                    </h3>
-                  ),
-                  h4: ({ children }) => (
-                    <h4 className="text-base font-semibold text-white pt-3">
-                      {children}
-                    </h4>
-                  ),
-                  p: ({ children }) => (
-                    <p className="leading-relaxed text-zinc-300">{children}</p>
-                  ),
-                  ul: ({ children }) => (
-                    <ul className="space-y-1.5 pl-5 list-disc marker:text-[#ffecd0]">
-                      {children}
-                    </ul>
-                  ),
-                  ol: ({ children }) => (
-                    <ol className="space-y-1.5 pl-5 list-decimal marker:text-[#ffecd0]">
-                      {children}
-                    </ol>
-                  ),
-                  li: ({ children }) => (
-                    <li className="text-zinc-300 pl-1">{children}</li>
-                  ),
-                  blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-[#4a753d] bg-[#162214]/80 px-4 py-3 rounded-r-xl text-xs text-zinc-200 my-4 shadow-sm">
-                      {children}
-                    </blockquote>
-                  ),
-                  table: ({ children }) => (
-                    <div className="overflow-x-auto my-6 rounded-xl border border-white/10 bg-[#0a0f09]">
-                      <table className="w-full text-left text-xs border-collapse">
-                        {children}
-                      </table>
-                    </div>
-                  ),
-                  thead: ({ children }) => (
-                    <thead className="bg-[#1b2e15] text-[#ffecd0] border-b border-white/10">
-                      {children}
-                    </thead>
-                  ),
-                  th: ({ children }) => (
-                    <th className="p-3 font-semibold">{children}</th>
-                  ),
-                  td: ({ children }) => (
-                    <td className="p-3 border-b border-white/5 text-zinc-300">
-                      {children}
-                    </td>
-                  ),
-                  code: ({ inline, className, children, ...props }: any) => {
-                    if (inline) {
-                      return (
-                        <code className="px-1.5 py-0.5 rounded bg-[#1b2e15] text-[#ffecd0] font-mono text-[12px] border border-[#ffecd0]/15">
-                          {children}
-                        </code>
-                      );
-                    }
-                    return (
-                      <div className="my-4 rounded-xl bg-[#090d08] border border-white/10 p-4 font-mono text-xs text-zinc-200 overflow-x-auto">
-                        <code>{children}</code>
-                      </div>
-                    );
-                  },
-                  a: ({ href, children }) => (
-                    <a
-                      href={href}
-                      className="text-[#ffecd0] underline underline-offset-2 decoration-[#ffecd0]/40 hover:decoration-[#ffecd0] transition"
-                    >
-                      {children}
-                    </a>
-                  ),
-                }}
-              >
-                {activeDoc.content}
-              </ReactMarkdown>
+              <MemoizedMarkdown
+                content={activeDoc.content}
+                onDocClick={handleDocClick}
+              />
             </div>
           </div>
 
