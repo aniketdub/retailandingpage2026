@@ -9,17 +9,11 @@ import {
   Search,
   BookOpen,
   ChevronRight,
-  Shield,
-  Layers,
-  Code2,
-  FileText,
-  HelpCircle,
   Menu,
   X,
-  ExternalLink,
 } from "lucide-react";
 
-// Memoized Markdown renderer to eliminate re-parsing latency
+// Optimized Markdown Renderer: Clean editorial typography without heavy borders or black box wrappers
 const MemoizedMarkdown = React.memo(function MemoizedMarkdown({
   content,
   onDocClick,
@@ -37,7 +31,7 @@ const MemoizedMarkdown = React.memo(function MemoizedMarkdown({
           </h1>
         ),
         h2: ({ children }) => (
-          <h2 className="text-xl sm:text-2xl font-bold text-white pt-5 pb-1 border-b border-white/5">
+          <h2 className="text-xl sm:text-2xl font-bold text-white pt-6 pb-1 border-b border-white/5">
             {children}
           </h2>
         ),
@@ -52,76 +46,78 @@ const MemoizedMarkdown = React.memo(function MemoizedMarkdown({
           </h4>
         ),
         p: ({ children }) => (
-          <p className="leading-relaxed text-zinc-300">{children}</p>
+          <p className="leading-relaxed text-zinc-300 my-2 text-sm">{children}</p>
         ),
         ul: ({ children }) => (
-          <ul className="space-y-1.5 pl-5 list-disc marker:text-[#ffecd0]">
+          <ul className="space-y-1.5 pl-5 list-disc marker:text-[#ffecd0] my-3">
             {children}
           </ul>
         ),
         ol: ({ children }) => (
-          <ol className="space-y-1.5 pl-5 list-decimal marker:text-[#ffecd0]">
+          <ol className="space-y-1.5 pl-5 list-decimal marker:text-[#ffecd0] my-3">
             {children}
           </ol>
         ),
         li: ({ children }) => (
-          <li className="text-zinc-300 pl-1">{children}</li>
+          <li className="text-zinc-300 pl-1 leading-relaxed">{children}</li>
         ),
+        // Clean editorial notes instead of dark boxed blocks
         blockquote: ({ children }) => (
-          <blockquote className="border-l-4 border-[#4a753d] bg-[#162214]/80 px-4 py-3 rounded-r-xl text-xs text-zinc-200 my-4 shadow-sm">
+          <div className="border-l-2 border-[#4a753d] pl-4 py-1 text-zinc-300 italic my-3 text-sm">
             {children}
-          </blockquote>
+          </div>
         ),
+        // Tables: seamless integration with standard table view
         table: ({ children }) => (
-          <div className="overflow-x-auto my-6 rounded-xl border border-white/10 bg-[#0a0f09]">
+          <div className="overflow-x-auto my-6 border border-white/10 rounded-xl">
             <table className="w-full text-left text-xs border-collapse">
               {children}
             </table>
           </div>
         ),
         thead: ({ children }) => (
-          <thead className="bg-[#1b2e15] text-[#ffecd0] border-b border-white/10">
+          <thead className="bg-[#182415] text-[#ffecd0] border-b border-white/10">
             {children}
           </thead>
         ),
         th: ({ children }) => (
-          <th className="p-3 font-semibold">{children}</th>
+          <th className="p-3 font-semibold text-[#ffecd0]">{children}</th>
         ),
         td: ({ children }) => (
           <td className="p-3 border-b border-white/5 text-zinc-300">
             {children}
           </td>
         ),
+        // Clean inline text token (no chunky black container)
         code: ({ inline, className, children, ...props }: any) => {
           if (inline) {
             return (
-              <code className="px-1.5 py-0.5 rounded bg-[#1b2e15] text-[#ffecd0] font-mono text-[12px] border border-[#ffecd0]/15">
+              <span className="font-mono text-xs text-[#ffecd0] bg-[#1a2618] px-1 py-0.5 rounded border border-[#ffecd0]/15">
                 {children}
-              </code>
+              </span>
             );
           }
+          // Only true multi-line code blocks (e.g. JSON or bash endpoints)
           return (
-            <div className="my-4 rounded-xl bg-[#090d08] border border-white/10 p-4 font-mono text-xs text-zinc-200 overflow-x-auto">
+            <pre className="my-3 p-4 rounded-xl bg-[#090d08] border border-white/10 font-mono text-xs text-zinc-200 overflow-x-auto">
               <code>{children}</code>
-            </div>
+            </pre>
           );
         },
         a: ({ href, children }) => {
-          // If it is an internal doc anchor (#doc-...)
           if (href?.startsWith("#doc-")) {
             const targetId = href.replace("#doc-", "");
             return (
               <button
                 type="button"
                 onClick={() => onDocClick(targetId)}
-                className="text-[#ffecd0] underline underline-offset-2 decoration-[#ffecd0]/50 hover:decoration-[#ffecd0] hover:text-white transition font-medium inline text-left cursor-pointer"
+                className="text-[#ffecd0] underline underline-offset-2 decoration-[#ffecd0]/40 hover:decoration-[#ffecd0] hover:text-white transition font-medium inline text-left cursor-pointer"
               >
                 {children}
               </button>
             );
           }
 
-          // If external or mailto
           return (
             <a
               href={href}
@@ -146,20 +142,16 @@ export default function HelpDocsViewer() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // Tabs from docs.json
   const tabs = docsData.navigation.tabs;
   const currentTabObj = tabs.find((t: any) => t.tab === activeTab) || tabs[0];
 
-  // Active doc content
   const activeDoc = (docsData.docs as any)[activePageId] || {
     title: "Documentation",
     description: "",
     content: "Select a topic from the sidebar to view documentation.",
   };
 
-  // Callback to find which tab owns a doc and switch automatically
   const handleDocClick = useCallback((docId: string) => {
-    // Find which tab this doc belongs to
     for (const tab of tabs) {
       for (const grp of tab.groups) {
         for (const p of grp.pages) {
@@ -178,13 +170,13 @@ export default function HelpDocsViewer() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [tabs]);
 
-  // Search index computation - memoized
+  // Precomputed search index
   const searchIndex = useMemo(() => {
     return Object.entries(docsData.docs).map(([id, doc]: [string, any]) => ({
       id,
       title: doc.title,
       desc: doc.description || doc.content.slice(0, 80),
-      raw: `${doc.title} ${doc.description} ${doc.content}`.toLowerCase(),
+      raw: `${doc.title} ${doc.description}`.toLowerCase(),
     }));
   }, []);
 
@@ -210,7 +202,7 @@ export default function HelpDocsViewer() {
           </h1>
         </div>
 
-        {/* Instant Search Bar */}
+        {/* Search Bar */}
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -221,7 +213,6 @@ export default function HelpDocsViewer() {
             className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#141d13] border border-white/10 text-sm text-white focus:outline-none focus:border-[#ffecd0] transition placeholder:text-zinc-500"
           />
 
-          {/* Quick Search Dropdown */}
           {searchResults.length > 0 && (
             <div className="absolute top-full left-0 right-0 mt-2 bg-[#141d13] border border-[#ffecd0]/25 rounded-xl p-2 shadow-2xl z-50 max-h-80 overflow-y-auto space-y-1">
               {searchResults.map((res) => (
@@ -242,7 +233,7 @@ export default function HelpDocsViewer() {
         </div>
       </div>
 
-      {/* Mintlify Tab Switcher */}
+      {/* Tabs */}
       <div className="flex items-center justify-between gap-2 pt-4 pb-2 overflow-x-auto border-b border-white/5">
         <div className="flex items-center gap-2">
           {tabs.map((tab: any) => {
@@ -273,7 +264,6 @@ export default function HelpDocsViewer() {
           })}
         </div>
 
-        {/* Mobile Sidebar Toggle */}
         <button
           onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
           className="md:hidden flex items-center gap-1.5 text-xs text-[#ffecd0] bg-[#1b2e15] px-3 py-1.5 rounded-lg border border-[#ffecd0]/20"
@@ -375,14 +365,12 @@ export default function HelpDocsViewer() {
         {/* Right Article View with Clean Typography */}
         <main className="md:col-span-9 rounded-2xl p-6 sm:p-10 border border-white/10 bg-[#121910]/70 backdrop-blur-xl min-h-[600px] flex flex-col justify-between">
           <div className="space-y-6">
-            {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-xs text-zinc-500">
               <span>{activeTab}</span>
               <span>/</span>
               <span className="text-[#ffecd0] font-medium">{activeDoc.title}</span>
             </div>
 
-            {/* Document Header */}
             <div className="space-y-2.5 border-b border-white/10 pb-6">
               <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                 {activeDoc.title}
@@ -394,7 +382,6 @@ export default function HelpDocsViewer() {
               )}
             </div>
 
-            {/* High-Performance Memoized Markdown Document */}
             <div className="markdown-doc text-sm text-zinc-300 leading-relaxed space-y-4">
               <MemoizedMarkdown
                 content={activeDoc.content}
@@ -403,7 +390,6 @@ export default function HelpDocsViewer() {
             </div>
           </div>
 
-          {/* Quick Footer inside Doc */}
           <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4">
             <span>RetAI Official Documentation</span>
             <div className="flex items-center gap-4">
