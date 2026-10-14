@@ -19,11 +19,50 @@ import {
   CreditCard,
   ChevronDown,
   Sparkles,
+  Send,
+  Loader2,
 } from "lucide-react";
 
 export default function HomeLanding() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [demoForm, setDemoForm] = useState({
+    name: "",
+    clinicName: "",
+    phone: "",
+    specialty: "Dermatology & Skin",
+  });
+  const [demoSubmitting, setDemoSubmitting] = useState(false);
+  const [demoSubmitted, setDemoSubmitted] = useState(false);
+  const [demoError, setDemoError] = useState("");
+
+  const handleDemoSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setDemoSubmitting(true);
+    setDemoError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...demoForm,
+          source: "Homepage Interactive Booking Section",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to submit request.");
+      setDemoSubmitted(true);
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please email help.retai@gmail.com directly.";
+      setDemoError(msg);
+    } finally {
+      setDemoSubmitting(false);
+    }
+  };
 
   // IntersectionObserver for scroll-triggered popups and fade-in animations
   useEffect(() => {
@@ -367,21 +406,150 @@ export default function HomeLanding() {
         </div>
       </section>
 
-      {/* BOTTOM CTA BANNER */}
-      <section className="w-full max-w-5xl mx-auto px-6 py-16 scroll-reveal">
-        <div className="rounded-3xl bg-[#141d13] border border-white/10 p-10 md:p-16 text-center flex flex-col items-center shadow-2xl">
-          <h2 className="text-3xl md:text-5xl font-bold text-white max-w-2xl tracking-tight">
-            Upgrade Your Clinic into a High-Retention Powerhouse
-          </h2>
-          <p className="text-zinc-300 max-w-lg mt-4 text-sm sm:text-base leading-relaxed">
-            Join premier skin and aesthetic clinics utilizing RetAI to manage consultations, eliminate no-shows, and retain patients effortlessly.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-8 px-8 py-3.5 rounded-full bg-[#ffecd0] text-[#0d120c] font-bold text-sm hover:bg-white transition-all shadow-md hover:scale-105"
-          >
-            Book a Personal Demonstration
-          </Link>
+      {/* INTERACTIVE BOOK A DEMO & CONTACT SECTION */}
+      <section id="demo" className="w-full max-w-5xl mx-auto px-6 py-16 scroll-reveal">
+        <div className="rounded-3xl bg-[#141d13] border border-white/10 p-8 md:p-14 shadow-2xl relative overflow-hidden">
+          <div className="text-center max-w-2xl mx-auto mb-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1b2b17] border border-[#ffecd0]/20 text-xs font-semibold text-[#ffecd0] mb-4">
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Direct Clinic Consultation</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
+              Upgrade Your Clinic into a High-Retention Powerhouse
+            </h2>
+            <p className="text-zinc-300 mt-4 text-sm sm:text-base leading-relaxed">
+              Experience RetAI live with your clinic's actual specialty workflows. Enter your details below for a 15-minute walkthrough, or email us at{" "}
+              <a href="mailto:help.retai@gmail.com" className="text-[#ffecd0] underline hover:text-white">
+                help.retai@gmail.com
+              </a>
+              .
+            </p>
+          </div>
+
+          <div className="max-w-xl mx-auto">
+            {demoSubmitted ? (
+              <div className="p-8 rounded-2xl bg-[#0b0f0a] border border-[#ffecd0]/20 text-center space-y-4 animate-in fade-in duration-300">
+                <div className="w-14 h-14 rounded-full bg-[#1b2b17] border border-[#ffecd0]/30 flex items-center justify-center mx-auto text-[#ffecd0]">
+                  <CheckCircle2 className="w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-bold text-white">Demonstration Requested</h3>
+                <p className="text-sm text-zinc-300 leading-relaxed">
+                  Thank you, Dr. <span className="text-white font-semibold">{demoForm.name}</span>. Your walkthrough request for <span className="text-white font-semibold">{demoForm.clinicName}</span> has been dispatched to{" "}
+                  <span className="text-[#ffecd0]">help.retai@gmail.com</span>.
+                </p>
+                <p className="text-xs text-zinc-400">
+                  Our clinic specialist will contact you on WhatsApp ({demoForm.phone}) within 2 hours.
+                </p>
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setDemoSubmitted(false)}
+                    className="text-xs text-[#ffecd0] hover:underline"
+                  >
+                    Submit another request or modify details
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleDemoSubmit} className="space-y-4 bg-[#0b0f0a]/90 p-6 md:p-8 rounded-2xl border border-white/10 shadow-xl">
+                {demoError && (
+                  <div className="p-3 rounded-xl bg-red-950/60 border border-red-500/30 text-xs text-red-200">
+                    {demoError}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5 uppercase tracking-wider">
+                      Doctor / Contact Name
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={demoForm.name}
+                      onChange={(e) => setDemoForm({ ...demoForm, name: e.target.value })}
+                      placeholder="Dr. Samantha Rao"
+                      className="w-full rounded-xl bg-[#141d13] border border-white/10 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ffecd0] transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5 uppercase tracking-wider">
+                      Clinic Name & City
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={demoForm.clinicName}
+                      onChange={(e) => setDemoForm({ ...demoForm, clinicName: e.target.value })}
+                      placeholder="Aura Aesthetics, Bengaluru"
+                      className="w-full rounded-xl bg-[#141d13] border border-white/10 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ffecd0] transition"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5 uppercase tracking-wider">
+                      WhatsApp / Phone
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={demoForm.phone}
+                      onChange={(e) => setDemoForm({ ...demoForm, phone: e.target.value })}
+                      placeholder="+91 98765 43210"
+                      className="w-full rounded-xl bg-[#141d13] border border-white/10 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ffecd0] transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5 uppercase tracking-wider">
+                      Specialty
+                    </label>
+                    <select
+                      value={demoForm.specialty}
+                      onChange={(e) => setDemoForm({ ...demoForm, specialty: e.target.value })}
+                      className="w-full rounded-xl bg-[#141d13] border border-white/10 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ffecd0] transition"
+                    >
+                      <option value="Dermatology & Skin">Dermatology & Skin</option>
+                      <option value="Aesthetic Surgery & Cosmetology">Aesthetic Surgery & Cosmetology</option>
+                      <option value="Trichology & Hair Restoration">Trichology & Hair Restoration</option>
+                      <option value="Multi-Specialty Wellness">Multi-Specialty Wellness</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={demoSubmitting}
+                  className="w-full mt-2 flex items-center justify-center gap-2 py-3.5 rounded-full bg-[#ffecd0] text-[#0d120c] font-bold text-sm hover:bg-white transition-all shadow-md hover:shadow-[#ffecd0]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {demoSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Dispatching to help.retai@gmail.com...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Request Live Walkthrough</span>
+                      <Send className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+
+                <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-400 pt-2 gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span>Bengaluru Headquarters | help.retai@gmail.com</span>
+                  </div>
+                  <Link href="/contact" className="text-[#ffecd0] hover:underline">
+                    Detailed Walkthrough Questionnaire &rarr;
+                  </Link>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
       </section>
     </div>
