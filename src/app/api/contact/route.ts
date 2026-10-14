@@ -252,9 +252,11 @@ Direct WhatsApp: ${waLink || "N/A"}
     console.log("=== NEW RETAI CLINIC LEAD ===");
     console.log(JSON.stringify({ ...data, submittedAt: nowIst, waLink }, null, 2));
 
+    const doctorSalutation = name.trim().toLowerCase().startsWith("dr") ? name.trim() : `Dr. ${name.trim()}`;
+
     return NextResponse.json({
       success: true,
-      message: `Thank you Dr. ${name}. Your clinic walkthrough request has been sent to help.retai@gmail.com. Our specialist will contact you on ${phone} within 2 hours.`,
+      message: `Thank you, ${doctorSalutation}. Your clinic walkthrough request has been sent to help.retai@gmail.com. Our specialist will contact you on ${phone} within 2 hours.`,
       deliveryMethods,
     });
   } catch (error) {
