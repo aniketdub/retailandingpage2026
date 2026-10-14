@@ -87,7 +87,7 @@ export default function PricingPage() {
                 {tier.description}
               </p>
               <div className="my-6">
-                <span className="text-4xl font-extrabold text-[#ffecd0]">
+                <span className="text-4xl font-extrabold text-white">
                   {tier.price}
                 </span>
                 <span className="text-sm text-zinc-400 ml-1">{tier.period}</span>

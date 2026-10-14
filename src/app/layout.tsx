@@ -16,7 +16,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "RetAI — AI Patient Relationship Management (PRM) for Modern Clinics",
+  title: "RetAI - AI Patient Relationship Management (PRM) for Modern Clinics",
   description:
     "The all-in-one AI operating system for dermatology, skin, and aesthetic clinics. AI voice receptionists, WhatsApp lead conversion, and smart patient retention.",
   icons: {

@@ -46,8 +46,8 @@ export default function Navbar() {
             className="h-8 w-8 object-contain rounded-lg transition-transform group-hover:scale-105"
             priority
           />
-          <span className="font-['Lexend_Peta',sans-serif] text-lg font-bold tracking-tight text-white group-hover:text-[#ffecd0] transition-colors">
-            Ret<span className="text-[#ffecd0]">AI</span>
+          <span className="font-['Lexend_Peta',sans-serif] text-lg font-bold tracking-tight text-white transition-colors">
+            RetAI
           </span>
         </Link>
 

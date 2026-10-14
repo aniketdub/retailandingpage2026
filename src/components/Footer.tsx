@@ -16,7 +16,7 @@ export default function Footer() {
               className="h-8 w-8 object-contain rounded-lg"
             />
             <span className="font-['Lexend_Peta',sans-serif] text-xl font-bold tracking-tight text-white">
-              Ret<span className="text-[#ffecd0]">AI</span>
+              RetAI
             </span>
           </div>
           <p className="text-sm text-zinc-400 leading-relaxed">
