@@ -1,0 +1,76 @@
+---
+title: "Data export"
+description: "Report CSVs, the full clinic archive, per-patient records, and what happens if you leave."
+icon: "download"
+---
+
+Your data is yours. There is no export you have to ask permission for and no format that traps you.
+
+## Report exports
+
+Every report in [Reports](/features/reports) has an **Export CSV** button that exports the current filtered view — not a fixed template. Filter first, export second.
+
+## Full clinic export
+
+**Owner only.** Settings → Data export → **Export everything**.
+
+Produces one archive containing:
+
+| File | Contents |
+| --- | --- |
+| `patients.csv` | Demographics, contact, flags, lifetime value |
+| `appointments.csv` | Every appointment with status, clinician, service |
+| `invoices.csv` | Invoice headers with totals and tax |
+| `invoice_line_items.csv` | Per-line detail with per-line GST |
+| `payments.csv` | Every payment with method and reference |
+| `packages.csv` | Sold packages with sessions and financial state |
+| `treatments.csv` | Delivered treatments and sessions |
+| `consultations.csv` | Consultation records |
+| `prescriptions.csv` | Issued prescriptions |
+| `messages.csv` | WhatsApp message log with direction and status |
+| `calls.csv` | Voice call log with outcomes |
+| `inventory.csv` | Products, quantities, and the movement ledger |
+| `staff.csv` | Staff records and roles |
+| `audit.csv` | The audit trail |
+
+Large exports are prepared in the background; you get a notification and a time-limited download link when ready.
+
+<Warning>
+  A full export contains complete patient PHI. Downloading it makes you responsible for how it is stored. Do not email it, do not leave it in a shared drive, and delete it when the purpose it was pulled for is finished. Every export is audited with the staff member's name.
+</Warning>
+
+## Photographs
+
+Clinical images export separately because of their size. Choose a date range or a set of patients; you receive a structured archive with a manifest CSV mapping each file to its patient, session, treatment, and consent state.
+
+## Per-patient export
+
+**Patients → open a patient → Actions → Download summary** produces a PDF with demographics, treatment history, prescriptions, packages, and balance.
+
+For a complete machine-readable record of one patient — a DPDP data-portability request — use **Actions → Export full record**, which produces JSON plus that patient's images.
+
+<Note>
+  India's DPDP Act gives patients a right of access to their own data. This is the button that satisfies it. See [Data protection](/security/data-protection).
+</Note>
+
+## Accountant handover
+
+For month-end, export from Reports:
+
+1. **GST summary** for the period
+2. **Revenue summary**, split by method
+3. **Invoice list**, with line items
+4. **Refunds and credit notes**
+5. **Outstanding ageing** at period end
+
+See [Month-end close](/workflows/month-end-close).
+
+## If you leave RetAI
+
+On termination you may request a complete export at any point during your contract and for **30 days after it ends**. You receive the full clinic archive plus all clinical images.
+
+After that window, your data is deleted per the schedule in [Retention & deletion](/security/retention-and-deletion). We do not hold data hostage and we do not keep it longer than the contract permits.
+
+## API access
+
+Anything exportable through the UI is reachable programmatically. See [Export endpoints](/api-reference/endpoints/export).

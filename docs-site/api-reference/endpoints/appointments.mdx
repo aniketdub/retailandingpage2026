@@ -1,0 +1,108 @@
+---
+title: "Appointments"
+description: "List appointments and update their status or time."
+icon: "calendar-days"
+---
+
+## List appointments
+
+`GET /api/appointments`
+
+<ParamField query="from" type="string">ISO 8601. Start of the range.</ParamField>
+<ParamField query="to" type="string">ISO 8601. End of the range.</ParamField>
+<ParamField query="clinician_id" type="string">UUID.</ParamField>
+<ParamField query="patient_id" type="string">UUID.</ParamField>
+<ParamField query="status" type="string">`tentative`, `confirmed`, `checked_in`, `completed`, `no_show`, `cancelled`.</ParamField>
+<ParamField query="limit" type="integer" default="100">Maximum 500.</ParamField>
+
+```bash
+curl "https://www.retentionos.tech/api/appointments?from=2026-08-14T00:00:00%2B05:30&to=2026-08-15T00:00:00%2B05:30" \
+  -H "Cookie: <session cookie>"
+```
+
+<ResponseField name="appointments" type="array">
+  <Expandable title="appointment">
+    <ResponseField name="id" type="string" />
+    <ResponseField name="patient_id" type="string" />
+    <ResponseField name="patient_name" type="string" />
+    <ResponseField name="service_id" type="string" />
+    <ResponseField name="service_name" type="string" />
+    <ResponseField name="clinician_id" type="string" />
+    <ResponseField name="clinician_name" type="string" />
+    <ResponseField name="starts_at" type="string">ISO 8601 with timezone.</ResponseField>
+    <ResponseField name="ends_at" type="string" />
+    <ResponseField name="status" type="string" />
+    <ResponseField name="source" type="string">`staff`, `ai_whatsapp`, `ai_voice`, or `patient`.</ResponseField>
+    <ResponseField name="package_id" type="string | null">Set when this is a package session.</ResponseField>
+    <ResponseField name="session_number" type="integer | null" />
+    <ResponseField name="notes" type="string | null" />
+  </Expandable>
+</ResponseField>
+
+```json
+{
+  "appointments": [
+    {
+      "id": "3c6e0b8a-9c15-4f2d-8b1e-71c4f0a2d9e5",
+      "patient_id": "8f14e45f-ceea-467a-9a36-dedd4bea2543",
+      "patient_name": "Priya Sharma",
+      "service_id": "b1946ac9-2492-4f8a-9d3c-6f0b7a1e2c44",
+      "service_name": "Laser hair reduction — full legs",
+      "clinician_id": "d3d94468-02a4-4c1b-9a5e-8f2b1c7d6e10",
+      "clinician_name": "Dr Meera Iyer",
+      "starts_at": "2026-08-14T15:00:00+05:30",
+      "ends_at": "2026-08-14T15:45:00+05:30",
+      "status": "confirmed",
+      "source": "ai_whatsapp",
+      "package_id": "7d793037-a076-4b1e-9f5a-2c8e4d1b6a92",
+      "session_number": 4,
+      "notes": null
+    }
+  ],
+  "total": 1
+}
+```
+
+<Tip>
+  `source` tells you what created the appointment. Filtering to `ai_whatsapp` and `ai_voice` is how you measure what the AI actually booked.
+</Tip>
+
+## Update an appointment
+
+`PATCH /api/appointments/{id}`
+
+<ParamField body="status" type="string">Any valid status.</ParamField>
+<ParamField body="starts_at" type="string">ISO 8601. Reschedules; `ends_at` recomputes from the service duration unless supplied.</ParamField>
+<ParamField body="ends_at" type="string" />
+<ParamField body="clinician_id" type="string">Reassigns the clinician.</ParamField>
+<ParamField body="notes" type="string" />
+
+```bash
+curl -X PATCH "https://www.retentionos.tech/api/appointments/3c6e0b8a-9c15-4f2d-8b1e-71c4f0a2d9e5" \
+  -H "Content-Type: application/json" \
+  -H "Cookie: <session cookie>" \
+  -d '{"status":"completed"}'
+```
+
+### Side effects
+
+Updating an appointment is not an inert write:
+
+| Change | Triggers |
+| --- | --- |
+| `status` → `completed` | Post-visit follow-up queued; aftercare sent if configured; package session incremented; consumables deducted |
+| `status` → `cancelled` | Pending reminders cancelled; Google Calendar event removed; slot freed |
+| `starts_at` changed | Reminders re-queued; Google Calendar event moved |
+| `clinician_id` changed | Google Calendar event moves between calendars |
+
+<Warning>
+  Marking `completed` deducts stock and recognises package revenue. Do not use it as a generic "seen" flag — it is a commercial and clinical event.
+</Warning>
+
+## Errors
+
+| Code | Cause |
+| --- | --- |
+| `400` | Invalid status transition, unparseable date, or unresolved clinic scope |
+| `403` | Role lacks the Calendar module |
+| `404` | No such appointment **in your clinic** |

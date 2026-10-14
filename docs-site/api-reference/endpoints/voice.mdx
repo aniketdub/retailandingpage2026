@@ -1,0 +1,85 @@
+---
+title: "Voice"
+description: "Call log and outbound AI calls."
+icon: "phone-volume"
+---
+
+<Note>
+  Voice endpoints require the voice tier. Without it they return `403`.
+</Note>
+
+## List calls
+
+`GET /api/calls`
+
+<ParamField query="from" type="string">ISO 8601.</ParamField>
+<ParamField query="to" type="string">ISO 8601.</ParamField>
+<ParamField query="patient_id" type="string" />
+<ParamField query="direction" type="string">`inbound` or `outbound`.</ParamField>
+<ParamField query="outcome" type="string">`booked`, `enquiry_captured`, `escalated`, `no_action`.</ParamField>
+<ParamField query="limit" type="integer" default="50" />
+
+<ResponseField name="calls" type="array">
+  <Expandable title="call">
+    <ResponseField name="id" type="string" />
+    <ResponseField name="provider_call_id" type="string">Unique. Authoritative deduplication key.</ResponseField>
+    <ResponseField name="patient_id" type="string | null">Resolved server-side from the phone number.</ResponseField>
+    <ResponseField name="phone" type="string">E.164.</ResponseField>
+    <ResponseField name="direction" type="string" />
+    <ResponseField name="started_at" type="string" />
+    <ResponseField name="duration_seconds" type="integer" />
+    <ResponseField name="outcome" type="string" />
+    <ResponseField name="appointment_id" type="string | null">Set when the call created a booking.</ResponseField>
+    <ResponseField name="lead_id" type="string | null">Set when the call captured an enquiry.</ResponseField>
+  </Expandable>
+</ResponseField>
+
+## Get one call
+
+`GET /api/calls/{callId}` — includes the transcript and a signed, expiring recording URL.
+
+<ResponseField name="transcript" type="array">
+  <Expandable title="turn">
+    <ResponseField name="speaker" type="string">`caller` or `agent`.</ResponseField>
+    <ResponseField name="text" type="string" />
+    <ResponseField name="at_seconds" type="number" />
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="recording_url" type="string | null">
+  Short-lived signed URL. It expires — do not store it.
+</ResponseField>
+
+<Warning>
+  Recording availability depends on your configured retention period. A call past that period returns `recording_url: null` with the transcript intact.
+</Warning>
+
+## Place an outbound call
+
+`POST /api/voice/call`
+
+<ParamField body="patient_id" type="string" required />
+<ParamField body="intent" type="string">`confirmation`, `win_back`, `package_expiry`, `follow_up`.</ParamField>
+<ParamField body="context" type="string">Extra context for the agent. Never a substitute for the patient record — the agent reads that itself.</ParamField>
+
+```bash
+curl -X POST "https://www.retentionos.tech/api/voice/call" \
+  -H "Content-Type: application/json" \
+  -H "Cookie: <session cookie>" \
+  -d '{"patient_id":"8f14e45f-ceea-467a-9a36-dedd4bea2543","intent":"package_expiry"}'
+```
+
+<ResponseField name="call_id" type="string" />
+<ResponseField name="status" type="string">`queued`.</ResponseField>
+
+<Warning>
+  **This rings a real phone.** Rate limited to 10 per minute per clinic — protection against a runaway loop dialling your entire patient list, not a licence to sit at the limit. Never blind-retry.
+</Warning>
+
+## Attribution
+
+A call's clinic and patient are resolved **from the phone number, on the server**, never from the provider payload. A spoofed or malformed payload cannot attribute a call to the wrong clinic.
+
+Call records are deduplicated on the provider's call ID at the database level, so a retried event cannot create a duplicate.
+
+See [Voice events webhook](/api-reference/webhooks/voice-events).

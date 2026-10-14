@@ -1,0 +1,94 @@
+---
+title: "Reports"
+description: "Revenue, recovery, procedure mix, follow-up performance, demographics, and the day-end close."
+icon: "chart-line"
+---
+
+<Frame caption="The reports hub — every report is filterable and exportable to CSV.">
+  <img src="/images/features/reports-hub.png" alt="Reports hub" />
+</Frame>
+
+Every report shares the same controls: a date range, a clinician filter, a service or category filter, and an **Export CSV** button. Nothing is a dead end.
+
+## Revenue
+
+<AccordionGroup>
+  <Accordion title="Revenue summary" icon="chart-line" defaultOpen>
+    Collected versus billed, by day, week, or month. Split by payment method, service category, and clinician. Package revenue appears as it is earned, not as it is collected — see [Packages](/features/packages).
+  </Accordion>
+  <Accordion title="GST summary" icon="percent">
+    Tax collected by rate, with taxable value per rate. The report your accountant asks for.
+  </Accordion>
+  <Accordion title="Outstanding and ageing" icon="clock">
+    Who owes what, bucketed by age. Sorted by amount so the calls worth making are at the top.
+  </Accordion>
+  <Accordion title="Discounts granted" icon="tag">
+    Every discount with the staff member who granted it. Discount as a percentage of gross is the number to watch.
+  </Accordion>
+  <Accordion title="Retainer and credit" icon="wallet">
+    Advance money held and credit outstanding. Both are liabilities, and both are easy to forget.
+  </Accordion>
+</AccordionGroup>
+
+## Retention — the reports that justify the product
+
+<CardGroup cols={2}>
+  <Card title="Revenue recovered" icon="arrow-rotate-left">
+    Bookings that came from an at-risk outreach, attributed to the message that produced them. The honest measure of RetAI's return.
+  </Card>
+  <Card title="Follow-up performance" icon="paper-plane">
+    Messages sent, replied to, and converted to a booking — by message type and by timing.
+  </Card>
+  <Card title="Retention rate" icon="repeat">
+    Share of patients returning within their expected interval, trended over time.
+  </Card>
+  <Card title="Package completion" icon="box">
+    Share of sold sessions actually delivered. Unredeemed sessions are a liability and a retention failure at once.
+  </Card>
+</CardGroup>
+
+## Clinical and operational
+
+| Report | Answers |
+| --- | --- |
+| Appointments overview | Booked, completed, cancelled, no-show — by day, clinician, and service |
+| No-show analysis | Who, when, which slots, and whether reminders were delivered |
+| Procedure trends | Which treatments are growing and which are fading, period over period |
+| Clinician utilisation | Booked hours against available hours |
+| Chair and room utilisation | Where the physical bottleneck actually is |
+| Patient demographics | Age, gender, location, referral source |
+| New versus returning | New patient acquisition against returning volume |
+| Feedback analytics | Post-visit ratings and comments, by clinician and service |
+| Incentive payouts | Staff commission based on your configured rules |
+| Consumption by procedure | From [Inventory](/features/inventory) |
+
+## Day-end report
+
+The close-of-business reconciliation: collections by method, invoices issued, discounts, refunds, outstanding created, GST collected by rate, and appointments completed against booked.
+
+<Tip>
+  Run it before the last person leaves. A ₹500 discrepancy is trivially traceable while the person who took the payment is still there, and near-impossible three days later.
+</Tip>
+
+## Scheduled reports
+
+Any report can be scheduled to arrive by email or WhatsApp on a cadence — day-end nightly to the owner, revenue summary every Monday, package expiry every Friday.
+
+<Frame caption="Scheduling a report to the owner's WhatsApp.">
+  <img src="/images/features/reports-schedule.png" alt="Scheduled report configuration" />
+</Frame>
+
+## Exports
+
+Every report exports to CSV. A full clinic export — patients, appointments, invoices, and treatments in one archive — is available to owners from [Data export](/admin/data-export).
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Month-end close" icon="calendar-check" href="/workflows/month-end-close">
+    The monthly routine, in order.
+  </Card>
+  <Card title="At-Risk Patients" icon="heart-pulse" href="/features/at-risk">
+    Where recovered revenue originates.
+  </Card>
+</CardGroup>

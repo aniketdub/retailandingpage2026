@@ -1,0 +1,69 @@
+---
+title: "Subprocessors"
+description: "Every third party that processes clinic data, what it processes, and where."
+icon: "server"
+---
+
+Complete and current. A subprocessor list that omits a vendor is itself a compliance gap.
+
+<Note>
+  Clinics are notified at least **15 days** before a new subprocessor is engaged, and may object on reasonable data-protection grounds. This is committed in the Data Processing Agreement.
+</Note>
+
+## Current subprocessors
+
+| Subprocessor | Role | Data processed | Location | Cross-border |
+| --- | --- | --- | --- | :---: |
+| **Vercel Inc.** | Application hosting | All application traffic. No direct database access. | United States, global edge | Yes |
+| **Supabase Inc.** | Database and storage | All customer data — patients, appointments, invoices, messages, images, staff | Region selected at project setup | If region is outside India |
+| **Twilio Inc.** | WhatsApp message delivery | Patient phone numbers; message content | United States | Yes |
+| **Meta Platforms, Inc.** | WhatsApp Business Platform | Patient phone numbers; message content, as network operator | United States | Yes |
+| **Google LLC** | AI processing (Gemini); Google Calendar; Google Sign-In | Message content sent for reply generation; calendar event data where connected; email and name for sign-in | United States | Yes |
+| **Bolna** | AI voice calling | Patient phone numbers; call audio and transcripts, where voice is enabled | Confirm current region | Confirm |
+| **Firebase (Google LLC)** | Push notifications | **Device push token only.** Notification content is generic — never a patient name or message text. | United States | Token only; no patient data |
+
+## Notes on scope
+
+<AccordionGroup>
+  <Accordion title="Vercel does not hold your data" icon="server">
+    It serves the application. Patient records live in the database, which Vercel does not access directly.
+  </Accordion>
+  <Accordion title="Google receives message content, not whole records" icon="robot">
+    Only an allowlisted subset of patient fields accompanies a message to the AI. Not the full clinical record.
+  </Accordion>
+  <Accordion title="Firebase receives no patient data at all" icon="bell">
+    Push payloads carry a device token and a generic string. This is why a notification on a lock screen discloses nothing.
+  </Accordion>
+  <Accordion title="Bolna only where voice is enabled" icon="phone">
+    If your plan does not include the voice receptionist, no data reaches Bolna.
+  </Accordion>
+</AccordionGroup>
+
+## Cross-border transfer
+
+Where a subprocessor processes data outside India, this is disclosed under our Privacy Policy and DPA. The DPDP Act permits cross-border transfer except to countries restricted by government notification.
+
+## HIPAA
+
+<Warning>
+  RetentionOS does **not** currently hold Business Associate Agreements with these vendors, and RetAI is not offered as a HIPAA-compliant product. It is built for the Indian market and the DPDP Act. If you require HIPAA coverage, we are not currently the right vendor — and we would rather say so here than in a procurement questionnaire.
+</Warning>
+
+## Change history
+
+Material changes to this list are announced in the [changelog](/help/changelog) and notified directly to clinic owners.
+
+| Date | Change |
+| --- | --- |
+| — | Initial publication |
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Data protection" icon="lock" href="/security/data-protection">
+    Encryption and what each vendor actually receives.
+  </Card>
+  <Card title="DPDP compliance" icon="scale-balanced" href="/security/dpdp">
+    Cross-border transfer under Indian law.
+  </Card>
+</CardGroup>

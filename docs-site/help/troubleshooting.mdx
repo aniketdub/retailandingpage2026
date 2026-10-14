@@ -1,0 +1,150 @@
+---
+title: "Troubleshooting"
+description: "The problems clinics actually hit, and how to fix them without waiting for support."
+icon: "wrench"
+---
+
+## Sign-in
+
+<AccordionGroup>
+  <Accordion title="Account not recognised" icon="user-xmark" defaultOpen>
+    Your staff record has not been created, or has been deactivated. This is a permissions problem, not a password problem — resetting the password will not help.
+
+    **Fix:** an owner adds or reactivates you in **Staff**.
+  </Accordion>
+  <Accordion title="Google sign-in returns to the login screen" icon="google">
+    The return redirect is being blocked, usually by a VPN, a content blocker, or strict cookie settings.
+
+    **Fix:** disable the VPN or blocker for sign-in, allow cookies for the site, then retry. On mobile this can also be an in-app browser — open in the system browser instead.
+  </Accordion>
+  <Accordion title="Signed out unexpectedly" icon="clock">
+    Sessions expire after 8 hours idle. Also expected if an owner has just changed your role or deactivated and reactivated your account.
+  </Accordion>
+  <Accordion title="A module disappeared from my sidebar" icon="eye-slash">
+    An owner changed the permission matrix. Not a bug. Ask them, or see [Roles & permissions](/admin/roles-and-permissions).
+  </Accordion>
+</AccordionGroup>
+
+## WhatsApp
+
+<AccordionGroup>
+  <Accordion title="Messages arrive but are not attached to a patient" icon="user-xmark" defaultOpen>
+    Phone-format mismatch. The patient record holds a number without a country code, so the inbound message does not match.
+
+    **Fix:** open the patient, correct the phone to full international format (`+919876543210`), save. History reattaches.
+
+    **Prevent:** always enter numbers with the country code. The bulk importer does this automatically; manual entry does not.
+  </Accordion>
+  <Accordion title="Aisha has stopped replying to a thread" icon="robot">
+    Most likely a staff member clicked **Take over** — a taken-over thread is deliberately silent from the AI.
+
+    **Fix:** click **Hand back** on the thread. If no takeover occurred, check the AI is enabled in clinic settings.
+  </Accordion>
+  <Accordion title="Reminders are not sending" icon="bell-slash">
+    Check in this order:
+
+    1. Is the message template still approved?
+    2. Is the send time falling inside quiet hours?
+    3. Has this patient opted out?
+    4. Is the appointment status one that triggers a reminder — cancelled appointments do not remind
+
+    If all four are fine, check [status](https://status.retentionos.tech) for a delivery incident.
+  </Accordion>
+  <Accordion title="Patients say they received a message twice" icon="clone">
+    RetAI's queue claims each message atomically before sending, so genuine double-sends are prevented. A duplicate is almost always WhatsApp-side redelivery.
+
+    Report it with the patient's number and approximate time and we will check the delivery log.
+  </Accordion>
+  <Accordion title="Wrong clinic name shown to patients" icon="id-card">
+    Business verification is incomplete or the display name is pending WhatsApp review. This sits on WhatsApp's side; raise it with us and we chase it.
+  </Accordion>
+</AccordionGroup>
+
+## Calendar
+
+<AccordionGroup>
+  <Accordion title="Google Calendar sync stopped" icon="calendar-xmark">
+    Usually the Google account changed password or revoked access.
+
+    **Fix:** Settings → Integrations → Google Calendar → Disconnect, then Connect again.
+  </Accordion>
+  <Accordion title="Appointments push to Google but Google events do not appear in RetAI" icon="arrow-left">
+    The events are on a different calendar in the same account. Only the selected calendar is read.
+
+    **Fix:** move them, or change the selected calendar in integration settings.
+  </Accordion>
+  <Accordion title="Duplicate events in Google" icon="clone">
+    Two staff accounts connected to the same Google calendar. Disconnect one.
+  </Accordion>
+  <Accordion title="The AI will not book a service" icon="calendar-xmark">
+    Almost always the service has no clinician mapped to it, so there is no one qualified to deliver it.
+
+    **Fix:** [Services](/features/services) → open the service → assign clinicians. Also confirm the service has a duration set.
+  </Accordion>
+</AccordionGroup>
+
+## Billing
+
+<AccordionGroup>
+  <Accordion title="GST total looks wrong" icon="percent">
+    Check the GST rate on each *service*, not on the clinic. Rates are per service and applied per line. Also check whether catalogue prices are entered GST-inclusive or exclusive in [clinic setup](/admin/clinic-setup) — the setting changes how every price is interpreted.
+  </Accordion>
+  <Accordion title="Package revenue looks too low" icon="box">
+    Working as designed. Package revenue is recognised against **sessions delivered**, not the full amount at point of sale. The uncollected portion appears as unearned advance — a liability, not revenue. See [Packages](/features/packages#gst-on-amount-received).
+  </Accordion>
+  <Accordion title="Invoice numbers have a gap" icon="hashtag">
+    A cancelled invoice keeps its number — it is voided, not deleted. Gaps mean cancellations, and the cancelled invoices are visible in the invoice list with their reason.
+  </Accordion>
+  <Accordion title="An invoice looks partially created" icon="triangle-exclamation">
+    Rare, and a known limitation: invoice writes are sequential rather than one atomic transaction, so an infrastructure failure mid-write can leave a partial record. These are logged and reconcilable.
+
+    **Fix:** report it with the invoice number. Do not re-issue until we have looked, or you will have two.
+  </Accordion>
+</AccordionGroup>
+
+## Photos
+
+<AccordionGroup>
+  <Accordion title="Cannot add a photo to a collection" icon="eye-slash">
+    Marketing consent is not recorded for it. This is the protection working, not a bug — a photo without marketing consent is structurally barred from any shareable collection.
+
+    **Fix:** obtain and record the patient's marketing consent, then retry.
+  </Accordion>
+  <Accordion title="A shared photo link stopped working" icon="link-slash">
+    Image URLs are short-lived and signed. They expire by design so a copied link cannot become a permanent public route to a clinical image.
+
+    **Fix:** share from within RetAI rather than pasting a URL.
+  </Accordion>
+  <Accordion title="Photos are not pairing as before/after" icon="images">
+    They are not bound to package sessions. Capture from the session rather than from the patient profile and pairing becomes automatic.
+  </Accordion>
+</AccordionGroup>
+
+## Mobile
+
+<AccordionGroup>
+  <Accordion title="No push notifications" icon="bell-slash">
+    In order: system notification permission for the app, then per-alert toggles in Settings → Notifications, then sign out and back in to re-register the device.
+  </Accordion>
+  <Accordion title="Notifications arrive late on Android" icon="clock">
+    Battery optimisation is suspending background delivery. Exclude RetAI from battery optimisation in system settings.
+  </Accordion>
+  <Accordion title="App is slow or blank" icon="wifi">
+    RetAI requires a live connection and holds no offline copy. Check connectivity, then force-close and reopen.
+  </Accordion>
+</AccordionGroup>
+
+## Still stuck
+
+<CardGroup cols={2}>
+  <Card title="Contact support" icon="life-ring" href="/help/support">
+    Your clinic WhatsApp group is the fastest route.
+  </Card>
+  <Card title="Check status" icon="signal" href="https://status.retentionos.tech">
+    Live incidents and history.
+  </Card>
+</CardGroup>
+
+<Tip>
+  When reporting, include: what you did, what you expected, what happened, the patient or invoice reference, and roughly when. That turns a two-day exchange into a one-message fix.
+</Tip>

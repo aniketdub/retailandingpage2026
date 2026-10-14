@@ -1,0 +1,68 @@
+---
+title: "Voice events"
+description: "The public webhook that receives call outcomes from the voice provider."
+icon: "phone-volume"
+---
+
+`POST /api/bolna/webhook`
+
+Public by necessity, authenticated by a shared secret supplied as a header or query parameter.
+
+<Warning>
+  **This endpoint fails closed in production.** If the shared secret is not configured, it rejects every request rather than accepting unauthenticated ones. A misconfiguration produces silence, not an open door.
+</Warning>
+
+## Processing
+
+<Steps>
+  <Step title="Validate the secret" icon="key">
+    Rejected outright if invalid or unconfigured in production.
+  </Step>
+  <Step title="Filter to finished statuses" icon="filter">
+    In-progress events are acknowledged and ignored. Only completed calls create records.
+  </Step>
+  <Step title="Deduplicate on the provider call ID" icon="clone">
+    A pre-check for efficiency, with a database uniqueness constraint as the authority.
+  </Step>
+  <Step title="Resolve the patient, and take the clinic from the patient row" icon="shield">
+    <Warning>
+      The clinic is read from the **patient record**, never from the payload. A spoofed or malformed payload cannot attribute a call to the wrong clinic.
+    </Warning>
+  </Step>
+  <Step title="Write the call record" icon="database">
+    With transcript, outcome, duration, and any appointment or lead it created.
+  </Step>
+</Steps>
+
+## Response semantics
+
+| Situation | Response |
+| --- | --- |
+| Processed | `200` |
+| Duplicate call ID | `200` — the unique-constraint violation is treated as success, so a retry cannot create a duplicate |
+| Invalid or missing secret | `403` |
+| In-progress event | `200`, ignored |
+| Unexpected failure | `500`, so the provider retries |
+
+<Note>
+  Returning `500` on unexpected failure is deliberate. A dropped call record is worse than a retried one, and the deduplication constraint makes retries safe.
+</Note>
+
+## Payload
+
+Provider-defined. RetAI reads: call identifier, phone number, direction, start time, duration, status, transcript, and any structured outcome the agent produced.
+
+<Warning>
+  RetAI does **not** read clinic or patient identity from the payload, even when present. That resolution happens server-side from the phone number. If you are debugging attribution, look at the phone number and the patient record — not at what the payload claims.
+</Warning>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Voice endpoints" icon="phone" href="/api-reference/endpoints/voice">
+    Reading the call log and placing outbound calls.
+  </Card>
+  <Card title="Voice setup" icon="gear" href="/admin/integrations/voice">
+    Configuration and routing.
+  </Card>
+</CardGroup>

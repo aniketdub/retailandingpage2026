@@ -1,0 +1,86 @@
+---
+title: "Leads Pipeline"
+description: "Enquiries that are not yet patients — counselling notes, editable quotations, ownership, and follow-up."
+icon: "hand-holding-heart"
+---
+
+<Frame caption="The leads pipeline in board view, with stage columns and owner avatars.">
+  <img src="/images/features/leads-pipeline.png" alt="Leads pipeline board" />
+</Frame>
+
+An aesthetic clinic's real conversion problem is not the consultation — it is the fortnight after it, when a quoted patient goes quiet. The Leads module exists for that fortnight.
+
+## Where leads come from
+
+| Source | How it arrives |
+| --- | --- |
+| WhatsApp enquiry | An unknown number messages; Aisha handles it and creates the lead |
+| Missed or answered call | The [AI Receptionist](/features/receptionist) captures the enquiry |
+| Walk-in | Reception creates it by hand |
+| Website form | Via the API — see [CRM endpoints](/api-reference/endpoints/crm) |
+| Campaign import | CSV upload |
+
+## Pipeline stages
+
+<Steps>
+  <Step title="New" icon="inbox">
+    Just arrived, no one has spoken to them yet. Unassigned leads are flagged.
+  </Step>
+  <Step title="Contacted" icon="phone">
+    Someone has spoken to them. Log what was discussed.
+  </Step>
+  <Step title="Consultation booked" icon="calendar-check">
+    An appointment exists. The lead is linked to it.
+  </Step>
+  <Step title="Quoted" icon="file-invoice-dollar">
+    A quotation has been issued. This is where deals sit longest and die quietest.
+  </Step>
+  <Step title="Converted" icon="circle-check">
+    Treatment purchased. The lead becomes a patient record; nothing is retyped.
+  </Step>
+  <Step title="Lost" icon="circle-xmark">
+    With a reason — price, timing, went elsewhere, no response. Lost reasons are the most useful report in this module.
+  </Step>
+</Steps>
+
+## Counselling and quotations
+
+The counselling tool is for the conversation where a patient asks "so what would all of this cost?"
+
+<AccordionGroup>
+  <Accordion title="Build an editable quotation" icon="pen-to-square" defaultOpen>
+    Add services and packages, apply a discount, and RetAI computes GST per line at the correct rate for each item. Save it against the lead. Revise it as many times as the conversation needs — every version is kept.
+  </Accordion>
+  <Accordion title="Send it" icon="paper-plane">
+    Deliver as a branded PDF over WhatsApp or email. Delivery and open are logged against the lead.
+  </Accordion>
+  <Accordion title="Record observations" icon="clipboard-list">
+    Free-text counselling notes — concerns raised, budget signalled, objections. These are visible to whoever picks the lead up next, which is the entire point.
+  </Accordion>
+  <Accordion title="Convert to an invoice" icon="receipt">
+    When the patient accepts, convert the quotation straight to a checkout. Nothing is re-entered, so the quoted price and the billed price cannot drift apart.
+  </Accordion>
+</AccordionGroup>
+
+## Ownership and follow-up
+
+Every lead has an owner and a next-action date. Overdue actions surface on the owner's overview screen and, if enabled, as a push notification.
+
+<Tip>
+  Set the next-action date during the counselling conversation, while the patient is still in front of you. A lead with no next action is a lost lead with a delay.
+</Tip>
+
+## Reporting
+
+The Leads report shows conversion by source, by owner, and by service; average days from enquiry to conversion; and the breakdown of lost reasons. See [Reports](/features/reports).
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Billing" icon="file-invoice-dollar" href="/features/billing">
+    Converting an accepted quotation.
+  </Card>
+  <Card title="Treatment Packages" icon="box" href="/features/packages">
+    What most quotations are actually for.
+  </Card>
+</CardGroup>

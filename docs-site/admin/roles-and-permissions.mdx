@@ -1,0 +1,103 @@
+---
+title: "Roles & permissions"
+description: "The three roles, the module matrix, and how access is actually enforced."
+icon: "lock"
+---
+
+## The three roles
+
+<CardGroup cols={3}>
+  <Card title="Owner" icon="crown">
+    Every module, always. Cannot be restricted — a clinic must not be able to lock out its own administrator.
+  </Card>
+  <Card title="Doctor" icon="stethoscope">
+    Clinical and commercial modules. Configurable.
+  </Card>
+  <Card title="Receptionist" icon="headset">
+    Front-of-house modules. Configurable.
+  </Card>
+</CardGroup>
+
+## The module matrix
+
+**Staff → Permissions.** Toggle any module for Doctor or Receptionist. Changes apply on the staff member's next page load.
+
+| Module | Doctor default | Receptionist default |
+| --- | :---: | :---: |
+| Overview | ✅ always | ✅ always |
+| AI Calendar | ✅ | ✅ |
+| All Patients | ✅ | ✅ |
+| WhatsApp Inbox | ✅ | ✅ |
+| AI Receptionist | ✅ | ✅ |
+| Leads Pipeline | ✅ | ✅ |
+| Services | ✅ | ✅ |
+| Before & After | ✅ | ✅ |
+| Treatment Packages | ✅ | ✅ |
+| At-Risk Patients | ✅ | ❌ |
+| Consultations & Rx | ✅ | ❌ |
+| Billing | ✅ | ❌ |
+| Inventory | ✅ | ❌ |
+| Staff | ❌ | ❌ |
+
+Two defaults are deliberate:
+
+- **Reception gets photos and packages.** They capture the images and they sell the courses. Locking them out creates a bottleneck at the doctor.
+- **Reception does not get prescriptions.** Prescribing is clinical. Grant it if your practice works differently, but it is off until an owner decides.
+
+<Note>
+  **Overview can never be revoked.** Every signed-in staff member sees the overview screen. There is no configuration that produces a user who can log in and see nothing.
+</Note>
+
+## How enforcement actually works
+
+This matters more than the toggles.
+
+<Steps>
+  <Step title="Session check" icon="key">
+    No valid session → API calls return 401, page requests redirect to sign-in.
+  </Step>
+  <Step title="Identity check" icon="id-card">
+    The session must correspond to a current staff record. A staff record that has been deactivated fails here, even if the session was issued before deactivation.
+  </Step>
+  <Step title="Module check" icon="lock">
+    Every module page checks access **on the server as its first action**. Navigating directly to a module URL you lack access to returns nothing — the gating is not hidden in the browser.
+  </Step>
+  <Step title="Clinic scope" icon="building">
+    Every query is scoped to your clinic before it runs. Clinic identity comes from your session, never from a URL parameter or request body — so editing an ID in a request cannot reach another clinic's data.
+  </Step>
+</Steps>
+
+<Warning>
+  A deactivated staff member loses access within minutes, not at session expiry. Role and clinic are re-read from the staff record periodically, so de-provisioning takes effect quickly and **fails closed** — a missing staff record grants nothing rather than defaulting to something.
+</Warning>
+
+## Multi-location groups
+
+A group owner can hold access across locations and switch between them. Every other role is bound to a single clinic. There is no view anywhere that shows two clinics' patients side by side.
+
+## What is always audited
+
+Regardless of role:
+
+- Sign-ins and sign-in failures
+- Permission changes
+- Discounts granted, refunds, and invoice cancellations
+- Patient record edits
+- Data exports
+- Photo exports and collection additions
+
+See [Access control](/security/access-control).
+
+## Recommended starting configuration
+
+<AccordionGroup>
+  <Accordion title="Single-doctor clinic" icon="user">
+    Owner and doctor are the same person. One receptionist on defaults. Nothing to change.
+  </Accordion>
+  <Accordion title="Multi-doctor clinic" icon="user-group">
+    Doctors on defaults but with **Billing off** unless they take payment themselves. A practice manager on the Receptionist role with Billing and Inventory granted.
+  </Accordion>
+  <Accordion title="Clinic with a counsellor" icon="hand-holding-heart">
+    Counsellor on the Receptionist role with Billing granted (they build quotations) and Inventory off.
+  </Accordion>
+</AccordionGroup>

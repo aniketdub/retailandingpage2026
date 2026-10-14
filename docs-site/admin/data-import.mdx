@@ -1,0 +1,100 @@
+---
+title: "Data import"
+description: "Bringing your existing patients, services, packages, and stock into RetAI."
+icon: "database"
+---
+
+Migration is run by the RetentionOS team during [onboarding](/onboarding). This page tells you what to send and what happens to it.
+
+<Note>
+  Send whatever format you already have — a CSV export, an Excel workbook, even photographs of a printed price list. We normalise it. The fields below are what we extract, not a format you must produce.
+</Note>
+
+## Patients
+
+**Required**
+
+| Field | Notes |
+| --- | --- |
+| Name | |
+| Phone | Any format. We normalise to E.164 (`+919876543210`). |
+
+**Strongly recommended**
+
+| Field | Why |
+| --- | --- |
+| Last visit date | Without it, at-risk scoring has no baseline and stays quiet for weeks |
+| Treatment history | Drives at-risk cadence and gives Aisha context in conversation |
+| Package/session state | Unredeemed sessions are your fastest recoverable revenue |
+| Email, DOB, gender, address | Reporting and demographics |
+| Referral source | Lead-source reporting |
+| Allergies and clinical flags | Safety. Send these even if you send nothing else optional. |
+| Outstanding balance | So the front desk sees it on day one |
+
+<Warning>
+  **Phone numbers are the identity key.** A number stored without a country code will not match an inbound WhatsApp message, and that patient will appear to RetAI as a stranger. Our importer fixes what it can and reports what it cannot — review that report.
+</Warning>
+
+## Services
+
+Name, category, price, GST rate, duration, and the clinicians who deliver it. Add the patient-facing description if you have one; if not, we draft them and you approve — this is what Aisha reads to patients.
+
+## Packages
+
+Name, component services with session counts, list price, validity period, and session interval.
+
+**In-flight packages** — courses your patients have already partly used — need sessions total, sessions already delivered, agreed price, and amount received. Without those four numbers, revenue recognition starts wrong and stays wrong.
+
+## Inventory
+
+Product name, SKU, unit, current quantity, purchase price, selling price, GST rate, reorder level, and batch/expiry where applicable. Vendors optional at go-live.
+
+## Staff
+
+Name, work email, phone, role, and — for clinicians — registration number, specialty, and which services they deliver.
+
+## What happens to your file
+
+<Steps>
+  <Step title="Validation" icon="magnifying-glass">
+    We check for missing required fields, malformed phone numbers, impossible dates, and duplicate records. You get a report before anything is written.
+  </Step>
+  <Step title="Normalisation" icon="wand-magic-sparkles">
+    Phone numbers to E.164, dates to a single format, currency strings to numbers, names to consistent casing.
+  </Step>
+  <Step title="Duplicate matching" icon="clone">
+    Candidate duplicates are matched on phone first, then name plus date of birth. Ambiguous cases go on a review list rather than being merged silently.
+  </Step>
+  <Step title="Dry run" icon="flask">
+    Imported into your demo tenant first. Your team checks a sample against the source before anything reaches the live tenant.
+  </Step>
+  <Step title="Live import" icon="database">
+    Written to your live tenant, with an import reference on every record so the batch is reversible.
+  </Step>
+</Steps>
+
+## After import
+
+- Check ten patients at random against your old system
+- Confirm package session counts on your five most valuable in-flight packages
+- Confirm at-risk begins populating — it needs last-visit dates to have imported
+- Test one WhatsApp message from an imported patient's number and confirm it attaches to the right record
+
+<Tip>
+  The WhatsApp test is the one people skip and the one that catches phone-normalisation problems. Do it before go-live, not after.
+</Tip>
+
+## Ongoing import
+
+Beyond migration, you can bulk-add via CSV in **Patients → Import** and **Services → Import**, or push records from a website form through the [API](/api-reference/endpoints/crm).
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Onboarding plan" icon="timeline" href="/onboarding">
+    Where import sits in the rollout.
+  </Card>
+  <Card title="Data export" icon="download" href="/admin/data-export">
+    Getting your data back out.
+  </Card>
+</CardGroup>

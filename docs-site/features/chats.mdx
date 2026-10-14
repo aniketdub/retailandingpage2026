@@ -1,0 +1,95 @@
+---
+title: "WhatsApp Inbox"
+description: "Every patient conversation in one place, with Aisha answering questions and booking appointments on her own."
+icon: "comments"
+---
+
+<Frame caption="The WhatsApp inbox — threads on the left, conversation and patient context on the right.">
+  <img src="/images/features/whatsapp-inbox.png" alt="WhatsApp inbox" />
+</Frame>
+
+WhatsApp is where Indian clinics actually talk to patients. RetAI treats it as the primary channel, not a notification afterthought.
+
+## The inbox
+
+Threads sort by most recent message. Each thread shows the patient's name (or their number if they are not yet a patient), a preview, and an unread badge. Selecting a thread opens the conversation alongside that patient's context — active packages, last visit, upcoming appointment, outstanding balance.
+
+Filters: **Unread**, **Needs attention**, **Handled by AI**, **Assigned to me**.
+
+## Aisha — what she does unprompted
+
+When a patient messages, Aisha reads the recent conversation, that patient's active treatment plan, and your live service catalogue. Then she either replies or acts.
+
+<CardGroup cols={2}>
+  <Card title="Answers questions" icon="circle-question">
+    What a treatment involves, what it costs, how long a session takes, what aftercare is required — all from your own catalogue, never invented.
+  </Card>
+  <Card title="Books appointments" icon="calendar-check">
+    Finds a genuinely free slot with a qualified clinician for the requested service, and creates the appointment.
+  </Card>
+  <Card title="Reschedules and cancels" icon="arrow-right-arrow-left">
+    Moves an existing booking and re-queues the reminder.
+  </Card>
+  <Card title="Escalates" icon="triangle-exclamation">
+    Anything clinical, any complaint, anything she is not confident about goes to a human and the thread is flagged **Needs attention**.
+  </Card>
+</CardGroup>
+
+### What she will never do
+
+<Warning>
+  These are enforced in code, not merely requested in a prompt:
+
+  - **She cannot cross patients.** Which clinic and which patient a conversation belongs to is resolved on the server from the verified message sender. A crafted message can steer what Aisha *says*; it cannot make her read or write another patient's record.
+  - **She cannot confirm a booking that was not made.** Replies claiming an appointment that no tool actually created are intercepted before they reach the patient.
+  - **She cannot make clinical or outcome claims.** A forbidden-claims filter runs on every outgoing message.
+  - **She cannot invent prices or offers.** Numbers come from your service catalogue.
+</Warning>
+
+## Taking over from the AI
+
+Click **Take over** on any thread. Aisha stops replying to that conversation and it becomes yours. Your replies send under the same clinic number, so the patient sees one continuous conversation.
+
+Click **Hand back** to return the thread to the AI.
+
+<Tip>
+  Threads marked **Needs attention** are the ones Aisha deliberately did not answer. Working that filter first is the fastest way to keep the inbox honest.
+</Tip>
+
+## Templates and quick replies
+
+For the messages you send constantly — directions to the clinic, pre-procedure instructions, parking guidance — save a quick reply and insert it with two clicks. Templates support patient-name and appointment-time placeholders.
+
+## Automatic messages
+
+Beyond conversation, RetAI sends on its own:
+
+| Message | When |
+| --- | --- |
+| Appointment reminder | Configurable, typically 24h and 2h before |
+| Confirmation request | On tentative bookings |
+| Post-visit follow-up | After a completed appointment |
+| Aftercare instructions | On procedures configured to send them |
+| Package session reminder | When sessions remain and the gap is growing |
+| Invoice delivery | On demand from [Billing](/features/billing) |
+| Win-back | From [At-Risk Patients](/features/at-risk) |
+
+Timing rules are set in [Clinic setup](/admin/clinic-setup).
+
+## Delivery and duplicates
+
+Every message is logged with its delivery status. Two properties are worth knowing:
+
+- **Nothing sends twice.** Queued messages are claimed atomically before sending, so overlapping workers cannot double-message a patient.
+- **Inbound messages are deduplicated at the database level.** WhatsApp retries a webhook on any hiccup; a retried delivery cannot produce a second reply from Aisha.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Connect WhatsApp" icon="whatsapp" href="/admin/integrations/whatsapp">
+    Setup and number verification.
+  </Card>
+  <Card title="Mobile app" icon="mobile-screen-button" href="/features/mobile">
+    Push notifications when a patient messages.
+  </Card>
+</CardGroup>

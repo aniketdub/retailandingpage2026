@@ -1,0 +1,100 @@
+---
+title: "Consultation to invoice"
+description: "One patient, end to end — check-in, consultation, photos, prescription, package, payment, follow-up."
+icon: "arrow-right"
+---
+
+The complete clinical-to-commercial loop for a single visit. Follow it once with a real patient and the product stops feeling like eleven separate screens.
+
+<Steps>
+  <Step title="Check in" icon="door-open">
+    Calendar → find the appointment → **Checked in**.
+
+    The clinician's screen now shows this patient as waiting.
+  </Step>
+
+  <Step title="Open the consultation" icon="stethoscope">
+    From the appointment, click **Start consultation**. RetAI opens your clinic's template for that service.
+
+    Allergies and clinical flags are pinned at the top. They are not in a tab you have to remember to open.
+  </Step>
+
+  <Step title="Record findings" icon="clipboard-list">
+    Fill the structured fields. Where a finding is easier drawn than written, open the [annotation canvas](/features/consultations#the-clinical-drawing-tool), pick the base diagram — face, three-quarter, scalp, or body — and mark it.
+
+    <Tip>
+      Number your marks. "Site 1: 0.5ml, site 2: 0.3ml" in the notes, with matching numbered markers on the diagram, is the record you will want at the review visit.
+    </Tip>
+  </Step>
+
+  <Step title="Capture photographs" icon="camera">
+    From the consultation, capture *before* images. Tag treatment, area, and angle. Record consent:
+
+    - **Clinical record** — always
+    - **Marketing use** — only if the patient has explicitly agreed
+
+    <Warning>
+      If marketing consent is not given, do not tick it "to sort out later". A photo without it is structurally barred from any shareable collection, and that is the protection working. Re-consent later if the patient changes their mind.
+    </Warning>
+  </Step>
+
+  <Step title="Write the prescription" icon="file-lines">
+    Start from a template, adjust for the patient, sign, and issue. Deliver as PDF over WhatsApp, or print.
+  </Step>
+
+  <Step title="Record the plan" icon="box">
+    If the plan is a course rather than a single visit, sell it as a **package** — that is what makes session tracking, expiry reminders, and correct revenue recognition work.
+
+    If the patient needs to think about it, create a **quotation** on their lead instead and set a next-action date.
+  </Step>
+
+  <Step title="Deliver the session" icon="syringe">
+    Mark today's session delivered. RetAI:
+
+    - increments sessions completed
+    - deducts consumables per the procedure's bill of materials
+    - recognises the earned portion of revenue and tax
+    - queues the next session's reminder
+  </Step>
+
+  <Step title="Complete the appointment" icon="circle-check">
+    Mark it **Completed**. This queues the post-visit follow-up and any aftercare message attached to the service.
+  </Step>
+
+  <Step title="Bill" icon="file-invoice-dollar">
+    Checkout pre-fills from what was delivered. Add anything retail or pharmacy. GST computes per line at each line's own rate.
+
+    Take payment — split across methods if needed — and issue.
+  </Step>
+
+  <Step title="Send the invoice" icon="whatsapp">
+    One click delivers the PDF to the patient's WhatsApp. It is logged on their conversation.
+  </Step>
+
+  <Step title="Book the next visit" icon="calendar-check">
+    Before they leave the desk. This is the single highest-leverage action in the entire workflow.
+  </Step>
+</Steps>
+
+## What happens after they walk out
+
+Without anyone touching anything:
+
+| When | What |
+| --- | --- |
+| ~1 hour after completion | Aftercare instructions sent, if configured for that service |
+| A few days later | Post-visit follow-up asking how they are getting on |
+| Before the next session | Appointment reminder, then a confirmation request if unconfirmed |
+| If the gap grows | The patient rises on the [at-risk list](/features/at-risk) with sessions remaining stated |
+| As expiry approaches | Package-expiry reminder |
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Sell and track a package" icon="box" href="/workflows/sell-and-track-a-package">
+    The money side in detail.
+  </Card>
+  <Card title="Consultations & Rx" icon="stethoscope" href="/features/consultations">
+    Templates and the drawing tool.
+  </Card>
+</CardGroup>

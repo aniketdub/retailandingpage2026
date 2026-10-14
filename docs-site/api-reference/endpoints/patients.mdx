@@ -1,0 +1,102 @@
+---
+title: "Patients"
+description: "Read and search patient records."
+icon: "users"
+---
+
+## List patients
+
+<ParamField query="search" type="string">
+  Matches name, phone, or email. Phone input is normalised to E.164 before matching.
+</ParamField>
+
+<ParamField query="status" type="string">
+  One of `active`, `lapsed`, `at_risk`, `new`.
+</ParamField>
+
+<ParamField query="last_visit_before" type="string">
+  ISO 8601 date. Patients whose most recent visit precedes this.
+</ParamField>
+
+<ParamField query="last_visit_after" type="string">
+  ISO 8601 date.
+</ParamField>
+
+<ParamField query="limit" type="integer" default="50">
+  Maximum 200.
+</ParamField>
+
+<ParamField query="offset" type="integer" default="0" />
+
+```bash
+curl "https://www.retentionos.tech/api/patients?search=%2B919876543210" \
+  -H "Cookie: <session cookie>"
+```
+
+<ResponseField name="patients" type="array">
+  <Expandable title="patient">
+    <ResponseField name="id" type="string">UUID.</ResponseField>
+    <ResponseField name="name" type="string" />
+    <ResponseField name="phone" type="string">E.164.</ResponseField>
+    <ResponseField name="email" type="string | null" />
+    <ResponseField name="date_of_birth" type="string | null">ISO 8601 date.</ResponseField>
+    <ResponseField name="gender" type="string | null" />
+    <ResponseField name="clinical_flags" type="array">Allergies and warnings.</ResponseField>
+    <ResponseField name="last_visit_at" type="string | null">ISO 8601.</ResponseField>
+    <ResponseField name="visit_count" type="integer" />
+    <ResponseField name="lifetime_value" type="number">Rupees.</ResponseField>
+    <ResponseField name="outstanding_balance" type="number">Rupees.</ResponseField>
+    <ResponseField name="sessions_remaining" type="integer">Across all active packages.</ResponseField>
+    <ResponseField name="at_risk_score" type="number | null">Higher is more at risk.</ResponseField>
+    <ResponseField name="marketing_consent" type="boolean" />
+    <ResponseField name="created_at" type="string" />
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="total" type="integer">Total matching, ignoring pagination.</ResponseField>
+
+```json
+{
+  "patients": [
+    {
+      "id": "8f14e45f-ceea-467a-9a36-dedd4bea2543",
+      "name": "Priya Sharma",
+      "phone": "+919876543210",
+      "email": "priya@example.com",
+      "date_of_birth": "1991-04-17",
+      "gender": "female",
+      "clinical_flags": ["Allergy: lidocaine"],
+      "last_visit_at": "2026-06-02T11:30:00+05:30",
+      "visit_count": 9,
+      "lifetime_value": 84500.00,
+      "outstanding_balance": 0.00,
+      "sessions_remaining": 3,
+      "at_risk_score": 0.71,
+      "marketing_consent": true,
+      "created_at": "2024-11-08T09:12:00+05:30"
+    }
+  ],
+  "total": 1
+}
+```
+
+<Note>
+  Results are scoped to your clinic. There is no `clinic_id` parameter — see [Authentication](/api-reference/authentication#authorisation).
+</Note>
+
+## Phone matching
+
+Search input is normalised to E.164 before matching, so `9876543210`, `+91 98765 43210`, and `919876543210` all find the same patient.
+
+<Warning>
+  A patient **record** stored without a country code will not match an inbound WhatsApp message, regardless of what search does. See [Data import](/admin/data-import).
+</Warning>
+
+## Errors
+
+| Code | Cause |
+| --- | --- |
+| `401` | No valid session |
+| `403` | Role lacks the Patients module |
+| `400` | Malformed filter, or clinic scope unresolved |
+| `429` | Rate limited |

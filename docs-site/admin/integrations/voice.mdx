@@ -1,0 +1,86 @@
+---
+title: "Voice setup"
+description: "Numbers, call routing, agent configuration, and recording policy for the AI Receptionist."
+icon: "phone-volume"
+---
+
+<Note>
+  Voice is a separate plan tier. If it is not enabled for your clinic the module is hidden and no calls are answered — nothing else changes.
+</Note>
+
+## What you need
+
+- A phone number for the AI to answer on. Either a new number, or your existing clinic line with conditional forwarding to it.
+- An escalation number where live transfers go.
+- Your call-recording consent wording, matching what your jurisdiction requires.
+
+## Answer policy
+
+<CardGroup cols={3}>
+  <Card title="Overflow only" icon="phone-slash">
+    The AI answers only after the clinic line rings unanswered past a threshold. **Start here.**
+  </Card>
+  <Card title="After hours only" icon="moon">
+    The AI answers outside working hours. Humans take everything during opening.
+  </Card>
+  <Card title="All calls" icon="phone">
+    The AI answers first, always, transferring to a human when needed.
+  </Card>
+</CardGroup>
+
+<Tip>
+  Overflow-only with **enquiry capture, no booking** is the right first fortnight. Read the transcripts, fix the treatment descriptions that produced awkward answers, then widen. Clinics that switch everything on at once end up distrusting transcripts they never read.
+</Tip>
+
+## Agent configuration
+
+| Setting | Notes |
+| --- | --- |
+| Greeting | The first line the caller hears. Include the clinic name. |
+| Voice | Several options including Indian English |
+| Languages | Additional languages the agent will switch to on hearing them |
+| Booking permission | May the agent create appointments, or only capture the request? |
+| Escalation number | Where live transfers land |
+| Escalation triggers | Clinical questions and complaints are non-removable; add your own |
+| Maximum call duration | A safety ceiling |
+| Recording retention | How long audio is kept before automatic deletion |
+
+## What the agent may say
+
+It reads from your [service catalogue](/features/services) — treatment descriptions, prices, and durations. It reads the patient's record when the caller's number matches one.
+
+It is forbidden from promising outcomes, making medical claims, inventing prices or offers, and confirming an appointment that was not actually created.
+
+<Warning>
+  The patient-facing description on each service is what a caller hears. Write those fields as you would want them spoken aloud to a stranger. The agent will not invent claims — but it will faithfully repeat one you wrote.
+</Warning>
+
+## Recording and consent
+
+RetAI plays a configurable consent announcement at the start of every recorded call.
+
+<Warning>
+  The wording is your clinic's legal responsibility, not ours. It must match what your jurisdiction requires for recording a call. Have it reviewed before you go live. See [Data protection](/security/data-protection).
+</Warning>
+
+Recordings are encrypted at rest, scoped to your clinic, and deleted automatically at your configured retention period.
+
+## Outbound calls
+
+Triggered from a patient record — appointment confirmation, package-expiry reminder, or a win-back for a lapsed high-value patient. Outbound calling is rate-limited per clinic to prevent a misconfiguration from calling your entire patient list.
+
+## Attribution and safety
+
+A call's clinic and patient are resolved **from the phone number, on the server** — never from the call payload. A spoofed or malformed payload cannot attribute a call to the wrong clinic. Call events are deduplicated at the database level, so a retried webhook cannot create a duplicate call record.
+
+## Reviewing calls
+
+The call log shows caller, duration, outcome, and attributed patient. Open a call for the transcript, the recording, and any appointment or lead it created.
+
+<Tip>
+  Read ten transcripts a month, permanently. It is the cheapest quality control in the product, and it usually surfaces a service description that needs rewording rather than an AI failure.
+</Tip>
+
+## Turning it off
+
+Settings → Integrations → Voice → **Disable**. Calls stop being answered immediately. Existing call records, transcripts, and recordings are retained per your retention setting.

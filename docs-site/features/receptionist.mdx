@@ -1,0 +1,84 @@
+---
+title: "AI Receptionist"
+description: "A voice agent that answers the calls your front desk misses, captures the enquiry, and logs it to the patient record."
+icon: "phone-volume"
+---
+
+<Frame caption="Call log with transcript, outcome, and the patient the call was attributed to.">
+  <img src="/images/features/receptionist-call-log.png" alt="AI receptionist call log" />
+</Frame>
+
+Every missed call at an aesthetic clinic is a patient who called a competitor next. The AI Receptionist answers on the lines your team cannot get to — after hours, during procedures, or when both handsets are already busy.
+
+## What a call looks like
+
+<Steps>
+  <Step title="The call is answered" icon="phone">
+    Either every call, or only calls that ring unanswered past a threshold. Your choice — see [Voice setup](/admin/integrations/voice).
+  </Step>
+  <Step title="The agent identifies the caller" icon="id-card">
+    If the number matches an existing patient, the agent knows their history. If not, it treats them as a new enquiry.
+  </Step>
+  <Step title="It handles the enquiry" icon="comments">
+    Clinic hours and location, what a treatment involves and costs, availability, and appointment booking or rescheduling.
+  </Step>
+  <Step title="It escalates when it should" icon="triangle-exclamation">
+    Anything clinical, any complaint, or any request it cannot complete is handed off — transferred live if a human is available, otherwise captured as a callback with a summary.
+  </Step>
+  <Step title="Everything is logged" icon="file-lines">
+    Recording, transcript, outcome, and any created appointment are written to the patient's record.
+  </Step>
+</Steps>
+
+## The call log
+
+Each row shows caller, duration, outcome, and attributed patient. Open a call for:
+
+- **Transcript** — full text, searchable
+- **Recording** — audio playback, subject to your retention setting
+- **Outcome** — booked, enquiry captured, escalated, or no action
+- **Linked records** — appointments and leads created by the call
+
+<Note>
+  A call's clinic and patient are resolved from the phone number on the server, never from the call payload. A spoofed or malformed payload cannot attribute a call to the wrong clinic.
+</Note>
+
+## Outbound calls
+
+Trigger a call from a patient record — confirmation for tomorrow's slot, a win-back for a lapsed high-value patient, or a package-expiry reminder. Outbound calling is rate-limited per clinic.
+
+<Warning>
+  Recording consent is your clinic's legal obligation. RetAI plays a configurable consent announcement at call start; you are responsible for the wording matching what your jurisdiction requires. See [Data protection](/security/data-protection).
+</Warning>
+
+## Configuring the agent
+
+In [Voice setup](/admin/integrations/voice) you control:
+
+| Setting | What it does |
+| --- | --- |
+| Greeting | The first line the caller hears |
+| Voice and language | Including Indian English and regional language options |
+| Answer policy | All calls, after-hours only, or overflow only |
+| Escalation number | Where live transfers go |
+| Booking permission | Whether the agent may create appointments or only capture enquiries |
+| Recording retention | How long audio is kept before automatic deletion |
+
+<Tip>
+  Start with **overflow only** and **enquiry capture, no booking**. Read a week of transcripts, tune the greeting and the treatment descriptions, then let it book. Clinics that turn everything on at once end up distrusting the transcripts they never read.
+</Tip>
+
+## When voice is not enabled
+
+Voice is a separate tier. If your plan does not include it, the module is hidden and no calls are answered — the rest of RetAI is unaffected.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Voice setup" icon="gear" href="/admin/integrations/voice">
+    Numbers, routing, and agent configuration.
+  </Card>
+  <Card title="Leads Pipeline" icon="hand-holding-heart" href="/features/leads">
+    Where captured enquiries go.
+  </Card>
+</CardGroup>

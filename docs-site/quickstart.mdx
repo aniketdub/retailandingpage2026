@@ -1,0 +1,130 @@
+---
+title: "Quickstart"
+description: "From first sign-in to your first AI-sent reminder in about 15 minutes."
+icon: "rocket"
+---
+
+This is the fastest path from an empty RetAI account to a working clinic. It assumes your account has already been created for you — see the [onboarding plan](/onboarding) if it has not.
+
+<Note>
+  You need **Owner** access for steps 2–5. A receptionist or doctor account can complete steps 1, 6, and 7 only.
+</Note>
+
+<Steps>
+  <Step title="Sign in" icon="key">
+    Open [www.retentionos.tech](https://www.retentionos.tech) and sign in with your work email.
+
+    Two methods work:
+
+    - **Google** — one tap, recommended. Your Google account must already be registered as a staff member; RetAI never lets an unrecognised Google account create itself an account.
+    - **Email and password** — issued to you during onboarding.
+
+    <Frame caption="The RetAI sign-in screen.">
+      <img src="/images/quickstart/01-login.png" alt="RetAI login screen" />
+    </Frame>
+
+    <Warning>
+      If sign-in says your account is not recognised, your staff record has not been created yet. Contact your clinic owner — this is a permissions issue, not a password issue.
+    </Warning>
+  </Step>
+
+  <Step title="Add your team" icon="user-group">
+    Go to **CRM → Staff**. Add every person who will use RetAI, with the right role:
+
+    | Role | Sees by default |
+    | --- | --- |
+    | Owner | Everything. Cannot be restricted. |
+    | Doctor | Everything except Staff management |
+    | Receptionist | Calendar, patients, leads, packages, gallery, WhatsApp — not billing, inventory, or prescriptions |
+
+    You can override any of these per clinic. See [Roles & permissions](/admin/roles-and-permissions).
+
+    <Frame caption="Staff management with per-role module toggles.">
+      <img src="/images/quickstart/02-staff.png" alt="Staff and role permissions" />
+    </Frame>
+  </Step>
+
+  <Step title="Load your services and prices" icon="tags">
+    Go to **CRM → Services**. Each service needs a name, a price, a GST rate, and a duration.
+
+    Duration matters more than it looks: it is what the AI uses to find a real free slot when a patient asks for an appointment. A service with the wrong duration produces double-booked chairs.
+
+    <Tip>
+      Bulk-loading a long price list? Send it to us as a spreadsheet during onboarding and we import it for you — see [Data import](/admin/data-import).
+    </Tip>
+  </Step>
+
+  <Step title="Import your patients" icon="users">
+    Patients can arrive three ways:
+
+    <AccordionGroup>
+      <Accordion title="Bulk import (recommended for go-live)" icon="file-csv">
+        Send us a CSV with name, phone, email, last visit date, and treatment history. We normalise the phone numbers to E.164 and match duplicates before anything is written. Details in [Data import](/admin/data-import).
+      </Accordion>
+      <Accordion title="Created by the AI" icon="robot">
+        The first time an unknown number messages your WhatsApp line, RetAI creates a patient record for it automatically.
+      </Accordion>
+      <Accordion title="Added by hand" icon="user-plus">
+        **Patients → Add patient**. Fine for walk-ins.
+      </Accordion>
+    </AccordionGroup>
+
+    <Warning>
+      Phone numbers are the join key between WhatsApp, your patient list, and the message log. A number stored as `98765 43210` instead of `+919876543210` will not match an inbound WhatsApp message, and the patient will silently appear as a stranger. The importer fixes this; manual entry does not always.
+    </Warning>
+  </Step>
+
+  <Step title="Connect WhatsApp" icon="whatsapp">
+    This is the step that turns RetAI from a database into a retention engine. Follow [Connect WhatsApp](/admin/integrations/whatsapp).
+
+    Once connected:
+
+    - Inbound patient messages land in the [WhatsApp Inbox](/features/chats)
+    - Aisha replies, answers questions about your treatments, and books appointments
+    - Appointment reminders and follow-ups send themselves
+    - Invoices can be delivered to the patient as a PDF link
+  </Step>
+
+  <Step title="Book one real appointment" icon="calendar-days">
+    Open the [AI Calendar](/features/calendar) and create an appointment for a real patient tomorrow.
+
+    Watch what happens automatically:
+
+    1. A reminder is queued for the right time before the slot
+    2. If Google Calendar is connected, the event appears on the clinician's calendar
+    3. The patient's record shows the upcoming visit
+
+    <Frame caption="The calendar, with resource columns per clinician.">
+      <img src="/images/quickstart/03-calendar.png" alt="AI Calendar day view" />
+    </Frame>
+  </Step>
+
+  <Step title="Send your first AI message" icon="wand-magic-sparkles">
+    Open **At-Risk Patients**, pick the patient at the top of the list, and click **Draft message**.
+
+    RetAI writes a message grounded in that patient's actual history — the treatment they had, how long it has been, what they were part-way through. Read it, edit it if you want, and send.
+
+    <Frame caption="An AI-drafted win-back message, before sending.">
+      <img src="/images/quickstart/04-ai-draft.png" alt="AI drafted reminder" />
+    </Frame>
+
+    That is the whole loop: RetAI notices the patient drifting, writes the message, sends it, handles the reply, and books the slot.
+  </Step>
+</Steps>
+
+## What to do next
+
+<CardGroup cols={2}>
+  <Card title="A day at the front desk" icon="clipboard-list" href="/workflows/front-desk-day">
+    The full daily routine, in order.
+  </Card>
+  <Card title="Sell and track a package" icon="box" href="/workflows/sell-and-track-a-package">
+    Session allocation and GST on amount received.
+  </Card>
+  <Card title="Connect Google Calendar" icon="calendar-days" href="/admin/integrations/google-calendar">
+    Two-way sync with your clinicians' existing calendars.
+  </Card>
+  <Card title="Turn on the voice receptionist" icon="phone-volume" href="/admin/integrations/voice">
+    Catch the calls your front desk misses.
+  </Card>
+</CardGroup>

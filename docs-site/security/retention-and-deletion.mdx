@@ -1,0 +1,88 @@
+---
+title: "Retention & deletion"
+description: "How long each category of data is kept, what deletion actually does, and what happens if you leave."
+icon: "trash"
+---
+
+## While your subscription is active
+
+| Data | Retention |
+| --- | --- |
+| Patient records, appointments, treatment plans, invoices | For the duration of your subscription, per your configuration and applicable healthcare record-keeping law |
+| WhatsApp message content and call transcripts | For the duration of the subscription, unless you delete a conversation |
+| Clinical images | For the duration of the subscription, or your configured image retention period if shorter |
+| Call recordings | Your configured retention period, then automatically deleted |
+| Staff accounts and access logs | Subscription duration plus 12 months, for security investigation |
+| Audit log | Minimum 3 years, **even where the underlying record has been deleted** |
+
+<Note>
+  The audit log outliving the records it describes is deliberate. Deleting a patient does not delete the record that a patient was deleted, when, and by whom. Without that, deletion itself becomes untraceable.
+</Note>
+
+## When you delete something
+
+<Steps>
+  <Step title="Removed from primary storage" icon="trash">
+    Immediately. It stops appearing anywhere in the product.
+  </Step>
+  <Step title="Persists in encrypted backups" icon="database">
+    For up to 30 days, until backups rotate. This is standard practice for maintaining recoverability, and it is a real property you should know about rather than one we obscure.
+  </Step>
+  <Step title="Purged as backups rotate" icon="circle-check">
+    No further copy remains.
+  </Step>
+  <Step title="Audit entry remains" icon="clipboard-list">
+    The deletion event itself is retained as an integrity record.
+  </Step>
+</Steps>
+
+<Warning>
+  Deletion is not instantaneous everywhere. If you are actioning an erasure request under a legal deadline, the primary-storage deletion is immediate; complete purge from backups follows the rotation schedule above. Say this accurately to a patient rather than promising instant total erasure.
+</Warning>
+
+## Patient erasure requests
+
+Your clinic is the Data Fiduciary and evaluates each request, including any exception — medical-record retention obligations under other Indian law may require you to keep clinical records regardless.
+
+RetAI actions a deletion instruction from you within **15 business days**.
+
+## If you leave RetAI
+
+<Steps>
+  <Step title="Export window — 30 days from termination" icon="download">
+    Your complete dataset stays available for export. Full clinic archive plus all clinical images. See [Data export](/admin/data-export).
+  </Step>
+  <Step title="Primary deletion — within a further 30 days" icon="trash">
+    Deleted from primary storage.
+  </Step>
+  <Step title="Backup purge — maximum 90 days from termination" icon="database">
+    Aged out of encrypted backups.
+  </Step>
+  <Step title="Minimal record retained" icon="file-lines">
+    Clinic name, subscription dates, and billing history, as required for our own tax and accounting obligations under Indian law.
+  </Step>
+</Steps>
+
+<Tip>
+  Export before you need to, not after. The 30-day window is generous but it is a window, and the last week of a vendor relationship is not when you want to discover you needed something.
+</Tip>
+
+## Backups
+
+Encrypted, rolling, retained for disaster recovery. They are not a per-record undo — a record deleted from primary storage ages out of backups rather than being surgically removed from every copy.
+
+<Warning>
+  If you delete something by accident, tell us **immediately**. Recovery from backup is possible within the rotation window but it restores to a point in time, which has consequences for everything else changed since. It is a last resort, not a routine operation.
+</Warning>
+
+## Configurable retention
+
+| Setting | Where |
+| --- | --- |
+| Call recording retention | [Voice setup](/admin/integrations/voice) |
+| Clinical image retention | [Clinic setup](/admin/clinic-setup#photo-settings) |
+| Conversation deletion | Per conversation, in the [WhatsApp Inbox](/features/chats) |
+
+<Warning>
+  Do not set retention shorter than your medical-record obligations. A clinic that auto-deletes clinical images at 12 months may be deleting records it is legally required to hold. Confirm the period with your own legal advice before shortening it.
+</Warning>

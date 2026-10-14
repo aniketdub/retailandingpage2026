@@ -1,0 +1,98 @@
+---
+title: "Access control"
+description: "Authentication, session behaviour, de-provisioning, and the audit trail."
+icon: "key"
+---
+
+## Authentication
+
+<CardGroup cols={2}>
+  <Card title="Google sign-in" icon="google">
+    Identity verified by Google, then matched to an existing staff record. **No self-registration** — an unrecognised Google account is rejected, not enrolled.
+  </Card>
+  <Card title="Email and password" icon="key">
+    Rate-limited per IP address to blunt credential stuffing.
+  </Card>
+</CardGroup>
+
+Sessions are signed tokens with an **8-hour idle lifetime**, refreshed on activity.
+
+## Continuous authorisation
+
+A session is not a permanent grant. Role and clinic are re-read from the staff record periodically rather than trusted from the token for its full lifetime.
+
+<Warning>
+  Consequences worth knowing:
+
+  - A **deactivated** staff member loses access within minutes, not at token expiry
+  - A **role change** takes effect within minutes without forcing a sign-out
+  - A **missing staff record grants nothing.** The failure mode is closed.
+</Warning>
+
+## Module-level authorisation
+
+Every dashboard screen checks access **on the server as its first action**. Navigating directly to a module URL you lack access to returns nothing — the gating is not client-side hiding.
+
+The set of guarded routes is verified structurally: a test suite sweeps every API route and every page for its authentication guard and clinic scoping, so **adding a route that forgets either one fails the build**.
+
+## Tenant scoping
+
+Clinic identity comes from the authenticated session, never from user input. See [Architecture](/security/architecture#tenant-isolation).
+
+## Rate limiting
+
+Applied to the interfaces where abuse would be expensive or damaging:
+
+| Interface | Purpose |
+| --- | --- |
+| Sign-in | Credential stuffing |
+| AI generation | Cost and abuse |
+| WhatsApp send | Number reputation |
+| Inbound WhatsApp, per phone | A malfunctioning or hostile sender |
+| Voice calls | Runaway outbound loops |
+
+<Note>
+  Rate limiting is per running instance rather than globally coordinated. The effective ceiling scales with the number of instances. It is abuse protection, not a hard billing cap — stated because a vague claim here would be misleading.
+</Note>
+
+## Audit logging
+
+Logged with staff identity, timestamp, and the affected record:
+
+- Sign-ins and failed sign-in attempts
+- Permission and role changes
+- Staff activation and deactivation
+- Patient record creation, edit, and deletion
+- Consultation and prescription creation and amendment
+- Invoice issue, amendment, refund, and cancellation
+- Discounts granted
+- Inventory adjustments and wastage, with reasons
+- Data exports, including full-clinic exports
+- Photo exports and collection additions
+
+Audit entries are retained independently of the records they describe. **Deleting a patient does not delete the record that the patient was deleted**, or by whom.
+
+## Support access
+
+RetentionOS staff hold no standing access to your clinic's data after handover. Support access is requested, time-boxed, and logged.
+
+<Tip>
+  Ask for that log any time. If a vendor cannot tell you exactly when their own staff accessed your patient data, that is the answer to a different and more important question.
+</Tip>
+
+## What you should do
+
+<AccordionGroup>
+  <Accordion title="Review staff access monthly" icon="user-group">
+    Anyone left? Deactivate them. Anyone changed role? Update it. Five minutes at month-end.
+  </Accordion>
+  <Accordion title="Use Google sign-in" icon="google">
+    It removes the shared-password failure mode, which is the most common real-world breach path in small clinics.
+  </Accordion>
+  <Accordion title="Do not share accounts" icon="user-slash">
+    A shared front-desk login makes the audit trail useless. Named accounts cost nothing.
+  </Accordion>
+  <Accordion title="Restrict billing deliberately" icon="lock">
+    Fewer people with refund and discount permission is a materially lower fraud surface.
+  </Accordion>
+</AccordionGroup>

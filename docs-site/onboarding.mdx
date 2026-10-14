@@ -1,0 +1,110 @@
+---
+title: "Onboarding plan"
+description: "The 10-step programme RetentionOS runs with your clinic, from first call to go-live and beyond."
+icon: "timeline"
+---
+
+Clinic software fails at rollout, not at build. RetAI onboarding is a guided programme run by our team with yours — you are never handed a login and left to work it out.
+
+**Typical duration: 7–10 working days** from kickoff to going live, depending on how quickly your existing patient data reaches us.
+
+<Steps>
+  <Step title="Shared WhatsApp group" icon="whatsapp">
+    We open a WhatsApp group with your clinic owner, front-desk lead, and the RetentionOS onboarding engineer. Every question during rollout goes here — no ticket queues, no waiting for email.
+
+    This group stays open permanently. It becomes your support channel after go-live.
+  </Step>
+
+  <Step title="Clinic data handover" icon="folder-open">
+    We collect, in one pass:
+
+    - Clinic logo, letterhead, registration and GSTIN details
+    - Staff list with roles and the modules each should see
+    - Service and procedure catalogue with prices, GST rates, and durations
+    - Package definitions — sessions, validity, price
+    - Existing patient records and visit history
+    - Consumables and stock, if you want inventory tracked from day one
+
+    <Tip>
+      Whatever format you already have works — an Excel sheet, a CSV export from your current software, even photographs of a printed price list. We normalise it. See [Data import](/admin/data-import) for the fields that matter.
+    </Tip>
+  </Step>
+
+  <Step title="Backend setup and customisation" icon="gear">
+    Our engineer configures your tenant:
+
+    - Clinic record, branding, and invoice template
+    - Service catalogue, GST rates, package structures
+    - Consultation and prescription templates for your specialty
+    - Role permissions matrix
+    - Follow-up and reminder timing rules
+    - The AI agent's persona, tone, and the claims it is forbidden from making
+
+    <Note>
+      Your data sits in its own tenant from the first row written. See [Architecture](/security/architecture) for how clinic isolation is enforced.
+    </Note>
+  </Step>
+
+  <Step title="Live training for your team" icon="chalkboard-user">
+    Two online sessions, recorded so new joiners can watch them later:
+
+    | Session | Audience | Covers |
+    | --- | --- | --- |
+    | Front desk | Reception, coordinators | Calendar, patients, WhatsApp inbox, packages, billing |
+    | Clinical & owner | Doctors, owner | Consultations, Rx, photo library, at-risk, reports |
+  </Step>
+
+  <Step title="Practice on a demo account" icon="flask">
+    Your team gets a sandbox tenant with fake patients. Book, bill, prescribe, refund, break things — none of it touches real records.
+
+    We do not move to the next step until your front desk can complete a full check-in → consultation → invoice → follow-up loop unaided.
+  </Step>
+
+  <Step title="Handover to your super admin" icon="user-shield">
+    Ownership of the tenant transfers to your nominated super admin. From this point RetentionOS staff hold no standing access to your clinic's data — support access is time-boxed and requested in the WhatsApp group.
+  </Step>
+
+  <Step title="Password reset across all accounts" icon="key">
+    Every account created during setup resets its password. No credential that passed through onboarding remains valid.
+  </Step>
+
+  <Step title="WhatsApp Business integration" icon="comments">
+    We connect your WhatsApp Business number and verify:
+
+    - Inbound patient messages arrive in the inbox and attach to the right patient
+    - Aisha replies correctly and books into real free slots
+    - Reminders, follow-ups, and invoice delivery all send
+    - The number is verified with the correct display name
+
+    Full detail: [Connect WhatsApp](/admin/integrations/whatsapp).
+  </Step>
+
+  <Step title="Go live" icon="rocket">
+    Your clinic starts running on RetAI: scheduling, patient records, billing, and patient communication. Our engineer is in the WhatsApp group throughout the first day.
+
+    <Warning>
+      Keep your previous system readable — not writable — for 30 days. Nobody should be entering data in two places, but you want the old records available while your team builds muscle memory.
+    </Warning>
+  </Step>
+
+  <Step title="Continuous support" icon="life-ring">
+    The WhatsApp group stays open. Response commitments are in the [SLA](/security/sla). Product updates land in the [changelog](/help/changelog).
+  </Step>
+</Steps>
+
+## What we need from you
+
+<CardGroup cols={2}>
+  <Card title="One decision-maker" icon="user-tie">
+    A single person who can approve the service list, prices, and permissions. Rollouts stall on committees.
+  </Card>
+  <Card title="Your patient data, once" icon="database">
+    In any format. The sooner it arrives, the sooner at-risk scoring has history to work with.
+  </Card>
+  <Card title="A WhatsApp Business number" icon="whatsapp">
+    Either a new number or your existing clinic number, provided it is not already bound to the WhatsApp consumer app.
+  </Card>
+  <Card title="Two hours of your team's time" icon="clock">
+    Split across the two training sessions. Practice time is self-paced.
+  </Card>
+</CardGroup>

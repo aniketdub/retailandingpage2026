@@ -1,0 +1,93 @@
+---
+title: "Inventory"
+description: "Consumables, per-procedure bill of materials, automatic stock deduction, and pharmacy fulfilment."
+icon: "boxes-stacked"
+---
+
+<Frame caption="Stock list with reorder thresholds and expiry warnings.">
+  <img src="/images/features/inventory-list.png" alt="Inventory stock list" />
+</Frame>
+
+Aesthetic clinics lose real money to stock they cannot account for — a vial short at the end of the month with no record of where it went. RetAI ties consumption to the procedure that consumed it.
+
+## Products
+
+Every stock item carries:
+
+| Field | Notes |
+| --- | --- |
+| Name and SKU | |
+| Category | Consumable, injectable, retail, pharmacy |
+| Unit | Vial, ml, piece, box — the unit you actually count in |
+| Purchase and selling price | Selling price only applies to retail and pharmacy items |
+| GST rate | Applied per line when sold |
+| Reorder level | Triggers a low-stock alert |
+| Expiry tracking | On for anything with a shelf life |
+| Batch tracking | On for injectables and pharmacy items |
+
+## Bill of materials
+
+Attach consumables to a service and the quantity each session uses. When a session is delivered, stock is deducted automatically — no separate stock entry, and no month-end guesswork about where the vials went.
+
+<Frame caption="A procedure's bill of materials.">
+  <img src="/images/features/inventory-bom.png" alt="Procedure bill of materials" />
+</Frame>
+
+<Tip>
+  Set the bill of materials once, at onboarding, for your ten highest-volume procedures. That covers most of your consumption. Add the long tail later.
+</Tip>
+
+## Stock movements
+
+Every change in quantity is a ledger entry with a reason and a person attached:
+
+- **Purchase received** — against a vendor and purchase order
+- **Consumed by procedure** — automatic, linked to the appointment
+- **Dispensed to patient** — pharmacy or retail sale, linked to the invoice
+- **Internal issue** — moved to another room or location
+- **Adjustment** — physical count correction, reason required
+- **Wastage** — breakage, contamination, expiry, reason required
+- **Return to vendor**
+
+<Note>
+  There is no way to change a quantity without leaving a ledger row. That is the entire point of the module.
+</Note>
+
+## Vendors and purchase orders
+
+Maintain vendor records with contact details and payment terms. Raise a purchase order, send it, receive against it — partially if that is what arrived — and stock updates on receipt. Outstanding POs and short deliveries are visible on the inventory overview.
+
+## Expiry and batches
+
+Batch-tracked items record batch number and expiry on receipt. Consumption is FIFO by expiry date, so the oldest stock goes first. Items approaching expiry surface on the overview at a threshold you set.
+
+<Warning>
+  Expiry alerts depend on batch data being entered at receipt. Skipping it at the goods-in stage means no expiry warning later — the system cannot warn about a date nobody recorded.
+</Warning>
+
+## Prescription fulfilment
+
+A prescription written in [Consultations & Rx](/features/consultations) can be dispensed here: stock deducts, the items are added to the patient's invoice, and the dispensing is recorded against the prescription.
+
+## Stock take
+
+Enter counted quantities against system quantities. RetAI shows the variance per item and its value, and posts the adjustments as ledger entries with your stock-take reference.
+
+## Reports
+
+Consumption by procedure, consumption by clinician, stock value on hand, wastage rate, expiry write-offs, and reorder suggestions based on run rate.
+
+<Tip>
+  **Consumption by clinician** is the report nobody asks for and everybody should read. Two clinicians doing the same procedure with materially different consumption is either a training issue or a leak.
+</Tip>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Services" icon="tags" href="/features/services">
+    Where the bill of materials is attached.
+  </Card>
+  <Card title="Billing" icon="file-invoice-dollar" href="/features/billing">
+    Selling retail and pharmacy items.
+  </Card>
+</CardGroup>

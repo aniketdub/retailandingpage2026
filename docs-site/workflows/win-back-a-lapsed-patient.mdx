@@ -1,0 +1,96 @@
+---
+title: "Win back a lapsed patient"
+description: "From at-risk row to booked appointment, with the AI doing most of the work."
+icon: "arrow-rotate-left"
+---
+
+This is the workflow RetAI exists for. It takes about ninety seconds per patient.
+
+<Steps>
+  <Step title="Open the at-risk list" icon="heart-pulse">
+    Sorted by **revenue at stake**, not by days absent. The top row is the most valuable call available to you today.
+
+    <Frame caption="At-risk list with reason and value at stake on each row.">
+      <img src="/images/workflows/winback-01-list.png" alt="At-risk patients list" />
+    </Frame>
+  </Step>
+
+  <Step title="Read the reason" icon="magnifying-glass">
+    Every row states why it is there, in plain terms:
+
+    > *3 of 6 laser sessions remaining · 9 weeks since last visit · package expires in 41 days · ₹18,400 at stake*
+
+    You are never guessing what to say.
+  </Step>
+
+  <Step title="Draft the message" icon="wand-magic-sparkles">
+    Click **Draft message**. RetAI writes it from that patient's own history — the treatment, the gap, what is unfinished, what expires when.
+
+    <Frame caption="The AI draft, with the context it was given shown alongside.">
+      <img src="/images/workflows/winback-02-draft.png" alt="AI drafted win-back message" />
+    </Frame>
+  </Step>
+
+  <Step title="Read it before it sends" icon="eye">
+    You always see the draft. Edit anything. The model will not promise results, invent an offer, or make a clinical claim — but your judgement about tone is still better than its own.
+
+    <Tip>
+      Shorter converts better. If the draft is four sentences, cut it to two. The goal is a reply, not a pitch.
+    </Tip>
+  </Step>
+
+  <Step title="Send" icon="paper-plane">
+    Delivered over WhatsApp from your clinic number. Logged on the patient's conversation.
+  </Step>
+
+  <Step title="Let Aisha handle the reply" icon="robot">
+    When the patient answers — often within the hour — Aisha reads the thread, answers their questions from your catalogue, offers real free slots, and books.
+
+    <Frame caption="The patient replies; Aisha books without a human touching it.">
+      <img src="/images/workflows/winback-03-aisha-books.png" alt="Aisha booking the appointment" />
+    </Frame>
+
+    You are only involved if she escalates, which she does for anything clinical or any complaint.
+  </Step>
+
+  <Step title="Watch the row disappear" icon="circle-check">
+    Once the appointment exists, the patient leaves the at-risk list. The recovered value is attributed to the message that produced it and appears in **Revenue recovered** in [Reports](/features/reports).
+  </Step>
+</Steps>
+
+## Doing it in bulk
+
+Filter the list — *"package expiring within 30 days, sessions remaining"* — and send to everyone matching. Each message is written per patient from their own history; this is not a mail merge.
+
+<Warning>
+  Bulk sends are rate-limited and spread over time. That is protecting your number: a hundred near-identical messages inside a minute is how a WhatsApp Business number gets restricted.
+</Warning>
+
+## If they do not reply
+
+<AccordionGroup>
+  <Accordion title="After one week" icon="clock">
+    The patient reappears on the at-risk list with the previous attempt noted. Send a second, differently-framed message — the draft accounts for the first attempt.
+  </Accordion>
+  <Accordion title="After two attempts" icon="phone-volume">
+    Escalate to voice. Trigger an outbound call from the patient record, or call them yourself. A high-value patient with unredeemed sessions deserves a human.
+  </Accordion>
+  <Accordion title="After three attempts" icon="circle-xmark">
+    Mark them dormant. They stop appearing in the daily list but stay in reporting, and a future visit reactivates them automatically.
+  </Accordion>
+</AccordionGroup>
+
+## Measuring it
+
+[Reports → Revenue recovered](/features/reports#retention-the-reports-that-justify-the-product) attributes bookings to the outreach that produced them. That number against your subscription cost is the only ROI calculation that matters.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="At-Risk Patients" icon="heart-pulse" href="/features/at-risk">
+    How the score is built.
+  </Card>
+  <Card title="WhatsApp Inbox" icon="comments" href="/features/chats">
+    Where the replies arrive.
+  </Card>
+</CardGroup>

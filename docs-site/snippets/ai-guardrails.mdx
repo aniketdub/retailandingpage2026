@@ -1,0 +1,10 @@
+export const AiGuardrails = () => (
+  <Warning>
+    These are enforced in code, not merely requested in a prompt:
+
+    - **The AI cannot cross patients.** Which clinic and which patient a conversation belongs to is resolved on the server from the verified sender, before the model is called. A crafted message can steer what the AI *says*; it cannot make it read or write another patient's record.
+    - **It cannot confirm a booking that was not made.** Replies claiming an appointment that no tool actually created are intercepted before they reach the patient.
+    - **It cannot make clinical or outcome claims.** A forbidden-claims filter runs on every outgoing message.
+    - **It cannot invent prices or offers.** Numbers come from your service catalogue.
+  </Warning>
+);

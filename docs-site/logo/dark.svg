@@ -1,0 +1,11 @@
+<!-- RetAI wordmark for DARK backgrounds. Placeholder — replace with the real brand asset. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 138 32" width="138" height="32" role="img" aria-label="RetAI">
+  <g>
+    <rect x="0" y="2" width="28" height="28" rx="9" fill="#34532b"/>
+    <!-- return loop: the retention idea, a patient coming back -->
+    <path d="M8.5 17.5a5.5 5.5 0 1 1 5.5 5.5" fill="none" stroke="#ffecd0" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M8.5 13.2v4.6h4.6" fill="none" stroke="#ffecd0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="19.6" cy="11.4" r="2" fill="#ffecd0"/>
+  </g>
+  <text x="38" y="22" font-family="Sora, Inter, system-ui, sans-serif" font-size="17" font-weight="600" letter-spacing="-0.2" fill="#f4f3ef">Ret<tspan fill="#9eb28a">AI</tspan></text>
+</svg>

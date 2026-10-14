@@ -1,0 +1,86 @@
+---
+title: "Staff"
+description: "Team accounts, roles, the per-module permission matrix, and de-provisioning."
+icon: "user-group"
+---
+
+<Frame caption="Staff list with roles and the module permission matrix.">
+  <img src="/images/features/staff-permissions.png" alt="Staff and permissions" />
+</Frame>
+
+<Note>
+  The Staff module is visible to **owners only** by default, and cannot be granted to a receptionist role. A clinic should not be able to lock out its own administrator.
+</Note>
+
+## Adding a staff member
+
+<Steps>
+  <Step title="Staff → Add staff member" icon="user-plus">
+    Name, work email, phone, and role.
+  </Step>
+  <Step title="Choose a role" icon="user-shield">
+    Owner, Doctor, or Receptionist. The role sets the default module access; you can override it per module afterwards.
+  </Step>
+  <Step title="Set clinical details, if applicable" icon="stethoscope">
+    For doctors: registration number, specialty, signature for prescriptions, and which services they may deliver.
+  </Step>
+  <Step title="Invite" icon="envelope">
+    They receive sign-in instructions. Google sign-in works immediately for the email you entered; there is no self-registration path, so an unrecognised Google account cannot create itself access.
+  </Step>
+</Steps>
+
+## Roles
+
+| Role | Scope |
+| --- | --- |
+| **Owner** | Every module, always. Cannot be restricted. Can manage staff, permissions, and clinic settings. |
+| **Doctor** | Clinical and commercial modules. No staff management by default. |
+| **Receptionist** | Front-of-house modules. No billing, inventory, or prescriptions by default. |
+
+Full defaults are in the [module tour](/features/overview#default-access-by-role).
+
+## The permission matrix
+
+Toggle any module on or off for the Doctor and Receptionist roles, per clinic. Changes take effect on the staff member's next page load.
+
+<Warning>
+  Access is enforced on the server when a page loads, not hidden in the browser. Typing the URL of a module you lack access to returns nothing. Do not rely on "they don't know the URL" — but equally, do not worry that they might.
+</Warning>
+
+## Clinician availability
+
+Set working days, hours, breaks, and leave per clinician. This constrains the calendar and constrains what the AI agent can offer — a slot outside a clinician's hours will not be booked by Aisha.
+
+<Frame caption="Clinician working hours and leave.">
+  <img src="/images/features/staff-availability.png" alt="Clinician availability" />
+</Frame>
+
+## Presence
+
+The staff list shows who is currently signed in and active. Useful at a busy front desk for knowing who can pick up an escalated WhatsApp thread right now.
+
+## De-provisioning
+
+Deactivate a staff member and their access ends. Two properties are worth knowing:
+
+- **Their session does not survive.** Role and clinic are re-read from the staff record periodically, so a removed staff member loses access within minutes — they cannot ride out the remaining lifetime of an already-issued session.
+- **Their records survive.** Consultations, invoices, and messages they created stay attached to their name. Clinical and financial history does not disappear because someone left.
+
+<Tip>
+  Deactivate, do not delete. Deletion of a staff member who has ever signed a prescription would orphan a clinical record.
+</Tip>
+
+## Audit
+
+Sign-ins, permission changes, discount grants, refunds, record edits, and data exports are logged with the staff member and timestamp. See [Access control](/security/access-control).
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Roles & permissions" icon="lock" href="/admin/roles-and-permissions">
+    The full configuration guide.
+  </Card>
+  <Card title="Access control" icon="shield-halved" href="/security/access-control">
+    How access is enforced, not just configured.
+  </Card>
+</CardGroup>

@@ -1,0 +1,78 @@
+---
+title: "Scheduled jobs"
+description: "The background workers that drain the follow-up queue and sync calendars."
+icon: "clock-rotate-left"
+---
+
+Two scheduled endpoints, each authenticated by a secret header compared in **constant time**.
+
+<Note>
+  These are documented because their behaviour explains guarantees you rely on elsewhere — particularly why a patient never receives the same message twice.
+</Note>
+
+## Follow-up queue drain
+
+`GET /api/cron/followups`
+
+Runs every few minutes. Sends reminders, follow-ups, aftercare, and package-expiry messages that have come due.
+
+<Steps>
+  <Step title="Select due items" icon="list">
+    Pending items with a trigger time in the past. Deliberately **across clinics** — one worker serves everyone.
+  </Step>
+  <Step title="Claim atomically" icon="lock">
+    Each item is claimed with a conditional update. **This is what makes overlapping runs safe** — two workers cannot both claim the same item, so a patient cannot be messaged twice.
+  </Step>
+  <Step title="Send to the provider first" icon="paper-plane">
+    With a delivery latch, so a bookkeeping retry can never re-send to the patient.
+  </Step>
+  <Step title="Log the outbound message" icon="database" />
+  <Step title="Mark sent or failed" icon="circle-check" />
+</Steps>
+
+<Warning>
+  **Delivered-but-unlogged items are deliberately parked, never re-claimed.** They are flagged for manual reconciliation instead.
+
+  The reasoning is explicit: a duplicate message to a patient is worse than a missing log row. Given an ambiguous state, RetAI chooses the missing log row every time.
+</Warning>
+
+## Google Calendar pull sync
+
+`GET /api/cron/google-calendar-sync`
+
+Runs periodically. Pulls changes from every connected Google Calendar so externally-created events appear as busy time in RetAI.
+
+Iterates all connections across clinics by design — one worker, all tenants, each write still scoped to the clinic that owns the connection.
+
+Stored refresh tokens are decrypted per connection (AES-256-GCM) and used only for that connection's calendar.
+
+## Authentication
+
+Both require a secret header, compared in constant time.
+
+<Warning>
+  Constant-time comparison is not incidental. A naive string comparison leaks timing information that can be used to recover the secret byte by byte. Any endpoint of yours that compares a secret should do the same.
+</Warning>
+
+## Failure behaviour
+
+| Situation | Behaviour |
+| --- | --- |
+| Missing or wrong secret | `403`, nothing runs |
+| One item fails | Logged and skipped; the run continues |
+| Whole run fails | `500`; the next scheduled run picks up where it stopped |
+| Overlapping runs | Safe by design — atomic claiming prevents double-processing |
+
+## What this means for you
+
+<AccordionGroup>
+  <Accordion title="Reminders arrive on a cadence, not instantly" icon="clock">
+    A reminder due at 15:00 sends within a few minutes of 15:00, not at exactly 15:00.
+  </Accordion>
+  <Accordion title="A missed run self-heals" icon="arrow-rotate-right">
+    Items stay pending until claimed. A skipped run means slightly late messages, not lost ones.
+  </Accordion>
+  <Accordion title="Quiet hours are enforced at send time" icon="moon">
+    An item that comes due inside quiet hours waits rather than sending.
+  </Accordion>
+</AccordionGroup>

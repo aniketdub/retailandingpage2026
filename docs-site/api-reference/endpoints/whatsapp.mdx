@@ -1,0 +1,104 @@
+---
+title: "WhatsApp"
+description: "Read the inbox and send outbound messages."
+icon: "comments"
+---
+
+<Warning>
+  These are the **session-protected** WhatsApp endpoints. The public inbound webhook is a different path — see [Inbound webhook](/api-reference/webhooks/whatsapp-inbound). The distinction is load-bearing: `/api/whatsapp` is public and signature-verified, while `/api/whatsapp/send` and `/api/whatsapp/inbox` require a session.
+</Warning>
+
+## Inbox
+
+`GET /api/whatsapp/inbox`
+
+<ParamField query="patient_id" type="string">Single conversation.</ParamField>
+<ParamField query="unread" type="boolean">Threads with unread inbound messages.</ParamField>
+<ParamField query="needs_attention" type="boolean">Threads the AI escalated.</ParamField>
+<ParamField query="limit" type="integer" default="50" />
+
+<ResponseField name="threads" type="array">
+  <Expandable title="thread">
+    <ResponseField name="patient_id" type="string | null">Null if the sender is not yet a patient.</ResponseField>
+    <ResponseField name="patient_name" type="string | null" />
+    <ResponseField name="phone" type="string">E.164.</ResponseField>
+    <ResponseField name="last_message_at" type="string" />
+    <ResponseField name="last_message_preview" type="string" />
+    <ResponseField name="unread_count" type="integer" />
+    <ResponseField name="needs_attention" type="boolean" />
+    <ResponseField name="ai_handling" type="boolean">False when a staff member has taken the thread over.</ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Messages in a thread
+
+`GET /api/whatsapp/inbox?patient_id={id}`
+
+<ResponseField name="messages" type="array">
+  <Expandable title="message">
+    <ResponseField name="id" type="string" />
+    <ResponseField name="direction" type="string">`inbound` or `outbound`.</ResponseField>
+    <ResponseField name="body" type="string" />
+    <ResponseField name="sent_at" type="string" />
+    <ResponseField name="status" type="string">`queued`, `sent`, `delivered`, `read`, `failed`.</ResponseField>
+    <ResponseField name="sender" type="string">`patient`, `ai`, or a staff member's name.</ResponseField>
+    <ResponseField name="provider_message_id" type="string">Unique. This is what makes inbound deduplication authoritative.</ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Delete a conversation
+
+`DELETE /api/whatsapp/inbox?patient_id={id}`
+
+<Warning>
+  Removes message content from primary storage. It persists in encrypted backups until they rotate — see [Retention & deletion](/security/retention-and-deletion). The deletion event itself is retained in the audit log.
+</Warning>
+
+## Send
+
+`POST /api/whatsapp/send`
+
+<ParamField body="patient_id" type="string">Either this or `phone`.</ParamField>
+<ParamField body="phone" type="string">E.164. Used when messaging a non-patient.</ParamField>
+<ParamField body="body" type="string" required>Message text.</ParamField>
+<ParamField body="template" type="string">Approved template name. Required outside the 24-hour session window.</ParamField>
+<ParamField body="template_params" type="object">Placeholder values for the template.</ParamField>
+
+```bash
+curl -X POST "https://www.retentionos.tech/api/whatsapp/send" \
+  -H "Content-Type: application/json" \
+  -H "Cookie: <session cookie>" \
+  -d '{"patient_id":"8f14e45f-ceea-467a-9a36-dedd4bea2543","body":"Your results are ready to collect."}'
+```
+
+<ResponseField name="message_id" type="string" />
+<ResponseField name="status" type="string">`queued` or `sent`.</ResponseField>
+
+### Constraints
+
+| Constraint | Detail |
+| --- | --- |
+| Rate limit | 30 per minute per clinic |
+| Session window | Free-form text only within 24 hours of the patient's last inbound message. Outside it, use `template`. |
+| Opt-out | A patient who has opted out cannot be messaged. The request is refused, not silently dropped. |
+| Quiet hours | Automated sends respect quiet hours. Direct API sends do not — that is your responsibility. |
+
+<Warning>
+  **This endpoint is not idempotent.** Calling it twice sends two messages to a real person. On an ambiguous failure, check the inbox before retrying.
+</Warning>
+
+## AI reminder drafting
+
+`POST /api/ai/generate-reminder`
+
+<ParamField body="patient_id" type="string" required />
+<ParamField body="intent" type="string">`win_back`, `package_expiry`, `session_due`, or `appointment_reminder`.</ParamField>
+
+Returns a **draft only** — nothing is sent. Rate limited to 20 per minute per clinic.
+
+<ResponseField name="draft" type="string">The generated message.</ResponseField>
+<ResponseField name="grounding" type="object">The patient context the model was given, for audit.</ResponseField>
+
+<Tip>
+  Generating and sending are separate calls on purpose. Any integration that auto-sends a generated draft without review is one prompt away from an awkward message to a real patient.
+</Tip>

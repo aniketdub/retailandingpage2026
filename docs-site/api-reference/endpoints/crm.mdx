@@ -1,0 +1,123 @@
+---
+title: "CRM"
+description: "Leads, status updates, and staff presence."
+icon: "hand-holding-heart"
+---
+
+The most common integration target — pushing website enquiries into the leads pipeline.
+
+## Leads
+
+### List
+
+`GET /api/crm/leads`
+
+<ParamField query="stage" type="string">`new`, `contacted`, `consultation_booked`, `quoted`, `converted`, `lost`.</ParamField>
+<ParamField query="owner_id" type="string">Staff UUID.</ParamField>
+<ParamField query="source" type="string">`whatsapp`, `voice`, `walk_in`, `website`, `campaign`.</ParamField>
+<ParamField query="overdue" type="boolean">Next-action date in the past.</ParamField>
+
+<ResponseField name="leads" type="array">
+  <Expandable title="lead">
+    <ResponseField name="id" type="string" />
+    <ResponseField name="name" type="string" />
+    <ResponseField name="phone" type="string">E.164.</ResponseField>
+    <ResponseField name="email" type="string | null" />
+    <ResponseField name="source" type="string" />
+    <ResponseField name="stage" type="string" />
+    <ResponseField name="interest" type="string | null">Service or treatment enquired about.</ResponseField>
+    <ResponseField name="owner_id" type="string | null" />
+    <ResponseField name="next_action_at" type="string | null" />
+    <ResponseField name="notes" type="string | null">Counselling observations.</ResponseField>
+    <ResponseField name="lost_reason" type="string | null" />
+    <ResponseField name="patient_id" type="string | null">Set once converted.</ResponseField>
+    <ResponseField name="created_at" type="string" />
+  </Expandable>
+</ResponseField>
+
+### Create
+
+`POST /api/crm/leads`
+
+<ParamField body="name" type="string" required />
+<ParamField body="phone" type="string" required>Any format; normalised to E.164.</ParamField>
+<ParamField body="email" type="string" />
+<ParamField body="source" type="string" default="website" />
+<ParamField body="interest" type="string" />
+<ParamField body="notes" type="string" />
+<ParamField body="owner_id" type="string" />
+<ParamField body="next_action_at" type="string">ISO 8601.</ParamField>
+
+```bash
+curl -X POST "https://www.retentionos.tech/api/crm/leads" \
+  -H "Content-Type: application/json" \
+  -H "Cookie: <session cookie>" \
+  -d '{
+    "name": "Ananya Rao",
+    "phone": "9876543211",
+    "source": "website",
+    "interest": "Acne scar revision",
+    "notes": "Submitted the contact form; asked about pricing."
+  }'
+```
+
+<Tip>
+  Set `next_action_at` on creation. A lead with no next action is a lost lead with a delay — and the overdue filter is what surfaces it before that happens.
+</Tip>
+
+### Update
+
+`PATCH /api/crm/leads` with `id` in the body. Stage, owner, next action, notes, and lost reason are all updatable.
+
+<Warning>
+  Moving a lead to `converted` creates a patient record from it. That is a real write with downstream effects — do not use it as a soft "interested" flag.
+</Warning>
+
+### Delete
+
+`DELETE /api/crm/leads?id={id}`
+
+## Status
+
+`PATCH /api/crm/status` — bulk stage update for several leads at once.
+
+<ParamField body="ids" type="array" required>Lead UUIDs.</ParamField>
+<ParamField body="stage" type="string" required />
+
+## Presence
+
+`GET /api/crm/presence` — which staff members are currently signed in and active.
+
+`POST /api/crm/presence` — heartbeat for the current session.
+
+<ResponseField name="staff" type="array">
+  <Expandable title="staff member">
+    <ResponseField name="id" type="string" />
+    <ResponseField name="name" type="string" />
+    <ResponseField name="role" type="string" />
+    <ResponseField name="last_seen_at" type="string" />
+    <ResponseField name="online" type="boolean" />
+  </Expandable>
+</ResponseField>
+
+Useful for routing an escalated WhatsApp thread to someone actually at a desk.
+
+## Website form integration
+
+The common pattern:
+
+<Steps>
+  <Step title="Your form posts to your own backend">
+    Never call RetAI directly from browser JavaScript — that would require exposing a session to the public internet.
+  </Step>
+  <Step title="Your backend calls POST /api/crm/leads">
+    With an authenticated session.
+  </Step>
+  <Step title="The lead appears in the pipeline">
+    Unassigned leads are flagged for the front desk to pick up.
+  </Step>
+</Steps>
+
+<Warning>
+  If this integration needs to run unattended, ask us about a machine-to-machine mechanism rather than automating a browser session. See [Authentication](/api-reference/authentication#machine-to-machine-access).
+</Warning>

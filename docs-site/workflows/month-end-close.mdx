@@ -1,0 +1,107 @@
+---
+title: "Month-end close"
+description: "The owner's monthly routine — reconcile, report, review retention, and hand your accountant a clean file."
+icon: "calendar-check"
+---
+
+About forty minutes on the first working day of the month.
+
+## 1 — Reconcile the money
+
+<Steps>
+  <Step title="Confirm every day-end was run" icon="calendar-days">
+    Reports → Day-end, filtered to last month. A missing day means a day nobody reconciled. Find it now, not in the audit.
+  </Step>
+  <Step title="Revenue summary" icon="chart-line">
+    Collected versus billed for the month. Split by payment method and reconcile against bank and card settlements.
+  </Step>
+  <Step title="Outstanding and ageing" icon="clock">
+    Anything past 30 days gets a call this week. Sort by amount.
+  </Step>
+  <Step title="Retainer and credit balances" icon="wallet">
+    Both are liabilities. Rising advance balances mean you are collecting faster than you are delivering — good for cash, but it is treatment you owe.
+  </Step>
+</Steps>
+
+## 2 — Tax
+
+<Steps>
+  <Step title="GST summary" icon="percent">
+    Tax collected by rate with taxable value per rate. Export to CSV.
+  </Step>
+  <Step title="Check package recognition" icon="box">
+    Package revenue should appear as earned, not as collected. Unearned advance is not this month's taxable revenue.
+  </Step>
+  <Step title="Review credit notes and refunds" icon="arrow-rotate-left">
+    Each with its reason and the staff member who authorised it.
+  </Step>
+  <Step title="Export for your accountant" icon="download">
+    [Data export](/admin/data-export) produces invoices, line items, payments, and the tax breakdown in one archive.
+  </Step>
+</Steps>
+
+## 3 — Review retention
+
+This is the section that changes what you do next month.
+
+<CardGroup cols={2}>
+  <Card title="Revenue recovered" icon="arrow-rotate-left">
+    What at-risk outreach brought back. Compare against your subscription cost.
+  </Card>
+  <Card title="Retention rate" icon="repeat">
+    Share of patients returning within their expected interval, trended.
+  </Card>
+  <Card title="Package completion" icon="box">
+    Sold sessions actually delivered. Below 70% means your allocation-at-sale discipline is slipping.
+  </Card>
+  <Card title="No-show analysis" icon="user-xmark">
+    Cross-check against reminder delivery. Undelivered reminders are a fixable cause.
+  </Card>
+</CardGroup>
+
+## 4 — Review operations
+
+| Report | What you are looking for |
+| --- | --- |
+| Clinician utilisation | Booked against available hours. Under 60% is a marketing problem; over 90% is a capacity problem. |
+| Procedure trends | What is growing, what is fading, period over period |
+| Discounts granted | Discount as a share of gross, by staff member |
+| Lead conversion | By source and by owner, with lost reasons |
+| Consumption by procedure | Two clinicians consuming differently for the same procedure is training or leakage |
+| Stock value and wastage | Write-offs and expiry losses |
+
+## 5 — Housekeeping
+
+<AccordionGroup>
+  <Accordion title="Stock take" icon="boxes-stacked">
+    Physical count against system quantities. Post adjustments with the stock-take reference.
+  </Accordion>
+  <Accordion title="Staff and permission review" icon="user-group">
+    Anyone left? Deactivate them. Anyone changed role? Update their modules.
+  </Accordion>
+  <Accordion title="Price list review" icon="tags">
+    Changing prices affects future invoices only. Existing packages hold their agreed price.
+  </Accordion>
+  <Accordion title="AI transcript sample" icon="robot">
+    Read ten AI-handled WhatsApp threads and five voice transcripts. You are checking tone and accuracy, not policing. Anything wrong is usually a service description that needs rewording.
+  </Accordion>
+</AccordionGroup>
+
+## 6 — Set next month's push
+
+Pick one number to move and one action to move it. Examples that work:
+
+- *Package completion below 70%* → allocate every session at the point of sale, without exception
+- *No-shows above 12%* → move the reminder from 24h to 24h **and** 2h
+- *Utilisation under 60% on Tuesdays* → run a targeted at-risk campaign filtered to Tuesday-preferring patients
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Reports" icon="chart-line" href="/features/reports">
+    Every report referenced here.
+  </Card>
+  <Card title="Data export" icon="download" href="/admin/data-export">
+    The accountant archive.
+  </Card>
+</CardGroup>

@@ -1,0 +1,102 @@
+---
+title: "FAQ"
+description: "The questions clinics actually ask, answered honestly."
+icon: "circle-question"
+---
+
+## The AI
+
+<AccordionGroup>
+  <Accordion title="Will patients know they are talking to an AI?" icon="robot" defaultOpen>
+    Aisha does not pretend to be a named human. Configure her introduction to state she is the clinic's assistant — most clinics do, and patients respond well to it. What matters more in practice is that she answers accurately and books correctly.
+  </Accordion>
+  <Accordion title="Can the AI give medical advice?" icon="stethoscope">
+    No, and it is prevented from doing so. Clinical questions are escalated to a human and the thread is flagged. A claims filter blocks medical and outcome claims on every outgoing message.
+  </Accordion>
+  <Accordion title="What if the AI books something wrong?" icon="calendar-xmark">
+    It books into real free slots with clinicians qualified for the service, so structurally wrong bookings are rare. Anything it does book is an ordinary appointment you can move or cancel. Start with booking permission off and enable it once you have read a week of conversations.
+  </Accordion>
+  <Accordion title="Can I turn the AI off?" icon="power-off">
+    Yes — entirely, or per conversation with **Take over**. The rest of RetAI works exactly as before.
+  </Accordion>
+  <Accordion title="Can someone trick the AI into showing another patient's data?" icon="shield">
+    No. Which clinic and which patient a conversation belongs to is resolved on the server from the verified sender, before the model is involved. A crafted message can influence what the AI says; it cannot change whose record it reads. See [Architecture](/security/architecture#ai-boundary).
+  </Accordion>
+  <Accordion title="What languages does it handle?" icon="language">
+    English and major Indian languages, including code-mixed messages — which is how most patients actually write. Configure the primary language in clinic settings.
+  </Accordion>
+</AccordionGroup>
+
+## WhatsApp
+
+<AccordionGroup>
+  <Accordion title="Can I use my existing clinic number?" icon="phone">
+    Yes, provided it is not currently registered on the WhatsApp consumer or Business app. Migrating it means that app stops working for that number. Most clinics take a fresh number and forward the old one.
+  </Accordion>
+  <Accordion title="Will my number get blocked?" icon="ban">
+    Only if you use it badly. RetAI rate-limits sends, spreads bulk campaigns over time, respects quiet hours, and honours opt-outs permanently. The fastest way to damage a number is a mass blast of near-identical promotional messages — which is why the [at-risk flow](/features/at-risk) personalises per patient instead.
+  </Accordion>
+  <Accordion title="Why can't I message a patient who has never messaged us?" icon="lock">
+    WhatsApp allows pre-approved templates any time, but free-form conversation only within 24 hours of the patient's last message. RetAI uses templates for reminders and win-backs, and natural conversation inside the open window.
+  </Accordion>
+  <Accordion title="Does the patient see who replied — AI or staff?" icon="user">
+    Both come from your clinic number as one continuous conversation. Taking over a thread is seamless from the patient's side.
+  </Accordion>
+</AccordionGroup>
+
+## Data and migration
+
+<AccordionGroup>
+  <Accordion title="Can you import from my current software?" icon="database">
+    Yes. Send whatever format you have — CSV, Excel, even photographs of a printed price list. We validate, normalise, dedupe, dry-run into a demo tenant, then import live. See [Data import](/admin/data-import).
+  </Accordion>
+  <Accordion title="Can I get my data out?" icon="download">
+    Any time, without asking. Full clinic export in CSV plus a separate image archive. Available throughout your contract and for 30 days after it ends. See [Data export](/admin/data-export).
+  </Accordion>
+  <Accordion title="Is my data shared with other clinics?" icon="building">
+    No. Every record belongs to exactly one clinic and clinic identity comes from your session, never from a request. There is no screen anywhere that shows two clinics' patients together.
+  </Accordion>
+  <Accordion title="Where is my data stored?" icon="server">
+    Database region is selected at project setup. Several subprocessors operate from the United States. All disclosed in [Subprocessors](/security/subprocessors).
+  </Accordion>
+  <Accordion title="Are you HIPAA compliant?" icon="scale-balanced">
+    No. RetAI is built for the Indian market and the DPDP Act, and we hold no Business Associate Agreements. If you need HIPAA coverage we are not currently the right vendor.
+  </Accordion>
+</AccordionGroup>
+
+## Billing and money
+
+<AccordionGroup>
+  <Accordion title="Does it handle GST correctly?" icon="percent">
+    GST is computed **per line at that line's own rate** — a bill mixing 5% and 18% items is never blended into a single wrong average. Package revenue is recognised against sessions delivered rather than declared entirely at the point of sale.
+  </Accordion>
+  <Accordion title="Can I take split payments?" icon="credit-card">
+    Yes. One invoice, several tenders, each recorded separately so day-end reconciliation by method balances.
+  </Accordion>
+  <Accordion title="Can I edit an issued invoice?" icon="pen">
+    Not silently — it is a tax document. Amending creates a linked revision; both versions are kept. Cancellation voids rather than deletes.
+  </Accordion>
+  <Accordion title="Does it work with my accounting software?" icon="file-csv">
+    Through CSV export today. Every report exports, and the full archive includes invoices, line items, payments, and the tax breakdown.
+  </Accordion>
+</AccordionGroup>
+
+## Practical
+
+<AccordionGroup>
+  <Accordion title="How long does setup take?" icon="clock">
+    Typically 7–10 working days from kickoff to go-live, mostly determined by how quickly your existing data reaches us. See [Onboarding](/onboarding).
+  </Accordion>
+  <Accordion title="Do you train my staff?" icon="chalkboard-user">
+    Two live online sessions, recorded for new joiners, plus a demo tenant to practise on before touching real records.
+  </Accordion>
+  <Accordion title="What if my internet goes down?" icon="wifi">
+    RetAI needs a connection. There is deliberately no offline copy of patient data on staff devices — offline caching of clinical records on phones is a liability we chose not to create. Keep a mobile hotspot as backup; most clinics do.
+  </Accordion>
+  <Accordion title="Can I use it on a phone?" icon="mobile-screen-button">
+    Yes, native apps for iOS and Android with push notifications. See [Mobile app](/features/mobile).
+  </Accordion>
+  <Accordion title="Can I run multiple locations?" icon="building">
+    Yes. One clinic record per location, plus a group-owner account that switches between them.
+  </Accordion>
+</AccordionGroup>

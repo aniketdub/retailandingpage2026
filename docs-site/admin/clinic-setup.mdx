@@ -1,0 +1,93 @@
+---
+title: "Clinic setup"
+description: "Branding, GSTIN, invoice numbering, working hours, and automation timing."
+icon: "gear"
+---
+
+Owner-only. Everything here is set once during [onboarding](/onboarding) and reviewed rarely.
+
+## Clinic profile
+
+| Field | Used for |
+| --- | --- |
+| Clinic name | Invoices, prescriptions, patient messages |
+| Logo | Invoice letterhead, prescription header, photo watermark |
+| Address and contact | Invoice footer, what Aisha tells patients who ask for directions |
+| GSTIN | Tax invoices |
+| Registration numbers | Prescriptions and statutory documents |
+| Time zone | Every timestamp in the product |
+
+## Invoice settings
+
+<AccordionGroup>
+  <Accordion title="Numbering" icon="hashtag" defaultOpen>
+    Prefix, starting number, and reset behaviour — never, annually, or monthly. Numbers are allocated atomically from a per-clinic sequence: two tills billing at the same instant cannot collide.
+
+    <Warning>
+      Changing the prefix or resetting the sequence mid-year will confuse your accountant and possibly your tax filing. Change it at a financial-year boundary or not at all.
+    </Warning>
+  </Accordion>
+  <Accordion title="Terms and footer" icon="file-lines">
+    Payment terms, cancellation policy, and any statutory text your invoices must carry.
+  </Accordion>
+  <Accordion title="Default GST behaviour" icon="percent">
+    Whether catalogue prices are entered GST-inclusive or exclusive. Set once — changing it later restates how every existing price is interpreted.
+  </Accordion>
+</AccordionGroup>
+
+## Working hours
+
+Clinic opening hours per day, plus holidays and closures. This bounds the calendar and bounds what the AI can offer — Aisha will not book a slot on a day the clinic is shut.
+
+Per-clinician hours are separate and live in [Staff](/features/staff).
+
+## Automation timing
+
+The rules that decide when RetAI messages a patient.
+
+| Automation | Typical setting |
+| --- | --- |
+| Appointment reminder | 24 hours before, and 2 hours before |
+| Confirmation request | On tentative bookings, 48 hours before |
+| Post-visit follow-up | 3 days after a completed appointment |
+| Aftercare | 1 hour after completion, for services configured to send it |
+| Package session due | At the configured session interval |
+| Package expiry warning | 30 days before expiry, if sessions remain |
+| At-risk re-attempt | 7 days after an unanswered win-back |
+| Quiet hours | No automated message before 09:00 or after 20:00 |
+
+<Tip>
+  Quiet hours are worth respecting even when a reminder is technically due. A clinic that messages at 11pm gets blocked by patients, and a blocked number cannot reach anyone.
+</Tip>
+
+## AI agent settings
+
+<AccordionGroup>
+  <Accordion title="Persona and tone" icon="robot">
+    The agent's name, greeting, and register — formal, warm, or brisk. Set to match how your front desk actually speaks.
+  </Accordion>
+  <Accordion title="Booking permission" icon="calendar-check">
+    Whether the agent may create appointments or only capture the request for a human. Start restrictive.
+  </Accordion>
+  <Accordion title="Escalation rules" icon="triangle-exclamation">
+    Which topics always go to a human. Clinical questions and complaints are non-removable; you can add more.
+  </Accordion>
+  <Accordion title="Forbidden claims" icon="ban">
+    Phrases and claims the agent must never make. Outcome promises and medical claims are enforced by default.
+  </Accordion>
+</AccordionGroup>
+
+## Photo settings
+
+Watermark position and opacity, default masking behaviour, and image retention period. See [Before & After](/features/gallery).
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Roles & permissions" icon="lock" href="/admin/roles-and-permissions">
+    Who sees what.
+  </Card>
+  <Card title="Integrations" icon="plug" href="/admin/integrations/whatsapp">
+    WhatsApp, calendar, voice, and push.
+  </Card>
+</CardGroup>

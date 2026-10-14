@@ -1,0 +1,63 @@
+---
+title: "Service levels"
+description: "Uptime targets, support response times, maintenance, and service credits."
+icon: "gauge-high"
+---
+
+<Note>
+  This page summarises the SLA for readability. The contractual document is the Service Level Agreement executed with your clinic; where the two differ, the executed SLA governs. Ask your account contact for the current version.
+</Note>
+
+## Uptime
+
+RetAI targets **99.5% monthly uptime** for the core application — sign-in, patient records, appointments, and billing.
+
+## Exclusions
+
+The uptime commitment does not cover:
+
+| Exclusion | Detail |
+| --- | --- |
+| Scheduled maintenance | Announced at least 24 hours ahead, capped where reasonably possible |
+| Third-party outages | Downtime caused by a subprocessor outside our control. We mitigate and communicate, but cannot commit to their availability. |
+| Force majeure | |
+| Customer-caused issues | Your own network, API misuse, or exceeding agreed usage limits |
+
+<Warning>
+  Third-party exclusion is worth understanding rather than skimming. If WhatsApp's platform has an outage, your patients cannot be messaged and no amount of RetAI availability changes that. We will tell you what is happening; we cannot fix Meta's network.
+</Warning>
+
+## Support response times
+
+| Severity | Definition | Target first response |
+| --- | --- | --- |
+| **Critical** | Service completely unavailable for all users | 1 hour |
+| **High** | A core feature — WhatsApp AI, billing, sign-in — broken for your clinic | 4 business hours |
+| **Normal** | A non-core issue or question | 1 business day |
+| **Low** | Feature request, general question | 3 business days |
+
+Support runs during business hours IST, primarily through your clinic's WhatsApp group. See [Support](/help/support).
+
+## Service credits
+
+If monthly uptime falls below the commitment, excluding the exclusions above:
+
+| Monthly uptime | Credit against next month's fee |
+| --- | --- |
+| 99.0% – 99.5% | 5% |
+| 95.0% – 99.0% | 10% |
+| Below 95.0% | 25% |
+
+Credits are the sole remedy for missed uptime and must be requested in writing within 30 days of the end of the affected month.
+
+## Maintenance
+
+Announced at least 24 hours ahead by email and in-app notice. Scheduled outside clinic hours wherever possible. Emergency security patches may deploy without notice; we tell you afterwards.
+
+## Backups and recovery
+
+Encrypted backups on a rolling schedule. Backups exist for disaster recovery, not as a per-record undo — see [Retention & deletion](/security/retention-and-deletion) for what that means for deleted data.
+
+## Status
+
+Live status and incident history: [status.retentionos.tech](https://status.retentionos.tech). Subscribe there to be notified of incidents without waiting for us to reach you.

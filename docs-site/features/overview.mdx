@@ -1,0 +1,105 @@
+---
+title: "Module tour"
+sidebarTitle: "Overview"
+description: "Every screen in RetAI, what it does, and which roles see it by default."
+icon: "grid-2"
+mode: "wide"
+---
+
+RetAI is organised into modules. Each one is a screen in the left sidebar, and each one can be granted or revoked per role.
+
+## Front of house
+
+<CardGroup cols={2}>
+  <Card title="AI Calendar" icon="calendar-days" href="/features/calendar">
+    Multi-clinician scheduling with drag-to-move, tentative holds, resource columns, and two-way Google sync.
+  </Card>
+  <Card title="WhatsApp Inbox" icon="comments" href="/features/chats">
+    Every patient conversation in one thread list, with Aisha handling what she can and escalating what she cannot.
+  </Card>
+  <Card title="AI Receptionist" icon="phone-volume" href="/features/receptionist">
+    Voice agent that answers missed calls, with transcripts and outcomes logged to the patient record.
+  </Card>
+  <Card title="Leads Pipeline" icon="hand-holding-heart" href="/features/leads">
+    Enquiries that are not yet patients — counselling notes, quotations, and follow-up ownership.
+  </Card>
+</CardGroup>
+
+## Clinical
+
+<CardGroup cols={2}>
+  <Card title="All Patients" icon="users" href="/features/patients">
+    The complete record: demographics, visits, treatments, photos, invoices, and every message ever exchanged.
+  </Card>
+  <Card title="Consultations & Rx" icon="stethoscope" href="/features/consultations">
+    Form-based consultation templates, a clinical drawing tool for marking anatomy, and prescription templates.
+  </Card>
+  <Card title="Before & After" icon="images" href="/features/gallery">
+    Consent-gated photo library with watermarking and identity masking, linked to package sessions.
+  </Card>
+  <Card title="Treatment Packages" icon="box" href="/features/packages">
+    Multi-session packages with allocation, expiry, session tracking, and GST on amount received.
+  </Card>
+</CardGroup>
+
+## Money and stock
+
+<CardGroup cols={2}>
+  <Card title="Billing" icon="file-invoice-dollar" href="/features/billing">
+    Point-of-sale checkout, per-line GST, split payments, invoice PDFs, and WhatsApp delivery.
+  </Card>
+  <Card title="Inventory" icon="boxes-stacked" href="/features/inventory">
+    Consumables, per-procedure bill of materials, and automatic stock deduction as treatments are delivered.
+  </Card>
+  <Card title="Services" icon="tags" href="/features/services">
+    Your procedure catalogue — price, GST rate, duration, and which clinicians can deliver it.
+  </Card>
+  <Card title="Reports" icon="chart-line" href="/features/reports">
+    Revenue, recovery, procedure mix, follow-up performance, and the day-end close.
+  </Card>
+</CardGroup>
+
+## Retention and administration
+
+<CardGroup cols={2}>
+  <Card title="At-Risk Patients" icon="heart-pulse" href="/features/at-risk">
+    Ranked list of patients drifting away, sorted by revenue at stake, with AI-drafted win-back messages.
+  </Card>
+  <Card title="Staff" icon="user-group" href="/features/staff">
+    Team accounts, roles, and the per-module permission matrix.
+  </Card>
+  <Card title="Mobile app" icon="mobile-screen-button" href="/features/mobile">
+    iOS and Android apps with push notifications for inbound patient messages.
+  </Card>
+  <Card title="Clinic setup" icon="gear" href="/admin/clinic-setup">
+    Branding, GSTIN, invoice numbering, working hours, and automation timing.
+  </Card>
+</CardGroup>
+
+## Default access by role
+
+<Note>
+  Owners always see every module and cannot be restricted. The table below is the starting point for the two configurable roles — change any of it in [Roles & permissions](/admin/roles-and-permissions).
+</Note>
+
+| Module | Doctor | Receptionist |
+| --- | :---: | :---: |
+| Overview | ✅ | ✅ |
+| AI Calendar | ✅ | ✅ |
+| All Patients | ✅ | ✅ |
+| WhatsApp Inbox | ✅ | ✅ |
+| AI Receptionist | ✅ | ✅ |
+| Leads Pipeline | ✅ | ✅ |
+| Services | ✅ | ✅ |
+| Before & After | ✅ | ✅ |
+| Treatment Packages | ✅ | ✅ |
+| At-Risk Patients | ✅ | ❌ |
+| Consultations & Rx | ✅ | ❌ |
+| Billing | ✅ | ❌ |
+| Inventory | ✅ | ❌ |
+| Staff | ❌ | ❌ |
+
+Two defaults are deliberate and worth naming:
+
+- **Reception gets the photo library and packages.** They capture the photos and they sell the packages. Locking them out creates a bottleneck at the doctor.
+- **Reception does not get prescriptions.** Prescribing is clinical. An owner can grant it, but it is off until they do.

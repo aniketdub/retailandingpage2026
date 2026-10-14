@@ -1,0 +1,84 @@
+---
+title: "Incident response"
+description: "What happens if something goes wrong, and what we commit to telling you."
+icon: "triangle-exclamation"
+---
+
+## Reporting
+
+<CardGroup cols={2}>
+  <Card title="Security vulnerability" icon="bug">
+    **security@retentionos.tech** — acknowledged within one business day.
+  </Card>
+  <Card title="Suspected data incident affecting your clinic" icon="triangle-exclamation">
+    Your clinic WhatsApp group, or **security@retentionos.tech**. Treated as Critical.
+  </Card>
+</CardGroup>
+
+## Responsible disclosure
+
+We will not pursue legal action against good-faith security research that avoids privacy violations, data destruction, and service disruption.
+
+<Warning>
+  Please do not test against a live clinic tenant — real patient data is involved. Ask us for a test tenant and we will provide one.
+</Warning>
+
+## Our process
+
+<Steps>
+  <Step title="Detect and triage" icon="magnifying-glass">
+    From monitoring, a customer report, or a researcher. Severity assigned within one hour of a credible report.
+  </Step>
+  <Step title="Contain" icon="shield">
+    Stop the bleeding first — revoke credentials, disable an affected path, block an origin. Containment precedes root-cause analysis.
+  </Step>
+  <Step title="Assess" icon="clipboard-list">
+    What data was affected, whose, over what window, and whether it was actually accessed rather than merely accessible. The distinction matters and we will state which one we can evidence.
+  </Step>
+  <Step title="Notify" icon="envelope">
+    Affected clinics are notified without undue delay with what is known at that point — including when the picture is still incomplete. We do not wait for a complete account before telling you something happened.
+  </Step>
+  <Step title="Remediate" icon="wrench">
+    Fix the root cause, not only the symptom. Where a structural test can prevent recurrence, we add one.
+  </Step>
+  <Step title="Report" icon="file-lines">
+    A written post-incident report to affected clinics: what happened, why, what data was involved, what we did, and what changed so it cannot recur the same way.
+  </Step>
+</Steps>
+
+## What we commit to telling you
+
+If a personal data breach affects your clinic's data, you receive:
+
+- The nature of the breach and the categories of data involved
+- Approximate number of records affected
+- The window during which data was exposed
+- Whether we can evidence actual access, or only potential access
+- What we have done, and what you should do
+- A named contact for follow-up
+
+<Note>
+  As **Data Fiduciary**, notification to the Data Protection Board and to affected patients is your clinic's obligation. Our job is to give you everything you need to make that notification accurately and quickly. See [DPDP compliance](/security/dpdp).
+</Note>
+
+## Our own history of disclosure
+
+We publish material security findings from our own audits rather than only the ones someone else discovers. The [known limitations](/security/architecture#known-limitations) section exists for that reason.
+
+<Tip>
+  A vendor that has never published a limitation has either never looked or is not telling you. Ask any vendor — including us — what their last internal audit found.
+</Tip>
+
+## Your responsibilities
+
+<AccordionGroup>
+  <Accordion title="Report suspected compromise immediately" icon="clock">
+    A staff account behaving oddly, an unexpected export, a device lost with a signed-in session. Speed matters more than certainty.
+  </Accordion>
+  <Accordion title="Keep staff access current" icon="user-group">
+    A leaver with a live account is the most common real-world incident vector in small clinics.
+  </Accordion>
+  <Accordion title="Protect exported data" icon="download">
+    A full clinic export is complete patient PHI in a file. Once downloaded, its security is yours.
+  </Accordion>
+</AccordionGroup>

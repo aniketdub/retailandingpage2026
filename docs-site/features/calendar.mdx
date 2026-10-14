@@ -1,0 +1,105 @@
+---
+title: "AI Calendar"
+description: "Multi-clinician scheduling with tentative holds, resource columns, drag-to-move, and two-way Google Calendar sync."
+icon: "calendar-days"
+---
+
+<Frame caption="Day view with one column per clinician, colour-coded by appointment status.">
+  <img src="/images/features/calendar-day-view.png" alt="RetAI calendar day view" />
+</Frame>
+
+The calendar is the busiest screen in the product. It is built for a clinic where four clinicians, two laser rooms, and a walk-in queue all compete for the same hour.
+
+## Views
+
+<Tabs>
+  <Tab title="Day">
+    One column per clinician or resource. The default working view for the front desk. Current time is marked with a live line.
+  </Tab>
+  <Tab title="Week">
+    Seven days for one clinician, or a compressed all-clinician view. Use it for planning next week's capacity.
+  </Tab>
+  <Tab title="Month">
+    Density heat map. Useful for spotting the quiet Tuesdays worth filling with a win-back campaign.
+  </Tab>
+  <Tab title="List">
+    A flat chronological list — the fastest view on a phone, and the one to use when the front desk is calling through tomorrow's confirmations.
+  </Tab>
+</Tabs>
+
+## Booking an appointment
+
+<Steps>
+  <Step title="Click an empty slot">
+    Or click **New appointment** and pick the time.
+  </Step>
+  <Step title="Pick the patient">
+    Search by name or phone number. If the patient does not exist, create them inline — name and phone are the only required fields.
+  </Step>
+  <Step title="Pick the service">
+    The service's configured duration sets the slot length automatically. Override it if this particular case needs longer.
+  </Step>
+  <Step title="Pick the clinician">
+    Only clinicians qualified for that service are offered. Configure that mapping in [Services](/features/services).
+  </Step>
+  <Step title="Save">
+    A reminder is queued, a follow-up is scheduled, and the event appears on the clinician's Google Calendar if connected.
+  </Step>
+</Steps>
+
+## Appointment statuses
+
+| Status | Meaning | Colour |
+| --- | --- | --- |
+| Tentative | Held but unconfirmed. Does not block the slot for another booking. | Amber |
+| Confirmed | Patient has confirmed, by reply or by phone. | Green |
+| Checked in | Patient is in the clinic. | Blue |
+| Completed | Visit finished. Triggers the post-visit follow-up. | Grey |
+| No-show | Patient did not attend. Feeds at-risk scoring. | Red |
+| Cancelled | Cancelled in advance. Frees the slot. | Muted |
+
+<Tip>
+  **Tentative** is the status most clinics under-use. When a patient says "probably Thursday", hold it as tentative. It shows on the calendar, it does not block the slot, and the reminder system chases the confirmation for you.
+</Tip>
+
+## Moving and rescheduling
+
+Drag an appointment to a new time or a different clinician's column. On save, RetAI:
+
+1. Updates the record and the Google Calendar event
+2. Cancels the old reminder and queues a new one
+3. Optionally messages the patient with the new time — you are asked before it sends
+
+<Warning>
+  Dragging an appointment into an occupied slot is allowed — clinics genuinely double-book on purpose. RetAI warns you, it does not block you. Aisha's automatic bookings, by contrast, never double-book.
+</Warning>
+
+## How the AI books into this calendar
+
+When a patient asks Aisha for an appointment, she does not guess. She reads the service duration, the clinicians qualified for that service, and existing bookings, then offers real free slots. The appointment she creates is an ordinary appointment — same statuses, same reminders, same Google sync.
+
+<Frame caption="An appointment created by Aisha, showing its conversation origin.">
+  <img src="/images/features/calendar-ai-booking.png" alt="AI-created appointment detail" />
+</Frame>
+
+See [WhatsApp Inbox](/features/chats) for the conversation side of this.
+
+## Google Calendar sync
+
+Two-way, per clinician:
+
+- **Push** — an appointment created in RetAI appears on the clinician's Google Calendar within seconds
+- **Pull** — personal events the clinician blocks out in Google appear in RetAI as busy time, so nothing gets booked over their lunch
+
+Setup: [Connect Google Calendar](/admin/integrations/google-calendar).
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="A day at the front desk" icon="clipboard-list" href="/workflows/front-desk-day">
+    Where the calendar fits in the daily routine.
+  </Card>
+  <Card title="Services" icon="tags" href="/features/services">
+    Durations and clinician mapping — the inputs the calendar relies on.
+  </Card>
+</CardGroup>

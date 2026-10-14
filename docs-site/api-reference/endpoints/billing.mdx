@@ -1,0 +1,118 @@
+---
+title: "Billing"
+description: "Services, invoices, checkout, PDF rendering, and invoice delivery."
+icon: "file-invoice-dollar"
+---
+
+<Note>
+  Every endpoint here requires the **Billing** module, which is off by default for the receptionist role.
+</Note>
+
+## Services
+
+`GET /api/billing/services`
+
+Returns the clinic's service catalogue with prices, GST rates, and durations.
+
+<ResponseField name="services" type="array">
+  <Expandable title="service">
+    <ResponseField name="id" type="string" />
+    <ResponseField name="name" type="string" />
+    <ResponseField name="category" type="string" />
+    <ResponseField name="price" type="number">Rupees.</ResponseField>
+    <ResponseField name="gst_rate" type="number">Percent, e.g. `18`.</ResponseField>
+    <ResponseField name="duration_minutes" type="integer" />
+    <ResponseField name="active" type="boolean" />
+  </Expandable>
+</ResponseField>
+
+## Invoices
+
+### List
+
+`GET /api/billing/invoices`
+
+<ParamField query="from" type="string">ISO 8601 date.</ParamField>
+<ParamField query="to" type="string">ISO 8601 date.</ParamField>
+<ParamField query="patient_id" type="string" />
+<ParamField query="status" type="string">`paid`, `partial`, `outstanding`, `cancelled`.</ParamField>
+
+### Get one
+
+`GET /api/billing/invoices/{id}` — returns the invoice with its line items and payments.
+
+<ResponseField name="invoice" type="object">
+  <Expandable title="invoice">
+    <ResponseField name="id" type="string" />
+    <ResponseField name="invoice_number" type="string">Allocated atomically per clinic.</ResponseField>
+    <ResponseField name="patient_id" type="string" />
+    <ResponseField name="issued_at" type="string" />
+    <ResponseField name="subtotal" type="number" />
+    <ResponseField name="discount_total" type="number" />
+    <ResponseField name="tax_total" type="number">Sum of per-line tax.</ResponseField>
+    <ResponseField name="total" type="number" />
+    <ResponseField name="amount_paid" type="number" />
+    <ResponseField name="outstanding" type="number" />
+    <ResponseField name="status" type="string" />
+    <ResponseField name="line_items" type="array">
+      <Expandable title="line item">
+        <ResponseField name="description" type="string" />
+        <ResponseField name="quantity" type="number" />
+        <ResponseField name="unit_price" type="number" />
+        <ResponseField name="discount" type="number" />
+        <ResponseField name="gst_rate" type="number">This line's own rate.</ResponseField>
+        <ResponseField name="tax_amount" type="number" />
+        <ResponseField name="line_total" type="number" />
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="payments" type="array">
+      <Expandable title="payment">
+        <ResponseField name="method" type="string">`cash`, `card`, `upi`, `bank_transfer`, `cheque`, `package`, `credit`.</ResponseField>
+        <ResponseField name="amount" type="number" />
+        <ResponseField name="reference" type="string | null" />
+        <ResponseField name="received_at" type="string" />
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Warning>
+  **Tax is per line, not per invoice.** `tax_total` is the sum of `line_items[].tax_amount`. Never re-derive tax by applying one rate to the subtotal — a mixed-rate invoice will not reconcile.
+</Warning>
+
+### Create
+
+`POST /api/billing/invoices`
+
+<ParamField body="patient_id" type="string" required />
+<ParamField body="line_items" type="array" required>
+  Each with `service_id` or `description`, `quantity`, `unit_price`, optional `discount`, and `gst_rate`.
+</ParamField>
+<ParamField body="payments" type="array">
+  Each with `method`, `amount`, optional `reference`. Omit for an unpaid invoice.
+</ParamField>
+<ParamField body="appointment_id" type="string">Links the invoice to a visit.</ParamField>
+
+<Warning>
+  Invoice creation writes the invoice, its line items, and the ledger entry **sequentially rather than as one atomic transaction.** An infrastructure failure mid-write can leave a partial record. Verify a created invoice before treating it as complete, and never blind-retry a failed creation — report it instead, or you will end up with two.
+</Warning>
+
+## Checkout
+
+`POST /api/billing/checkout` — the point-of-sale path. Same as invoice creation, plus package redemption and stock deduction.
+
+## PDF
+
+`GET /api/billing/invoices/{id}/pdf` — returns the rendered invoice PDF on your clinic letterhead.
+
+## Send
+
+`POST /api/billing/invoices/{id}/send` — delivers the invoice to the patient over WhatsApp and logs it on their conversation.
+
+<Warning>
+  This sends a real message. It is not idempotent — calling it twice messages the patient twice.
+</Warning>
+
+## Export
+
+`GET /api/billing/export` — CSV of invoices and line items for a date range. See [Export endpoints](/api-reference/endpoints/export).

@@ -1,0 +1,93 @@
+---
+title: "Consultations & Rx"
+description: "Form-based consultation templates, an anatomical drawing tool, and prescription templates for derma and aesthetic practice."
+icon: "stethoscope"
+---
+
+<Frame caption="A consultation in progress — structured template on the left, annotated diagram on the right.">
+  <img src="/images/features/consultation-editor.png" alt="Consultation editor with annotation" />
+</Frame>
+
+Free-text notes are unsearchable and unauditable. RetAI consultations are structured forms, built per specialty, that still let a clinician draw exactly what they saw.
+
+<Note>
+  Prescribing is off for the receptionist role by default. An owner can grant it in [Roles & permissions](/admin/roles-and-permissions).
+</Note>
+
+## Consultation templates
+
+Each template is a set of fields your clinic defines: presenting complaint, history, examination findings, diagnosis, plan, and any specialty sections you need — Fitzpatrick type, hair-loss grade, acne severity, prior treatments, contraindications.
+
+<CardGroup cols={2}>
+  <Card title="Structured means searchable" icon="magnifying-glass">
+    "Every patient with Fitzpatrick IV who had a Q-switched session in the last year" is a filter, not an afternoon of reading notes.
+  </Card>
+  <Card title="Templates per specialty" icon="clipboard-list">
+    Derma, trichology, cosmetic surgery, and aesthetics ship as starting points. We customise them to your protocols during [onboarding](/onboarding).
+  </Card>
+</CardGroup>
+
+## The clinical drawing tool
+
+Some findings are faster drawn than described. The annotation canvas gives the clinician a clean anatomical base diagram to mark on.
+
+<Frame caption="Marking treatment sites on the face — front diagram.">
+  <img src="/images/features/annotation-canvas.png" alt="Clinical annotation canvas" />
+</Frame>
+
+**Base diagrams available:**
+
+| Diagram | Use |
+| --- | --- |
+| Face — front | Injectables, peels, lesion mapping |
+| Face — three-quarter | Profile-dependent work, jawline, temple |
+| Scalp — vertex | Hair-loss grading, graft planning, PRP sites |
+| Body — front | Laser hair reduction areas, body contouring |
+
+The diagrams are deliberately minimal line art — every line the diagram contributes is a line competing with the clinician's own marks. Landmarks appear only where they are needed to place an annotation accurately.
+
+**Tools:** freehand pen, straight line, shaded region, point marker with a numbered label, text callout, and colour selection for distinguishing planned versus completed sites.
+
+<Tip>
+  All diagrams share one coordinate space. Switching the base diagram — face front to three-quarter, say — does not invalidate marks already recorded. Annotations from successive visits can be overlaid to show progression.
+</Tip>
+
+## Prescriptions
+
+<Steps>
+  <Step title="Start from a template" icon="file-lines">
+    Your common regimens — acne protocol, post-laser aftercare, melasma maintenance — saved with drugs, strengths, frequency, duration, and instructions already filled in.
+  </Step>
+  <Step title="Adjust for the patient" icon="pen-to-square">
+    Every field is editable. Allergies and clinical flags from the patient record are shown while you prescribe, not buried a tab away.
+  </Step>
+  <Step title="Sign and issue" icon="signature">
+    The prescription carries your clinic letterhead, the prescriber's name and registration number, and the date.
+  </Step>
+  <Step title="Deliver" icon="paper-plane">
+    Print, download as PDF, or send to the patient over WhatsApp. Delivery is logged on the patient record.
+  </Step>
+</Steps>
+
+### Pharmacy fulfilment
+
+If you run an in-house pharmacy, a prescription can be dispensed against [Inventory](/features/inventory) — stock is deducted and the items are added to the invoice.
+
+## Aftercare instructions
+
+Attach pre- and post-procedure instructions to any service. They send automatically at the right time relative to the appointment: pre-care the day before, aftercare an hour after the visit completes.
+
+<Warning>
+  Consultation notes and prescriptions are clinical records. They are versioned and audited — edits are recorded with who and when, and nothing is silently overwritten. See [Retention & deletion](/security/retention-and-deletion) for how long they are kept.
+</Warning>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Before & After" icon="images" href="/features/gallery">
+    Photographs taken at the same visit, bound to the session.
+  </Card>
+  <Card title="Consultation to invoice" icon="arrow-right" href="/workflows/consultation-to-invoice">
+    The full clinical-to-commercial walkthrough.
+  </Card>
+</CardGroup>

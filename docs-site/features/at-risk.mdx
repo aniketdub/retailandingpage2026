@@ -1,0 +1,92 @@
+---
+title: "At-Risk Patients"
+description: "Ranked list of patients drifting away, sorted by revenue at stake, with AI-drafted win-back messages."
+icon: "heart-pulse"
+---
+
+<Frame caption="The at-risk list, sorted by revenue at stake rather than by days since last visit.">
+  <img src="/images/features/at-risk-list.png" alt="At-risk patients list" />
+</Frame>
+
+This is the module the product is named after. Every clinic has patients quietly slipping away — a package half-finished, a maintenance cycle missed, a course of treatment abandoned after session two. They rarely announce it. They just stop coming.
+
+## How the score works
+
+At-risk is **a ranking, not a label.** It weighs:
+
+| Signal | Why it matters |
+| --- | --- |
+| Days since last visit, relative to *that patient's* own rhythm | A quarterly patient at 11 weeks is fine. A monthly patient at 11 weeks is not. |
+| Sessions remaining on a paid package | Already-paid, unredeemed value is the easiest revenue in the clinic to recover. |
+| Treatment type and expected cadence | Laser hair reduction has a biological interval. A missed one costs results, not just revenue. |
+| Lifetime value | Two patients equally lapsed are not equally worth a phone call. |
+| Recent no-shows or cancellations | A cancellation with no rebooking is a stronger drift signal than a long gap alone. |
+| Open conversation state | A patient mid-conversation with Aisha is being handled; they do not need a second chase. |
+
+The list is sorted by **revenue at stake**, so the top of the list is the most valuable call your front desk can make today — not merely the longest-absent name.
+
+## Working the list
+
+<Steps>
+  <Step title="Open At-Risk Patients" icon="heart-pulse">
+    The list is recomputed continuously. Work top-down.
+  </Step>
+  <Step title="Read the reason" icon="magnifying-glass">
+    Every row states *why* it is there: "3 of 6 laser sessions remaining, 9 weeks since last visit, package expires in 41 days." You are never guessing at the pitch.
+  </Step>
+  <Step title="Draft a message" icon="wand-magic-sparkles">
+    Click **Draft message**. RetAI writes a message grounded in that patient's real history — the treatment they had, the gap, what is unfinished.
+
+    <Frame caption="An AI-drafted win-back message with its grounding context shown.">
+      <img src="/images/features/at-risk-ai-draft.png" alt="AI-drafted win-back message" />
+    </Frame>
+  </Step>
+  <Step title="Edit and send" icon="paper-plane">
+    You always see the draft before it goes. Edit freely. Send over WhatsApp with one click.
+  </Step>
+  <Step title="Let Aisha take the reply" icon="robot">
+    When the patient answers, Aisha handles the conversation and books the slot. The row leaves the at-risk list when the appointment is created.
+  </Step>
+</Steps>
+
+## What the AI will and will not say
+
+The drafting model is constrained. It may reference the patient's own treatment history, sessions remaining, and your published service catalogue.
+
+It is forbidden from:
+
+- Promising a clinical outcome or result timeline
+- Inventing a discount, offer, or price not in your catalogue
+- Claiming an appointment exists that has not been created
+- Making any medical claim about the patient's condition
+
+<Note>
+  Every AI-drafted message is logged with the context it was given. If a patient ever queries what your clinic told them, the record is complete.
+</Note>
+
+## Bulk campaigns
+
+Filter the list — for example *"package expiring within 30 days, sessions remaining"* — and send a personalised draft to everyone matching. Each message is generated per patient from their own history; this is not a mail merge with a name field.
+
+<Warning>
+  Bulk sending is rate-limited and spread over time to protect your WhatsApp number's sending reputation. A hundred identical messages in one minute is how a business number gets restricted.
+</Warning>
+
+## Measuring recovery
+
+The [Reports](/features/reports) module tracks **revenue recovered** — bookings that came from an at-risk outreach, attributed to the message that produced them. That number is the honest measure of whether RetAI is paying for itself.
+
+<Frame caption="Revenue recovered over time, attributed to at-risk outreach.">
+  <img src="/images/features/revenue-recovered-chart.png" alt="Revenue recovered chart" />
+</Frame>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Win back a lapsed patient" icon="arrow-rotate-left" href="/workflows/win-back-a-lapsed-patient">
+    The end-to-end walkthrough.
+  </Card>
+  <Card title="WhatsApp Inbox" icon="comments" href="/features/chats">
+    Where the replies land.
+  </Card>
+</CardGroup>

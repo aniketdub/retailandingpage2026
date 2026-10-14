@@ -1,0 +1,87 @@
+---
+title: "Before & After"
+description: "A consent-gated clinical photo library with watermarking, identity masking, and automatic session linkage."
+icon: "images"
+---
+
+<Frame caption="The photo library — filtered by treatment, with paired before/after comparison.">
+  <img src="/images/features/gallery-grid.png" alt="Before and after photo library" />
+</Frame>
+
+Before-and-after photographs are the strongest sales asset an aesthetic clinic owns and the most sensitive data it holds. RetAI treats them as both.
+
+## Capturing photos
+
+<Steps>
+  <Step title="Open the patient or the session" icon="user">
+    Photos can be captured from the patient profile, or directly from a package session so the linkage is automatic.
+  </Step>
+  <Step title="Capture or upload" icon="camera">
+    Use the device camera — the mobile app makes this a one-tap job at the chair — or upload from a DSLR.
+  </Step>
+  <Step title="Tag it" icon="tags">
+    Treatment, body area, angle (front, three-quarter, left, right), and whether it is a *before*, *progress*, or *after* image.
+  </Step>
+  <Step title="Record consent" icon="file-signature">
+    Two separate permissions, captured separately:
+
+    - **Clinical record** — always required. The photo is part of the medical record.
+    - **Marketing use** — optional and explicit. Without it, the photo is structurally incapable of entering a shareable collection.
+  </Step>
+</Steps>
+
+<Warning>
+  Marketing consent is not a display setting that someone can toggle off later. A photo without recorded marketing consent cannot be added to a shareable collection at all — the export path refuses it. This is deliberate: under India's DPDP Act, "we forgot to blur it" is not a defence.
+</Warning>
+
+## Comparison view
+
+Select any two images of the same patient and area to open a side-by-side or slider comparison, with the date and session number on each. Because photos bind to the package session they were taken at, before/after pairs assemble themselves rather than needing manual curation.
+
+<Frame caption="Slider comparison between session 1 and session 6.">
+  <img src="/images/features/gallery-comparison.png" alt="Before after slider comparison" />
+</Frame>
+
+## Editing tools
+
+<AccordionGroup>
+  <Accordion title="Crop, rotate, and align" icon="crop">
+    Align a follow-up photo to the framing of the original so the comparison is honest.
+  </Accordion>
+  <Accordion title="Clinic watermark" icon="droplet">
+    Applies your logo at a configured position and opacity. Set it once in [Clinic setup](/admin/clinic-setup) and it applies to every exported image.
+  </Accordion>
+  <Accordion title="Identity masking" icon="eye-slash">
+    Blur or bar the eyes and any identifying marks. On any export where marketing consent covers the treatment area but not facial identity, masking is required before the export completes.
+  </Accordion>
+  <Accordion title="Annotation" icon="pen">
+    Mark treatment sites or areas of interest directly on the image. Annotations are stored as a layer, so the original is never altered.
+  </Accordion>
+</AccordionGroup>
+
+## Search and filters
+
+Filter by treatment, body area, clinician, date range, consent state, and whether a matching after-photo exists. The last one is the useful one: **"before photos with no after photo"** is a list of patients who did not finish their course.
+
+## Collections
+
+Group images into a collection — "Laser hair reduction results", "Acne scar revision" — for use in counselling. Collections can be shown to a prospective patient on a tablet during consultation, or exported.
+
+<Note>
+  Every image in a collection must carry marketing consent. Attempting to add one that does not is refused with the reason stated, not silently skipped.
+</Note>
+
+## Storage and access
+
+Photographs are stored encrypted, scoped to your clinic, and served only through short-lived signed URLs to signed-in staff. A URL copied from the browser expires and becomes useless — it cannot be forwarded as a permanent link.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Treatment Packages" icon="box" href="/features/packages">
+    Session linkage, which is what makes pairing automatic.
+  </Card>
+  <Card title="Data protection" icon="shield-halved" href="/security/data-protection">
+    Consent, encryption, and deletion of clinical images.
+  </Card>
+</CardGroup>

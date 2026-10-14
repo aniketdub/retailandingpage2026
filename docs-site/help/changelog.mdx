@@ -1,0 +1,70 @@
+---
+title: "Changelog"
+description: "What shipped, when."
+icon: "list"
+mode: "center"
+---
+
+<Update label="August 2026" description="Derma Stage 2">
+  ## WhatsApp AI as the primary patient channel
+
+  Aisha now handles the full conversation — answering treatment questions from your live catalogue, offering genuinely free slots, and creating the appointment herself. Bookings she makes are ordinary appointments with the same reminders and calendar sync as any other.
+
+  ## Clinical drawing tool
+
+  Annotate findings directly on anatomical base diagrams: face front, face three-quarter, scalp vertex, and body front. All diagrams share one coordinate space, so switching the base diagram does not invalidate existing marks and annotations from successive visits can be overlaid.
+
+  **Also in this release**
+  - Escalation flagging in the WhatsApp inbox for threads the AI deliberately did not answer
+  - Take over / hand back on individual conversations
+</Update>
+
+<Update label="August 2026" description="Derma Stage 1">
+  ## Before & After photo library
+
+  Consent-gated clinical image library with watermarking, identity masking, and automatic linkage to package sessions — so before/after pairs assemble themselves instead of being curated by hand.
+
+  Marketing consent is structural: a photo without it cannot enter a shareable collection at all.
+
+  ## Treatment packages
+
+  Multi-session packages with allocation, expiry, session tracking, and revenue recognised against sessions delivered rather than declared at point of sale. List price, discount, agreed price, and amount received are tracked as four distinct numbers.
+
+  ## Prescription templates
+
+  Reusable regimens with drugs, strengths, frequency, and instructions pre-filled. Issue as PDF, print, or deliver over WhatsApp.
+</Update>
+
+<Update label="August 2026" description="Security and correctness">
+  ## Per-line GST
+
+  GST is now computed per line at each line's own rate. A bill mixing 5% and 18% items is no longer blended into a single average rate.
+
+  <Warning>
+    This corrected an under-declaration on mixed-rate invoices. If your clinic issued mixed-rate invoices before this release, review them with your accountant.
+  </Warning>
+
+  ## Structural route guards
+
+  A test suite now sweeps every API route and dashboard page for its authentication guard and session-derived clinic scoping. Adding a route that forgets either one fails the build.
+
+  ## Atomic invoice numbering
+
+  Invoice numbers are allocated from a row-locked per-clinic sequence. Concurrent checkouts cannot collide.
+
+  ## Published architecture and known limitations
+
+  The [architecture](/security/architecture) and [known limitations](/security/architecture#known-limitations) pages are now public.
+</Update>
+
+<Update label="Earlier" description="Platform foundations">
+  - Multi-tenant clinic isolation with row-level security as an independent second layer
+  - NextAuth sessions with Google sign-in and no self-registration
+  - Two-way Google Calendar sync with AES-256-GCM encrypted token storage
+  - Bolna AI voice receptionist with server-side call attribution
+  - Follow-up queue with atomic claiming — no message can send twice
+  - GST invoicing with split payments and WhatsApp invoice delivery
+  - Inventory with per-procedure bill of materials and automatic deduction
+  - At-risk scoring with AI-drafted win-back messages
+  - iOS and Android apps with content-free push notifications
+</Update>

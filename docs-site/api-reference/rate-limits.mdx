@@ -1,0 +1,80 @@
+---
+title: "Rate limits"
+description: "Which endpoints are limited, at what rate, and how the limits actually behave."
+icon: "gauge-high"
+---
+
+## Limits
+
+| Endpoint | Limit | Window key |
+| --- | --- | --- |
+| `POST /api/ai/generate-reminder` | 20 / minute | Clinic |
+| `POST /api/whatsapp/send` | 30 / minute | Clinic |
+| `POST /api/voice/call` | 10 / minute | Clinic |
+| `POST /api/whatsapp` (inbound) | 15 / minute | Per sending phone number |
+| Credential sign-in | 10 per 5 minutes | Per IP address |
+
+## Why these five
+
+Each protects something specific:
+
+<CardGroup cols={2}>
+  <Card title="AI generation" icon="robot">
+    Cost. A runaway loop calling a language model is expensive fast.
+  </Card>
+  <Card title="WhatsApp send" icon="whatsapp">
+    Your number's reputation. A burst of near-identical messages is how a business number gets restricted.
+  </Card>
+  <Card title="Voice calls" icon="phone">
+    Real money and real phones ringing. A misconfiguration should not dial your whole patient list.
+  </Card>
+  <Card title="Inbound per phone" icon="shield">
+    A malfunctioning or hostile sender should not be able to exhaust your AI quota.
+  </Card>
+</CardGroup>
+
+Sign-in limiting is per IP, against credential stuffing.
+
+## How the limit actually behaves
+
+<Warning>
+  Rate limiting is a **fixed window, per running application instance** — it is not globally coordinated across instances. The effective ceiling is the stated limit multiplied by the number of instances currently serving traffic.
+
+  It is abuse and runaway-loop protection. It is **not** a hard billing cap, and you should not design an integration that relies on it to bound your costs.
+</Warning>
+
+Being a fixed window rather than a sliding one also means a burst can straddle a window boundary and briefly exceed the nominal rate. Both properties are stated because a vague claim here would mislead someone building against it.
+
+## When you hit a limit
+
+You receive `429` with:
+
+```json
+{
+  "error": "Rate limit exceeded",
+  "code": "RATE_LIMITED"
+}
+```
+
+Back off exponentially — start at one second, double each attempt, cap at five attempts.
+
+## Designing to stay under
+
+<AccordionGroup>
+  <Accordion title="Spread bulk sends" icon="clock" defaultOpen>
+    RetAI's own bulk campaigns spread over time deliberately. If you are sending programmatically, do the same — both for the limit and for your number's reputation.
+  </Accordion>
+  <Accordion title="Batch reads instead of looping" icon="layer-group">
+    List endpoints accept filters. One filtered request beats two hundred single-record requests.
+  </Accordion>
+  <Accordion title="Cache what does not change" icon="database">
+    The service catalogue changes rarely. Do not fetch it per message.
+  </Accordion>
+  <Accordion title="Never retry a send blind" icon="triangle-exclamation">
+    On an ambiguous failure, check whether it delivered before retrying. Duplicate messages to patients are worse than delayed ones.
+  </Accordion>
+</AccordionGroup>
+
+## Higher limits
+
+If a legitimate integration needs more headroom, talk to us. We would rather raise a limit than have you work around it.

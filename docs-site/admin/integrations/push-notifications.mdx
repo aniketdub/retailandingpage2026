@@ -1,0 +1,69 @@
+---
+title: "Push notifications"
+description: "Mobile alerts for inbound patient messages, escalations, and overdue follow-ups."
+icon: "bell"
+---
+
+Push notifications are how a clinic owner finds out a patient messaged at 9pm without watching the inbox.
+
+## Enabling
+
+<Steps>
+  <Step title="Install the mobile app" icon="mobile-screen-button">
+    iOS or Android. See [Mobile app](/features/mobile).
+  </Step>
+  <Step title="Sign in" icon="key">
+    Same account as the web.
+  </Step>
+  <Step title="Allow notifications when prompted" icon="bell">
+    If you dismissed the prompt, enable it in your device's system settings for the RetAI app. The app cannot re-prompt once dismissed.
+  </Step>
+  <Step title="Choose which alerts you want" icon="sliders">
+    Settings → Notifications, per device. Two phones can have different settings for the same account.
+  </Step>
+</Steps>
+
+## Available notifications
+
+| Notification | Default | Recommended for |
+| --- | --- | --- |
+| Inbound patient WhatsApp message | On | Front desk, owner |
+| Thread escalated by the AI | On | Whoever handles escalations |
+| Appointment booked by the AI | Off | Owner, during the first fortnight |
+| Appointment cancelled by a patient | On | Front desk |
+| Overdue lead follow-up assigned to you | On | Anyone who owns leads |
+| Low stock alert | Off | Owner, practice manager |
+| Day-end report ready | Off | Owner |
+
+## Content-free by design
+
+<Note>
+  Push payloads never contain patient names or message content. The notification tells you *that* a message arrived; tapping it opens the app, which then loads the data under your authenticated session.
+</Note>
+
+That means a notification sitting on a lock screen in a waiting room discloses nothing. It also means you cannot read a message from the notification shade — you have to open the app. That trade is deliberate.
+
+## Device management
+
+Each device that signs in registers itself for push. Signing out deregisters it.
+
+<Warning>
+  Sold or lost phone? Sign out on it if you can. If you cannot, have an owner deactivate and reactivate your staff account — that invalidates the session and stops delivery to that device.
+</Warning>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="No notifications at all" icon="bell-slash">
+    Check system notification permission for the RetAI app, then check per-notification toggles in Settings → Notifications, then sign out and back in to re-register the device.
+  </Accordion>
+  <Accordion title="Delayed notifications" icon="clock">
+    Usually battery optimisation on Android suspending background delivery. Exclude RetAI from battery optimisation.
+  </Accordion>
+  <Accordion title="Notifications on the wrong device" icon="mobile-screen">
+    An old device still holds a registration. Sign out on it, or have an owner cycle your account.
+  </Accordion>
+  <Accordion title="Duplicate notifications" icon="clone">
+    The same account signed in on two devices with the same alerts enabled. Turn the alert off on one.
+  </Accordion>
+</AccordionGroup>

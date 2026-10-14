@@ -1,0 +1,103 @@
+---
+title: "Billing"
+description: "Point-of-sale checkout, per-line GST, split payments, invoice PDFs, and WhatsApp delivery."
+icon: "file-invoice-dollar"
+---
+
+<Frame caption="Checkout with a live total — per-line GST computed as items are added.">
+  <img src="/images/features/billing-checkout.png" alt="Billing checkout screen" />
+</Frame>
+
+## Checkout
+
+<Steps>
+  <Step title="Pick the patient" icon="user">
+    Or start from an appointment, which pre-fills the patient and the service delivered.
+  </Step>
+  <Step title="Add line items" icon="plus">
+    Services, packages, retail products, or a free-text item for anything not in the catalogue. Quantities and per-line discounts are supported.
+  </Step>
+  <Step title="Watch the total" icon="calculator">
+    GST is calculated **per line at that line's own rate** and shown live. A bill mixing 5% and 18% items is never blended into a single wrong average rate.
+  </Step>
+  <Step title="Take payment" icon="credit-card">
+    One method or several — see split payments below.
+  </Step>
+  <Step title="Issue" icon="receipt">
+    The invoice number is allocated atomically from a per-clinic sequence. Two tills billing at the same instant cannot produce the same invoice number.
+  </Step>
+</Steps>
+
+## Payment methods
+
+Cash, card, UPI, bank transfer, cheque, package redemption, and clinic credit.
+
+### Split payments
+
+One invoice, several tenders — ₹5,000 on UPI and ₹3,000 in cash, say. Each part is recorded separately so your day-end reconciliation by method actually balances.
+
+<Frame caption="A split payment across UPI and cash.">
+  <img src="/images/features/billing-split-payment.png" alt="Split payment entry" />
+</Frame>
+
+### Partial payment and outstanding
+
+Take less than the full amount and the remainder is recorded as outstanding against the patient. Outstanding balances appear on the patient profile, in the day-end report, and in the overdue-accounts list.
+
+## Invoice delivery
+
+<CardGroup cols={2}>
+  <Card title="WhatsApp" icon="whatsapp">
+    One click. The patient receives a link to the PDF. Delivery is logged on the patient's conversation.
+  </Card>
+  <Card title="Download or print" icon="print">
+    A4 PDF on your letterhead with GSTIN, HSN/SAC codes, and the tax breakdown.
+  </Card>
+</CardGroup>
+
+## Retainer and credit
+
+Patients who pay in advance against future treatment hold a **retainer balance**. Refunds, goodwill adjustments, and overpayments create **clinic credit**. Both are redeemable at checkout and both appear on the patient profile, so the front desk cannot miss that a patient already has money on account.
+
+## Invoice list and search
+
+Filter by date range, patient, payment method, staff member, service, or outstanding status. Export any filtered view to CSV for your accountant — see [Data export](/admin/data-export).
+
+## Day-end close
+
+The day-end report reconciles: total collected by method, invoices issued, discounts granted with who granted them, refunds, outstanding created, and GST collected by rate.
+
+<Tip>
+  Run day-end before the last person leaves, not the next morning. A discrepancy is trivially traceable while the person who took the payment is still in the building.
+</Tip>
+
+See [Month-end close](/workflows/month-end-close) for the monthly version.
+
+## Amendments, refunds, and cancellation
+
+Issued invoices are not silently editable — they are tax documents.
+
+| Action | What happens |
+| --- | --- |
+| **Amend** | Creates a revision. Both versions are kept and linked. |
+| **Refund** | Recorded against the original invoice with a reason. |
+| **Cancel** | The invoice is voided, not deleted. It stays in the sequence and in reports. |
+
+<Warning>
+  Refunds and cancellations require billing permission and are audited with the staff member's name. This is a control, not an inconvenience.
+</Warning>
+
+## A known limitation, stated plainly
+
+Invoice creation writes the invoice, its line items, and the ledger entry as a sequence rather than as a single atomic transaction. In the rare event of an infrastructure failure mid-write, a partially built invoice can result. RetAI logs these and they are reconcilable, but we would rather you knew than discovered it.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Reports" icon="chart-line" href="/features/reports">
+    Revenue, tax, and collection reporting.
+  </Card>
+  <Card title="Treatment Packages" icon="box" href="/features/packages">
+    Why package revenue is recognised over time.
+  </Card>
+</CardGroup>

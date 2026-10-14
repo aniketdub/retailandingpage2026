@@ -1,0 +1,256 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "RetAI Docs",
+  "description": "Product documentation for RetAI by RetentionOS — the AI patient-retention and clinic-management platform for dermatology and aesthetic clinics.",
+  "colors": {
+    "primary": "#34532b",
+    "light": "#9eb28a",
+    "dark": "#34532b"
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://www.retentionos.tech"
+  },
+  "favicon": "/favicon.svg",
+  "appearance": {
+    "default": "dark",
+    "strict": false
+  },
+  "fonts": {
+    "heading": { "family": "Sora", "weight": 600 },
+    "body": { "family": "Inter", "weight": 400 }
+  },
+  "banner": {
+    "content": "RetAI now books appointments over WhatsApp on its own. [See how it works](/features/chats)",
+    "dismissible": true
+  },
+  "search": {
+    "prompt": "Search RetAI docs..."
+  },
+  "contextual": {
+    "options": ["copy", "view", "chatgpt", "claude"],
+    "display": "header"
+  },
+  "seo": {
+    "indexing": "navigable",
+    "metatags": {
+      "og:image": "https://docs.retentionos.tech/images/og-cover.png",
+      "og:site_name": "RetAI Documentation"
+    },
+    "organization": {
+      "name": "RetentionOS",
+      "url": "https://www.retentionos.tech",
+      "logo": "https://www.retentionos.tech/logo.png"
+    }
+  },
+  "navbar": {
+    "links": [
+      { "label": "Support", "href": "https://www.retentionos.tech/support", "icon": "life-ring" },
+      { "label": "Status", "href": "https://status.retentionos.tech", "icon": "signal" }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Open RetAI",
+      "href": "https://www.retentionos.tech"
+    }
+  },
+  "footer": {
+    "socials": {
+      "linkedin": "https://www.linkedin.com/company/retentionos",
+      "x": "https://x.com/retentionos"
+    },
+    "links": [
+      {
+        "header": "Product",
+        "items": [
+          { "label": "Feature tour", "href": "/features/overview" },
+          { "label": "Onboarding plan", "href": "/onboarding" },
+          { "label": "Pricing", "href": "https://www.retentionos.tech/pricing" }
+        ]
+      },
+      {
+        "header": "Resources",
+        "items": [
+          { "label": "Quickstart", "href": "/quickstart" },
+          { "label": "FAQ", "href": "/help/faq" },
+          { "label": "Changelog", "href": "/help/changelog" }
+        ]
+      },
+      {
+        "header": "Trust",
+        "items": [
+          { "label": "Security", "href": "/security/overview" },
+          { "label": "DPDP compliance", "href": "/security/dpdp" },
+          { "label": "Subprocessors", "href": "/security/subprocessors" }
+        ]
+      }
+    ]
+  },
+  "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Talk to us on WhatsApp",
+          "icon": "whatsapp",
+          "href": "https://wa.me/919108729324"
+        },
+        {
+          "anchor": "Main site",
+          "icon": "house",
+          "href": "https://www.retentionos.tech"
+        }
+      ]
+    },
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Get started",
+            "icon": "rocket",
+            "pages": [
+              "index",
+              "quickstart",
+              "onboarding",
+              "concepts"
+            ]
+          },
+          {
+            "group": "Everyday workflows",
+            "icon": "list-check",
+            "pages": [
+              "workflows/front-desk-day",
+              "workflows/consultation-to-invoice",
+              "workflows/win-back-a-lapsed-patient",
+              "workflows/sell-and-track-a-package",
+              "workflows/month-end-close"
+            ]
+          },
+          {
+            "group": "Modules",
+            "icon": "grid-2",
+            "pages": [
+              "features/overview",
+              "features/calendar",
+              "features/patients",
+              "features/at-risk",
+              "features/chats",
+              "features/receptionist",
+              "features/leads",
+              "features/consultations",
+              "features/gallery",
+              "features/packages",
+              "features/services",
+              "features/billing",
+              "features/inventory",
+              "features/reports",
+              "features/staff",
+              "features/mobile"
+            ]
+          },
+          {
+            "group": "Admin & setup",
+            "icon": "gear",
+            "pages": [
+              "admin/clinic-setup",
+              "admin/roles-and-permissions",
+              "admin/data-import",
+              "admin/data-export",
+              {
+                "group": "Integrations",
+                "icon": "plug",
+                "expanded": false,
+                "pages": [
+                  "admin/integrations/whatsapp",
+                  "admin/integrations/google-calendar",
+                  "admin/integrations/voice",
+                  "admin/integrations/push-notifications"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Help",
+            "icon": "life-ring",
+            "pages": [
+              "help/faq",
+              "help/troubleshooting",
+              "help/support",
+              "help/changelog"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Security & Trust",
+        "icon": "shield-halved",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "security/overview",
+              "security/architecture",
+              "security/data-protection",
+              "security/access-control"
+            ]
+          },
+          {
+            "group": "Compliance",
+            "pages": [
+              "security/dpdp",
+              "security/subprocessors",
+              "security/sla",
+              "security/incident-response",
+              "security/retention-and-deletion"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": [
+              "api-reference/introduction",
+              "api-reference/authentication",
+              "api-reference/errors",
+              "api-reference/rate-limits"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api-reference/endpoints/patients",
+              "api-reference/endpoints/appointments",
+              "api-reference/endpoints/billing",
+              "api-reference/endpoints/whatsapp",
+              "api-reference/endpoints/voice",
+              "api-reference/endpoints/crm",
+              "api-reference/endpoints/export"
+            ]
+          },
+          {
+            "group": "Webhooks & jobs",
+            "pages": [
+              "api-reference/webhooks/whatsapp-inbound",
+              "api-reference/webhooks/voice-events",
+              "api-reference/webhooks/cron"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "integrations": {
+    "ga4": { "measurementId": "G-XXXXXXXXXX" }
+  },
+  "redirects": [
+    { "source": "/introduction", "destination": "/", "permanent": true },
+    { "source": "/docs/:slug*", "destination": "/:slug*", "permanent": true }
+  ]
+}

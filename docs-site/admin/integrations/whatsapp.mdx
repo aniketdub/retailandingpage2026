@@ -1,0 +1,110 @@
+---
+title: "Connect WhatsApp"
+description: "Connect your WhatsApp Business number so patients can message the clinic and Aisha can reply."
+icon: "whatsapp"
+---
+
+This is the integration that turns RetAI from a records system into a retention engine. It is set up by the RetentionOS team during [onboarding](/onboarding); this page explains what happens and what you need to have ready.
+
+## What you need
+
+<CardGroup cols={2}>
+  <Card title="A phone number" icon="phone">
+    Either a new number or your existing clinic number — provided it is **not currently registered on the WhatsApp consumer or Business app**. A number can only live in one place.
+  </Card>
+  <Card title="Business verification details" icon="building">
+    Registered clinic name, address, website, and business category. These are what appear as your verified display name.
+  </Card>
+</CardGroup>
+
+<Warning>
+  If your clinic number is currently in use on the WhatsApp Business *app* on someone's phone, migrating it to the API means that app stops working for that number. Decide this before you start — reversing it is slow. Most clinics take a fresh number and forward the old one.
+</Warning>
+
+## Setup
+
+<Steps>
+  <Step title="We provision the number" icon="phone">
+    Registered against your clinic's tenant.
+  </Step>
+  <Step title="Business verification" icon="circle-check">
+    Submitted with your details. Verification typically takes 1–3 business days and is what gets your clinic name shown to patients instead of a bare number.
+  </Step>
+  <Step title="Webhook connection" icon="plug">
+    Inbound messages are routed to your clinic. Every inbound request is signature-verified — a forged webhook is rejected before it reaches any data.
+  </Step>
+  <Step title="Message templates" icon="file-lines">
+    Reminders, confirmations, and follow-ups are submitted for approval. Approval usually takes hours.
+  </Step>
+  <Step title="Agent configuration" icon="robot">
+    Aisha's persona, tone, escalation rules, and forbidden claims are set from your [clinic settings](/admin/clinic-setup#ai-agent-settings).
+  </Step>
+  <Step title="End-to-end test" icon="flask">
+    We verify, with you watching:
+
+    - A message from a known patient's number attaches to the right record
+    - A message from an unknown number creates a patient
+    - Aisha answers a treatment question correctly from your catalogue
+    - Aisha books an appointment into a genuinely free slot
+    - A reminder sends at the configured time
+    - An invoice delivers as a PDF link
+  </Step>
+</Steps>
+
+## Templates versus conversation
+
+WhatsApp distinguishes two message types, and the distinction shapes what RetAI can do when.
+
+| Type | When usable | Used for |
+| --- | --- | --- |
+| **Template** | Any time, pre-approved wording | Reminders, confirmations, follow-ups, win-backs |
+| **Session** | Within 24 hours of the patient's last message | Free-form conversation, including everything Aisha says |
+
+<Tip>
+  This is why a patient reply matters so much. Once they message you, a 24-hour window opens in which the conversation can be completely natural. Aisha is designed to get useful work done inside that window rather than pushing more templates at them.
+</Tip>
+
+## Reliability properties worth knowing
+
+- **Inbound messages are deduplicated at the database level.** WhatsApp retries webhooks on any hiccup; a retry cannot produce a second reply from Aisha.
+- **Outbound messages cannot double-send.** Queued messages are claimed atomically before delivery.
+- **Inbound is rate-limited per phone number.** A malfunctioning or malicious sender cannot exhaust your AI quota.
+- **Unattributable messages are dropped, not guessed.** If a message cannot be resolved to a clinic with certainty, nothing is written and no reply is sent. Silence beats replying into the wrong clinic's context.
+
+## Number reputation
+
+WhatsApp scores business numbers on how patients react to them. A number that gets blocked or reported drops in quality and eventually loses sending capacity.
+
+RetAI protects yours by:
+
+- Rate-limiting and spreading bulk sends over time
+- Respecting quiet hours on automated messages
+- Not re-sending an unanswered message more than the configured attempts
+- Honouring opt-outs permanently
+
+<Warning>
+  The fastest way to damage a number is a large blast of near-identical promotional messages. Use the [at-risk list](/features/at-risk), which personalises per patient, rather than treating RetAI as a broadcast tool.
+</Warning>
+
+## Opt-outs
+
+A patient who asks to stop receiving messages is opted out permanently and immediately. They can still be replied to if *they* message you; they will receive no automated message again unless they explicitly opt back in.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Messages arrive but attach to no patient" icon="user-xmark">
+    A phone-format mismatch. The patient record likely holds a number without a country code. Fix the record; history reattaches.
+  </Accordion>
+  <Accordion title="Aisha is not replying" icon="robot">
+    Check that the thread has not been taken over by a staff member — a taken-over thread is deliberately silent from the AI. Then check the agent is enabled in clinic settings.
+  </Accordion>
+  <Accordion title="Reminders are not sending" icon="clock">
+    Check template approval status, and check the reminder is not falling inside quiet hours.
+  </Accordion>
+  <Accordion title="Wrong display name" icon="id-card">
+    Business verification is incomplete or the display name is pending review. This is on WhatsApp's side; we chase it.
+  </Accordion>
+</AccordionGroup>
+
+More in [Troubleshooting](/help/troubleshooting).

@@ -1,0 +1,61 @@
+---
+title: "Export"
+description: "Programmatic clinic and billing exports."
+icon: "download"
+---
+
+<Note>
+  Export endpoints require **Owner** access. Every export is audited with the requesting staff member's name.
+</Note>
+
+## Clinic export
+
+`GET /api/export/clinic`
+
+Full clinic dataset as a multi-file archive.
+
+<ParamField query="from" type="string">ISO 8601 date. Omit for everything.</ParamField>
+<ParamField query="to" type="string">ISO 8601 date.</ParamField>
+<ParamField query="include" type="string">
+  Comma-separated: `patients`, `appointments`, `invoices`, `payments`, `packages`, `treatments`, `consultations`, `prescriptions`, `messages`, `calls`, `inventory`, `staff`, `audit`. Omit for all.
+</ParamField>
+
+```bash
+curl "https://www.retentionos.tech/api/export/clinic?include=patients,appointments,invoices" \
+  -H "Cookie: <session cookie>" \
+  -o clinic-export.zip
+```
+
+Large exports are prepared in the background and return a job reference plus a time-limited download link when ready.
+
+<Warning>
+  A full export is complete patient PHI in a file. Once you have downloaded it, its security is entirely yours. Do not email it, do not put it on a shared drive, and delete it when the purpose it was pulled for is done.
+</Warning>
+
+## Billing export
+
+`GET /api/billing/export`
+
+CSV of invoices and line items — the accountant-facing export.
+
+<ParamField query="from" type="string" required>ISO 8601 date.</ParamField>
+<ParamField query="to" type="string" required>ISO 8601 date.</ParamField>
+<ParamField query="format" type="string" default="csv">`csv` or `json`.</ParamField>
+
+Columns include invoice number, issue date, patient reference, line description, quantity, unit price, discount, **per-line GST rate and tax amount**, line total, payment method, and payment reference.
+
+<Warning>
+  Reconcile tax from `tax_amount` per line. Do not apply a single rate to the invoice subtotal — mixed-rate invoices will not balance.
+</Warning>
+
+## Per-patient export
+
+Available in the UI at **Patients → Actions → Export full record**, producing JSON plus that patient's images. This is the DPDP data-portability path. See [Data export](/admin/data-export).
+
+## Rate limiting
+
+Exports are heavy. Limit yourself to one full clinic export at a time; concurrent large exports will be queued rather than run in parallel.
+
+<Tip>
+  For recurring reporting, export incrementally with `from` and `to` rather than pulling everything each run. Faster for you and gentler on the database.
+</Tip>

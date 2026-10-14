@@ -1,0 +1,66 @@
+---
+title: "Errors"
+description: "Status codes, error shapes, and how to handle each."
+icon: "triangle-exclamation"
+---
+
+## Error shape
+
+```json
+{
+  "error": "Human-readable message",
+  "code": "MACHINE_READABLE_CODE"
+}
+```
+
+## Status codes
+
+| Code | Meaning | What to do |
+| --- | --- | --- |
+| `200` | Success | |
+| `201` | Created | |
+| `400` | Malformed request, or clinic scope could not be resolved | Fix the request. Do not retry unchanged. |
+| `401` | No valid session | Re-authenticate. Do not retry the same request. |
+| `403` | Authenticated, but your role lacks access to this module | Ask an owner to grant it. Retrying will not help. |
+| `404` | Not found, **or not in your clinic** | See the note below. |
+| `409` | Conflict — for example a duplicate on a unique constraint | Usually means the operation already succeeded. Check before retrying. |
+| `429` | Rate limited | Back off and retry. See [Rate limits](/api-reference/rate-limits). |
+| `500` | Server error | Retry with backoff. Report if it persists. |
+
+<Warning>
+  **`404` does not distinguish "does not exist" from "belongs to another clinic."** This is deliberate — a distinguishable response would confirm the existence of records in other tenants, which is an information leak. Do not build logic that infers existence from a 404.
+</Warning>
+
+## Common error codes
+
+| Code | Cause |
+| --- | --- |
+| `UNAUTHENTICATED` | No valid session |
+| `FORBIDDEN_MODULE` | Role lacks access to this module |
+| `CLINIC_SCOPE_UNRESOLVED` | Clinic could not be derived from the session. Almost always a staff record problem. |
+| `INVALID_PHONE` | Phone number not resolvable to E.164 |
+| `INVALID_DATE` | Date or time could not be parsed |
+| `RATE_LIMITED` | See the retry guidance |
+| `DUPLICATE` | Unique constraint hit — the record likely already exists |
+| `VENDOR_UNAVAILABLE` | A downstream provider failed. Check [status](https://status.retentionos.tech). |
+
+## Retry guidance
+
+<AccordionGroup>
+  <Accordion title="Never blind-retry a write" icon="triangle-exclamation" defaultOpen>
+    Message sends and invoice creation have real-world side effects. On an ambiguous failure, **check whether it succeeded before retrying.** A duplicate WhatsApp message to a patient is worse than a delayed one, and a duplicate invoice is a tax problem.
+  </Accordion>
+  <Accordion title="Retry 500 and 429 with exponential backoff" icon="clock">
+    Start at one second, double each attempt, cap at five attempts.
+  </Accordion>
+  <Accordion title="Never retry 400, 401, or 403" icon="ban">
+    Nothing about the request will change on its own.
+  </Accordion>
+  <Accordion title="Treat 409 as probable success" icon="circle-check">
+    A conflict on a unique constraint usually means your first attempt landed. Verify rather than retrying.
+  </Accordion>
+</AccordionGroup>
+
+## Webhook error semantics
+
+If you operate a webhook consumer, note that RetAI's own inbound webhooks deliberately return `500` on an unexpected failure so the provider retries, and treat a duplicate-key error as success so a retry does not create a duplicate record. That combination — retry on real failure, idempotent on redelivery — is the pattern to copy.

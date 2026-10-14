@@ -1,0 +1,80 @@
+---
+title: "Security overview"
+description: "How RetAI protects clinical data — isolation, encryption, access control, and the limits we state plainly."
+icon: "shield-halved"
+---
+
+<Note>
+  RetAI holds patient health information. This page states what we actually do, including where our protections end. A vendor security page that reads as though nothing could ever go wrong is not one you should trust.
+</Note>
+
+## The four properties that matter
+
+<CardGroup cols={2}>
+  <Card title="Clinic isolation" icon="building" href="/security/architecture">
+    Every record belongs to exactly one clinic. Clinic identity comes from your authenticated session, never from a URL or request body — so no request can be edited into reaching another clinic's data.
+  </Card>
+  <Card title="Encryption everywhere" icon="lock" href="/security/data-protection">
+    TLS in transit, encryption at rest for all data including images and call recordings, and separately-keyed encryption for stored third-party tokens.
+  </Card>
+  <Card title="Access control that fails closed" icon="key" href="/security/access-control">
+    Module access is checked on the server on every page load. A revoked or deactivated staff member loses access within minutes, not at session expiry.
+  </Card>
+  <Card title="Complete audit trail" icon="clipboard-list" href="/security/access-control#audit-logging">
+    Sign-ins, permission changes, record edits, discounts, refunds, and exports are all logged with staff identity and timestamp.
+  </Card>
+</CardGroup>
+
+## Defence in depth
+
+Isolation is enforced at two independent layers, so a failure in either one does not expose data on its own:
+
+1. **Application layer** — every query is scoped to your clinic before it runs. Unscoped queries throw rather than returning everything.
+2. **Database layer** — row-level security is enabled on every table holding customer data, so a leaked database credential does not become a data breach.
+
+## Third-party access
+
+Where a request touches an external service, that service is authenticated in both directions:
+
+| Interface | Protection |
+| --- | --- |
+| Inbound WhatsApp webhook | Cryptographic signature verification on every request |
+| Inbound voice webhook | Shared secret; **fails closed in production** when unconfigured |
+| Scheduled jobs | Secret compared in constant time |
+| Google Calendar authorisation | Signed, time-limited authorisation state |
+
+## AI safety
+
+Aisha reads patient data to do her job. Two properties bound what that can mean:
+
+<Warning>
+  **The AI does not choose whose data it touches.** Clinic and patient are resolved on the server from the verified message sender before the model is involved. A crafted or malicious message can influence what the AI *says*; it cannot make the AI read or write another patient's record.
+</Warning>
+
+The model also receives only an allowlisted set of patient fields, not the whole record, and its outputs pass a claims filter before reaching a patient.
+
+## What we do not claim
+
+Stated plainly, because a vague claim is worse than an honest limit:
+
+- **We are not HIPAA-certified** and do not currently hold Business Associate Agreements with our vendors. RetAI is built for the Indian market and the DPDP Act. If you need HIPAA coverage, we are not currently the right vendor.
+- **Some processing happens outside India.** Several subprocessors operate from the United States. Every one is disclosed in [Subprocessors](/security/subprocessors), which is the point of that page.
+- **Rate limiting is per-instance, not global.** The effective ceiling scales with the number of running application instances. It is protection against abuse and runaway loops, not a hard billing cap.
+- **Invoice writes are not a single atomic transaction.** An infrastructure failure mid-write can produce a partially built invoice. These are logged and reconcilable. See [Billing](/features/billing).
+
+## Reporting a vulnerability
+
+Email **security@retentionos.tech** with steps to reproduce. We acknowledge within one business day.
+
+We will not pursue legal action against good-faith research that avoids privacy violations, data destruction, and service disruption. Please do not test against a live clinic tenant — ask us for a test tenant and we will provide one.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Architecture" icon="sitemap" href="/security/architecture">
+    How isolation is actually implemented.
+  </Card>
+  <Card title="DPDP compliance" icon="scale-balanced" href="/security/dpdp">
+    Roles, consent, and patient rights under Indian law.
+  </Card>
+</CardGroup>

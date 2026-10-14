@@ -1,0 +1,109 @@
+---
+title: "Data protection"
+description: "Encryption, consent, clinical images, call recordings, and cross-border processing."
+icon: "lock"
+---
+
+## Encryption
+
+| Data | Protection |
+| --- | --- |
+| In transit | TLS on every connection — browser, mobile app, API, and every vendor interface |
+| At rest | Encrypted at the storage layer, including database, images, and call recordings |
+| Google refresh tokens | Additionally encrypted with **AES-256-GCM**, under a key held separately from the application session secret |
+| Backups | Encrypted |
+
+<Note>
+  The Google token key is deliberately separate from the session secret. Rotating one does not invalidate the other — a security operation on sessions should not silently break every clinic's calendar sync.
+</Note>
+
+## Clinical images
+
+Before-and-after photographs are the most sensitive category RetAI holds.
+
+<CardGroup cols={2}>
+  <Card title="Consent is structural" icon="file-signature">
+    Clinical-record consent and marketing consent are recorded separately. A photo without marketing consent is **incapable** of entering a shareable collection — the export path refuses it, rather than relying on someone remembering.
+  </Card>
+  <Card title="Signed, expiring URLs" icon="link-slash">
+    Images are served only through short-lived signed URLs to authenticated staff. A URL copied out of the browser expires and cannot be forwarded as a permanent link.
+  </Card>
+  <Card title="Identity masking" icon="eye-slash">
+    Where marketing consent covers the treatment area but not facial identity, masking is required before an export completes.
+  </Card>
+  <Card title="Watermarking" icon="droplet">
+    Your clinic logo is applied to exports at a configured position and opacity.
+  </Card>
+</CardGroup>
+
+## Call recordings
+
+Recorded only where voice is enabled. A configurable consent announcement plays at call start.
+
+<Warning>
+  The announcement wording is the clinic's legal responsibility. It must match what your jurisdiction requires for recording a call. Have it reviewed before go-live.
+</Warning>
+
+Recordings are encrypted at rest, scoped to your clinic, and deleted automatically at your configured retention period.
+
+## Push notifications
+
+Payloads never contain patient names or message content. A notification says a message arrived; the app loads the content afterwards under the recipient's authenticated session. A notification visible on a lock screen discloses nothing.
+
+## Message content and AI processing
+
+Patient message content is sent to Google Gemini for reply generation. Understand what that means:
+
+- Only an **allowlisted subset** of patient fields accompanies the message — not the full record
+- The clinic and patient are already resolved before the model is called
+- Every AI decision is logged with the context it was given, so what the AI was told is auditable
+- Processing occurs in the United States. Disclosed in [Subprocessors](/security/subprocessors).
+
+## Cross-border processing
+
+Several subprocessors operate outside India. This is disclosed rather than buried:
+
+| Vendor | Role | Location |
+| --- | --- | --- |
+| Vercel | Application hosting | United States, global edge |
+| Supabase | Database and storage | Region selected at project setup |
+| Twilio | WhatsApp delivery | United States |
+| Meta | WhatsApp network | United States |
+| Google | AI processing, Calendar, Sign-In | United States |
+| Bolna | Voice | Confirm current region |
+| Firebase | Push (device token only) | United States |
+
+The DPDP Act permits cross-border transfer except to countries restricted by government notification. Full detail: [Subprocessors](/security/subprocessors).
+
+## Patient rights
+
+Under India's DPDP Act, patients may access, correct, and request erasure of their data. RetAI provides the mechanisms; the **clinic is the Data Fiduciary** and decides each request.
+
+| Right | Mechanism |
+| --- | --- |
+| Access | Patient → Actions → Download summary, or Export full record |
+| Correction | Edit the patient record; changes are audited |
+| Erasure | Delete the patient record, subject to medical-record retention law |
+| Withdraw marketing consent | Toggle on the patient record; photos immediately become unusable for marketing |
+| Stop messages | Opt-out, honoured permanently and immediately |
+
+<Warning>
+  Erasure is not unconditional. Medical-record retention obligations under Indian law may require you to keep clinical records for a minimum period regardless of a patient's request. That assessment is the clinic's to make, with its own legal advice — RetAI does not make it for you.
+</Warning>
+
+## Staff device security
+
+RetAI stores no local copy of patient data on staff devices. The mobile app is a thin authenticated shell around the same secure application the web serves.
+
+A lost phone is a session to revoke, not a database to recover. Deactivating and reactivating the staff account invalidates it.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="DPDP compliance" icon="scale-balanced" href="/security/dpdp">
+    Roles and obligations under Indian law.
+  </Card>
+  <Card title="Retention & deletion" icon="trash" href="/security/retention-and-deletion">
+    How long data is kept, and what deletion actually does.
+  </Card>
+</CardGroup>

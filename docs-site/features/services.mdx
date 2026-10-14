@@ -1,0 +1,64 @@
+---
+title: "Services"
+description: "Your procedure catalogue — price, GST rate, duration, clinician mapping, and consumables."
+icon: "tags"
+---
+
+<Frame caption="The service catalogue, grouped by category.">
+  <img src="/images/features/services-catalogue.png" alt="Services catalogue" />
+</Frame>
+
+The service catalogue is the smallest module and the one everything else depends on. The calendar, the AI agent, billing, inventory, and packages all read from it.
+
+## Fields on a service
+
+| Field | Why it matters |
+| --- | --- |
+| **Name** | What appears on the invoice and what Aisha calls it to patients |
+| **Category** | Groups the catalogue — Laser, Injectables, Facials, Consultation, Trichology |
+| **Price** | Base price before any package or discount |
+| **GST rate** | Per service, not per clinic. Applied per line at billing. |
+| **Duration** | Sets the slot length on the calendar and constrains what the AI can offer |
+| **Clinicians** | Who may deliver it. The calendar and the AI both respect this. |
+| **Consumables** | Bill of materials deducted from stock on delivery |
+| **Pre/post care** | Instructions sent automatically around the appointment |
+| **Patient-facing description** | What Aisha tells a patient who asks what this treatment involves |
+
+<Warning>
+  Duration and clinician mapping are load-bearing. A wrong duration produces double-booked chairs; a missing clinician mapping means the AI cannot offer that service at all, and patients asking for it get escalated instead of booked.
+</Warning>
+
+## The patient-facing description
+
+This field is what Aisha reads when a patient asks "what is a HydraFacial?" or "how long does laser take?". Write it as you would say it to a patient.
+
+<Tip>
+  Include what the session involves, how long it takes, roughly what to expect afterwards, and the price. Leave out anything you would not want stated without a consultation — outcome promises, in particular. Aisha will not invent claims, but she will faithfully repeat one you wrote.
+</Tip>
+
+## Categories and ordering
+
+Categories control grouping on the checkout screen and in reports. Order services within a category so your highest-volume items are first — the front desk is picking from this list forty times a day.
+
+## Price changes
+
+Editing a price affects future invoices only. Existing invoices and sold packages keep the price they were sold at; historical revenue never restates.
+
+<Note>
+  Sold packages hold their own agreed price. Raising the price of a component service does not change what an existing package holder owes.
+</Note>
+
+## Bulk import
+
+Long price lists come in by CSV — name, category, price, GST rate, duration. See [Data import](/admin/data-import).
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Inventory" icon="boxes-stacked" href="/features/inventory">
+    Attaching consumables to a service.
+  </Card>
+  <Card title="Treatment Packages" icon="box" href="/features/packages">
+    Bundling services into a course.
+  </Card>
+</CardGroup>

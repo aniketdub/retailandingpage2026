@@ -1,0 +1,100 @@
+---
+title: "Connect Google Calendar"
+description: "Two-way sync between RetAI appointments and your clinicians' Google Calendars."
+icon: "calendar-days"
+---
+
+Clinicians already live in Google Calendar. Rather than asking them to stop, RetAI syncs both ways.
+
+## What sync does
+
+<CardGroup cols={2}>
+  <Card title="Push" icon="arrow-right">
+    An appointment created in RetAI — by staff or by Aisha — appears on the clinician's Google Calendar within seconds, with patient name, service, and duration.
+  </Card>
+  <Card title="Pull" icon="arrow-left">
+    Personal events the clinician blocks in Google appear in RetAI as busy time. Neither staff nor the AI will book over their lunch or their child's school run.
+  </Card>
+</CardGroup>
+
+## Connecting
+
+<Steps>
+  <Step title="Settings → Integrations → Google Calendar" icon="gear" />
+  <Step title="Click Connect" icon="plug">
+    You are redirected to Google to grant calendar access.
+  </Step>
+  <Step title="Sign in as the clinician" icon="user">
+    Connect the account whose calendar should sync — not a shared clinic account, unless that genuinely is the clinician's working calendar.
+  </Step>
+  <Step title="Grant calendar permission" icon="circle-check">
+    RetAI requests calendar read and write. It requests nothing else — no Gmail, no Drive, no contacts.
+  </Step>
+  <Step title="Choose the target calendar" icon="calendar-days">
+    Pick which calendar receives clinic appointments. A dedicated "Clinic" calendar is cleaner than the personal default.
+  </Step>
+  <Step title="Verify" icon="flask">
+    Create a test appointment in RetAI and confirm it appears in Google. Then block an hour in Google and confirm RetAI shows it as busy.
+  </Step>
+</Steps>
+
+<Note>
+  Each clinician connects their own calendar. There is no way for one staff member to connect a colleague's calendar on their behalf — the consent must come from the account holder.
+</Note>
+
+## What is stored
+
+RetAI stores a Google refresh token so sync can continue without re-authorising daily. That token is **encrypted at rest with AES-256-GCM** under a key held separately from the application session secret.
+
+Revoking access in your Google account permissions ends the connection immediately; the stored token becomes useless.
+
+## Sync behaviour
+
+| Action in RetAI | Effect in Google |
+| --- | --- |
+| Appointment created | Event created |
+| Appointment moved | Event moved |
+| Appointment cancelled | Event deleted |
+| Status changed | Event title updated |
+
+| Action in Google | Effect in RetAI |
+| --- | --- |
+| Event created on the synced calendar | Shown as busy; that time cannot be booked |
+| Event moved | Busy time moves |
+| Event deleted | Busy time cleared |
+
+<Warning>
+  Editing a RetAI-created event *inside Google* is not a supported way to reschedule. The clinical record, the reminder, and the patient's expectation all live in RetAI. Reschedule there; Google follows.
+</Warning>
+
+## Privacy of event detail
+
+Choose what appears in the Google event title:
+
+| Setting | Google shows |
+| --- | --- |
+| Full detail | Patient name and service |
+| Service only | Service name, no patient name |
+| Busy only | "Clinic appointment" |
+
+<Tip>
+  If a clinician's Google Calendar is shared with anyone outside the clinic — a spouse, an assistant, a public availability link — use **Service only** or **Busy only**. A shared calendar is a disclosure path, and patient names on it are a data-protection problem.
+</Tip>
+
+## Disconnecting
+
+Settings → Integrations → Google Calendar → **Disconnect**. The stored token is deleted. Events already pushed remain in Google; delete them there if you want them gone.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Sync stopped working" icon="triangle-exclamation">
+    Usually the Google account changed its password or revoked access. Reconnect.
+  </Accordion>
+  <Accordion title="Appointments push but Google events do not pull" icon="arrow-left">
+    Confirm the events are on the *selected* calendar. Events on a different calendar in the same account are not read.
+  </Accordion>
+  <Accordion title="Duplicate events" icon="clone">
+    Usually two connections to the same calendar from different staff accounts. Disconnect one.
+  </Accordion>
+</AccordionGroup>

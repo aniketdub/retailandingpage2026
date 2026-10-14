@@ -1,0 +1,83 @@
+---
+title: "Mobile app"
+description: "iOS and Android apps with push notifications for inbound patient messages."
+icon: "mobile-screen-button"
+---
+
+<Frame caption="The RetAI mobile app — calendar, inbox, and patient search in your pocket.">
+  <img src="/images/features/mobile-app.png" alt="RetAI mobile app" />
+</Frame>
+
+RetAI ships as native apps for iOS and Android in addition to the web app. Same account, same data, same permissions.
+
+## What mobile is for
+
+<CardGroup cols={2}>
+  <Card title="Push on inbound messages" icon="bell">
+    A patient messages after hours and the owner knows immediately. The notification is content-free by design — it tells you a message arrived, not what it said.
+  </Card>
+  <Card title="Photo capture at the chair" icon="camera">
+    Capture before/after images straight into the patient's session without a camera-to-computer transfer step.
+  </Card>
+  <Card title="Calendar on the floor" icon="calendar-days">
+    Check the day, move an appointment, mark a patient checked in, without walking back to the desk.
+  </Card>
+  <Card title="Patient lookup" icon="magnifying-glass">
+    Full patient record, history, and conversation, searchable by name or phone.
+  </Card>
+</CardGroup>
+
+## Installing
+
+<Tabs>
+  <Tab title="iOS">
+    Install from the App Store, open, and sign in with the same account you use on the web. Allow notifications when prompted — without that permission, inbound-message alerts do not arrive.
+  </Tab>
+  <Tab title="Android">
+    Install from Google Play, open, and sign in. Allow notifications when prompted.
+  </Tab>
+</Tabs>
+
+## Sign-in
+
+Google sign-in and email/password both work. Google sign-in opens a secure system browser tab, completes with Google, and returns you to the app.
+
+<Warning>
+  If Google sign-in returns to the app but leaves you on the login screen, your device is blocking the return redirect. Try disabling any VPN or content blocker for the sign-in, then retry. Persisting past that, see [Troubleshooting](/help/troubleshooting).
+</Warning>
+
+## Notifications
+
+Configure per device in **Settings → Notifications**:
+
+| Notification | Default |
+| --- | --- |
+| Inbound patient WhatsApp message | On |
+| Thread escalated by the AI | On |
+| Appointment booked by the AI | Off |
+| Overdue lead follow-up assigned to you | On |
+| Low stock alert | Off — owners and managers only |
+| Day-end report ready | Off |
+
+<Note>
+  Push payloads never contain patient names or message content. Tapping the notification opens the app, which then loads the data under your authenticated session. A notification visible on a lock screen discloses nothing.
+</Note>
+
+## Offline behaviour
+
+The app requires a connection. It is a thin native shell around the same secure application the web serves, so there is no local copy of patient data on the device — and nothing to extract if the phone is lost.
+
+<Tip>
+  That is a deliberate trade. Offline caching of clinical records on staff phones is a data-protection liability we chose not to create.
+</Tip>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Push setup" icon="bell" href="/admin/integrations/push-notifications">
+    Enabling and troubleshooting notifications.
+  </Card>
+  <Card title="WhatsApp Inbox" icon="comments" href="/features/chats">
+    What most notifications are about.
+  </Card>
+</CardGroup>

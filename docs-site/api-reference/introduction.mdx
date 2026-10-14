@@ -1,0 +1,81 @@
+---
+title: "API introduction"
+sidebarTitle: "Introduction"
+description: "Base URL, conventions, and what the RetAI API is for."
+icon: "code"
+---
+
+The RetAI API is used for integrations — pushing website enquiries into the leads pipeline, pulling reporting data into a warehouse, or syncing with practice software you already run.
+
+<Note>
+  The API is session-authenticated and scoped to the signed-in staff member's clinic. It is not currently a public partner API with issued keys. If you need machine-to-machine access, talk to us — we will not tell you to script a browser session.
+</Note>
+
+## Base URL
+
+```
+https://www.retentionos.tech/api
+```
+
+## Conventions
+
+| Aspect | Convention |
+| --- | --- |
+| Format | JSON request and response bodies |
+| Methods | `GET` read, `POST` create, `PATCH` update, `DELETE` remove |
+| Timestamps | ISO 8601 with timezone |
+| Money | Numbers in rupees, two decimal places |
+| Phone numbers | E.164 (`+919876543210`) on the way in and out |
+| IDs | UUIDs |
+
+## Clinic scope
+
+<Warning>
+  **Every endpoint is scoped to the clinic of the authenticated session.** There is no `clinic_id` parameter you can pass, because clinic identity is never read from user input. This is a security property, not a missing feature: it is what makes it impossible to reach another clinic's data by editing a request.
+</Warning>
+
+## Endpoint groups
+
+<CardGroup cols={2}>
+  <Card title="Patients" icon="users" href="/api-reference/endpoints/patients">
+    Read and search patient records.
+  </Card>
+  <Card title="Appointments" icon="calendar-days" href="/api-reference/endpoints/appointments">
+    List and update appointments.
+  </Card>
+  <Card title="Billing" icon="file-invoice-dollar" href="/api-reference/endpoints/billing">
+    Services, invoices, checkout, PDFs, and delivery.
+  </Card>
+  <Card title="WhatsApp" icon="comments" href="/api-reference/endpoints/whatsapp">
+    Inbox and outbound send.
+  </Card>
+  <Card title="Voice" icon="phone-volume" href="/api-reference/endpoints/voice">
+    Call log and outbound calls.
+  </Card>
+  <Card title="CRM" icon="hand-holding-heart" href="/api-reference/endpoints/crm">
+    Leads, status, and presence.
+  </Card>
+  <Card title="Export" icon="download" href="/api-reference/endpoints/export">
+    Clinic and billing exports.
+  </Card>
+  <Card title="Webhooks" icon="webhook" href="/api-reference/webhooks/whatsapp-inbound">
+    Inbound message, voice event, and scheduled-job endpoints.
+  </Card>
+</CardGroup>
+
+## Before you build
+
+<AccordionGroup>
+  <Accordion title="Read the rate limits" icon="gauge-high">
+    Several endpoints are rate-limited, and the limits are per-instance rather than globally coordinated. See [Rate limits](/api-reference/rate-limits).
+  </Accordion>
+  <Accordion title="Handle 401 by re-authenticating" icon="key">
+    Sessions expire after 8 hours idle. A `401` means sign in again, not retry the same request.
+  </Accordion>
+  <Accordion title="Do not assume atomicity on invoice creation" icon="triangle-exclamation">
+    Invoice writes are sequential rather than a single transaction. Verify a created invoice before acting on it as complete.
+  </Accordion>
+  <Accordion title="Ask us before going to production" icon="comments">
+    We would rather know an integration exists than discover it in a traffic spike. It also means we tell you before a breaking change instead of after.
+  </Accordion>
+</AccordionGroup>

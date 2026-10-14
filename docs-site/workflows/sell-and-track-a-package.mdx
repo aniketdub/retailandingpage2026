@@ -1,0 +1,115 @@
+---
+title: "Sell and track a package"
+description: "Quotation to sale to session delivery to expiry recovery — including how the money is recognised."
+icon: "box"
+---
+
+Packages are where most aesthetic revenue lives and where most clinic accounting goes wrong. This walkthrough covers both the clicks and the arithmetic.
+
+## 1 — Quote it
+
+<Steps>
+  <Step title="Open the patient's lead, or create one" icon="hand-holding-heart">
+    If they are already a patient, quote from the patient record instead.
+  </Step>
+  <Step title="Build the quotation" icon="pen-to-square">
+    Add the package, apply any discount the counsellor is authorised to give. GST computes per line at each line's own rate.
+  </Step>
+  <Step title="Send it" icon="paper-plane">
+    Branded PDF over WhatsApp. Set a next-action date on the lead before you close the screen.
+  </Step>
+</Steps>
+
+## 2 — Sell it
+
+Convert the accepted quotation straight to checkout — nothing is retyped, so the quoted price and the billed price cannot drift apart.
+
+At checkout, four numbers are tracked separately. Conflating them is the classic error:
+
+| Term | Example |
+| --- | --- |
+| **List price** | ₹60,000 for 6 laser sessions |
+| **Discount** | ₹6,000 granted by the counsellor |
+| **Agreed price** | ₹54,000 — what the patient owes |
+| **Amount received** | ₹20,000 paid today |
+
+RetAI then derives:
+
+- **Outstanding** — ₹34,000 still to collect
+- **Per-session value** — ₹9,000
+- **Earned value** — ₹0 today; no session has been delivered
+- **Unearned advance** — ₹20,000, a *liability*. You have taken money and owe treatment for it.
+
+<Note>
+  This is the point of the module. A six-session package sold today is not six sessions of revenue today, and not six sessions of GST liability today.
+</Note>
+
+## 3 — Allocate the sessions
+
+<Frame caption="Six sessions allocated across three months at the configured interval.">
+  <img src="/images/workflows/package-01-allocation.png" alt="Package session allocation" />
+</Frame>
+
+RetAI proposes dates from the package's configured session interval. Adjust anything, then confirm. Each becomes a real appointment with its own reminder.
+
+<Tip>
+  Allocate all sessions at the point of sale, even if dates shift later. A package with sessions on the calendar completes far more often than one the patient is expected to remember to book.
+</Tip>
+
+## 4 — Deliver a session
+
+Marking session 1 delivered:
+
+1. Sessions completed → 1, remaining → 5
+2. Earned value → ₹9,000; unearned advance → ₹11,000
+3. GST recognised on the earned portion, at the correct per-line rate
+4. Consumables deducted from stock via the bill of materials
+5. Session photograph prompted, bound to session 1
+6. Session 2's reminder queued
+
+<Frame caption="Package progress after two of six sessions.">
+  <img src="/images/workflows/package-02-progress.png" alt="Package progress tracking" />
+</Frame>
+
+### When delivery runs ahead of collection
+
+If you deliver session 3 while only ₹20,000 has been collected, earned value (₹27,000) exceeds amount received. RetAI shows that as **delivered unpaid: ₹7,000** — treatment given away pending collection.
+
+<Warning>
+  Delivered-unpaid is the number that quietly grows in clinics without package accounting. Check it on the package report weekly, not at year end.
+</Warning>
+
+## 5 — Recover the remainder
+
+RetAI chases sessions without anyone remembering to:
+
+| Trigger | What is sent |
+| --- | --- |
+| Session interval exceeded | Reminder that the next session is due |
+| Package expiry in 30 days with sessions remaining | Expiry reminder |
+| Gap widening beyond the patient's own rhythm | Patient rises on the [at-risk list](/features/at-risk) with sessions-remaining stated in the draft |
+
+## 6 — Close it out
+
+<AccordionGroup>
+  <Accordion title="All sessions delivered" icon="circle-check">
+    Package marked complete. Full agreed price recognised. It stays on the patient record as history.
+  </Accordion>
+  <Accordion title="Expired with sessions remaining" icon="clock">
+    Flagged on the package report. Your policy decides — extend, part-refund, or forfeit. Whatever you choose is recorded with a reason.
+  </Accordion>
+  <Accordion title="Cancelled mid-course" icon="circle-xmark">
+    Refundable amount computes as amount received minus earned value, adjusted per your policy. Recorded against the original invoice so the audit trail holds.
+  </Accordion>
+</AccordionGroup>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Treatment Packages" icon="box" href="/features/packages">
+    Full module reference.
+  </Card>
+  <Card title="Reports" icon="chart-line" href="/features/reports">
+    Package completion and unearned-advance reporting.
+  </Card>
+</CardGroup>

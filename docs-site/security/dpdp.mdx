@@ -1,0 +1,84 @@
+---
+title: "DPDP compliance"
+description: "Roles, consent, patient rights, and what the clinic is responsible for under India's Digital Personal Data Protection Act."
+icon: "scale-balanced"
+---
+
+<Warning>
+  This page explains how RetAI is built to support DPDP compliance. It is not legal advice. Your clinic is the Data Fiduciary and remains responsible for its own compliance. Take advice from a qualified Indian lawyer on your specific obligations.
+</Warning>
+
+## Who is who
+
+| Role | Who | Responsibility |
+| --- | --- | --- |
+| **Data Principal** | Your patient | Holds the rights |
+| **Data Fiduciary** | **Your clinic** | Decides why and how patient data is processed. Answerable for consent, notice, and rights requests. |
+| **Data Processor** | RetentionOS | Processes on your documented instructions. Provides the mechanisms; does not decide the purposes. |
+
+<Note>
+  This distinction is the one clinics get wrong. RetAI is your processor, not your compliance department. We give you consent capture, audit, export, and deletion — you decide what you collect, why, and what you tell patients.
+</Note>
+
+## Consent
+
+RetAI records consent as discrete, separately-recorded permissions rather than a single blanket agreement:
+
+| Consent | Captured | Effect if absent |
+| --- | --- | --- |
+| Treatment and clinical records | At registration | Cannot proceed |
+| WhatsApp communication | At registration or first contact | No automated messages sent |
+| Marketing use of photographs | Per photo, explicitly | Photo **structurally barred** from any shareable collection |
+| Call recording | Announced at call start | Configure per your legal advice |
+| Marketing communication | Separate from service communication | No promotional messages |
+
+Consent state is visible on the patient record and every consent change is audited.
+
+<Warning>
+  **Marketing consent on photographs is not a display toggle.** A photo without it cannot be added to a shareable collection at all — the export path refuses it and states why. Under DPDP, "we forgot to blur it" is not a defence, so we made the failure impossible rather than unlikely.
+</Warning>
+
+## Patient rights, and how to satisfy each
+
+| Right | In RetAI |
+| --- | --- |
+| **Access** | Patient → Actions → Download summary (PDF), or Export full record (JSON plus images) |
+| **Correction** | Edit the patient record. Changes are audited. |
+| **Erasure** | Delete the patient record, subject to retention law below |
+| **Withdraw consent** | Toggle on the patient record. Photos immediately become unusable for marketing. |
+| **Grievance redressal** | Your clinic must publish a contact. RetAI supports you on anything requiring platform action. |
+
+<Warning>
+  **Erasure is not unconditional.** Medical-record retention obligations under other Indian law may require you to retain clinical records for a minimum period regardless of an erasure request. That assessment is the clinic's, with its own legal advice. RetAI will action your instruction; it will not make the judgement for you.
+</Warning>
+
+## Notice
+
+As Data Fiduciary you must tell patients what you collect, why, who it is shared with, and how to exercise their rights. A patient-notice template is provided during [onboarding](/onboarding) as a starting point — **have it reviewed by your lawyer before using it.**
+
+## Cross-border transfer
+
+Several RetAI subprocessors operate outside India. The DPDP Act permits cross-border transfer except to countries restricted by government notification.
+
+Every subprocessor, what it processes, and where, is listed in [Subprocessors](/security/subprocessors). Clinics are notified at least **15 days** before a new subprocessor is engaged, and may object on reasonable data-protection grounds.
+
+## Breach notification
+
+If a personal data breach affects your clinic's data, RetentionOS notifies you without undue delay with what is known: what happened, what data was affected, what we have done, and what you should do. As Data Fiduciary, notification to the Data Protection Board and to affected patients is your obligation; we provide what you need to make it.
+
+See [Incident response](/security/incident-response).
+
+## Data Processing Agreement
+
+A DPA is executed with every clinic, covering processing scope, subprocessor notification, security measures, breach notification, and deletion on termination. Ask your account contact for the current version.
+
+## What we support versus what you own
+
+<CardGroup cols={2}>
+  <Card title="RetAI provides" icon="circle-check">
+    Consent capture and audit, access and portability exports, correction with audit, deletion mechanisms, retention scheduling, breach notification to you, subprocessor disclosure, and a DPA.
+  </Card>
+  <Card title="Your clinic owns" icon="user-shield">
+    Deciding what you collect and why, patient notice, evaluating erasure requests against retention law, publishing a grievance contact, staff training, and your own legal advice.
+  </Card>
+</CardGroup>

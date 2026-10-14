@@ -1,0 +1,113 @@
+---
+title: "Treatment Packages"
+description: "Multi-session packages with allocation, expiry, session tracking, and GST recognised on amount received."
+icon: "box"
+---
+
+<Frame caption="A sold package showing sessions delivered, sessions remaining, and collection state.">
+  <img src="/images/features/package-detail.png" alt="Treatment package detail" />
+</Frame>
+
+Most aesthetic revenue is sold as a course, not a visit. Packages are where RetAI tracks the gap between money collected and treatment delivered — and that gap is where both your tax exposure and your retention risk live.
+
+## Defining a package
+
+<Steps>
+  <Step title="Name and services" icon="tags">
+    A package is a set of services with a session count each. "Laser hair reduction — full legs × 6" or a mixed course: "4 × HydraFacial + 2 × chemical peel".
+  </Step>
+  <Step title="List price" icon="indian-rupee-sign">
+    What the package is advertised at.
+  </Step>
+  <Step title="Validity" icon="clock">
+    How long the patient has to use it. Expiry drives the reminders that recover unredeemed sessions.
+  </Step>
+  <Step title="Session interval" icon="calendar-days">
+    The recommended gap between sessions. This is what tells RetAI a patient is falling behind their own course.
+  </Step>
+</Steps>
+
+Pre-built package templates for common derma and aesthetic courses ship with the product; clone one and adjust rather than starting blank.
+
+## Selling a package
+
+At checkout, the counsellor can apply a discount. RetAI keeps four numbers distinct, and conflating them is the single most common accounting error in clinic software:
+
+| Term | Meaning |
+| --- | --- |
+| **List price** | What the package is advertised at |
+| **Discount** | Reduction granted by the counsellor |
+| **Agreed price** | What the patient actually owes — list price minus discount |
+| **Amount received** | What the clinic has actually collected so far |
+
+From these RetAI derives:
+
+<CardGroup cols={2}>
+  <Card title="Earned value" icon="circle-check">
+    The portion of the agreed price attributable to sessions actually delivered. This is revenue.
+  </Card>
+  <Card title="Unearned advance" icon="hand-holding-dollar">
+    Money collected for sessions not yet delivered. This is a **liability** — the clinic owes treatment for it.
+  </Card>
+  <Card title="Delivered unpaid" icon="triangle-exclamation">
+    Treatment given that has not been paid for. The number clinic managers need and rarely have.
+  </Card>
+  <Card title="Outstanding" icon="receipt">
+    Agreed price minus amount received.
+  </Card>
+</CardGroup>
+
+## GST on amount received
+
+<Note>
+  A six-session package sold today is **not** six sessions of revenue today, and it is **not** six sessions of GST liability today.
+</Note>
+
+RetAI recognises tax against sessions delivered and money received rather than declaring the whole package at the point of sale. GST is computed **per line at that line's own rate**, so a package mixing a 5% item and an 18% item is not blended into a single wrong average.
+
+The practical effect: your tax outflow tracks your actual delivery rather than running months ahead of it.
+
+<Warning>
+  Package tax treatment depends on your clinic's own registration and accounting method. Configure it with your accountant during [onboarding](/onboarding) — RetAI computes correctly under the method you set, but it does not choose the method for you.
+</Warning>
+
+## Allocating and scheduling sessions
+
+From a sold package, allocate sessions to dates in one pass. RetAI proposes dates using the configured interval; adjust anything, then confirm. Each allocated session becomes an ordinary appointment on the [calendar](/features/calendar) with its own reminder.
+
+<Frame caption="Allocating six sessions across three months from the package screen.">
+  <img src="/images/features/package-session-allocation.png" alt="Package session allocation" />
+</Frame>
+
+## Delivering a session
+
+Marking a session delivered:
+
+1. Increments sessions completed and recomputes earned value
+2. Deducts consumables from [Inventory](/features/inventory) via the procedure's bill of materials
+3. Prompts for the session photograph, linked to that session number
+4. Recognises the revenue and tax portion for the delivered session
+5. Schedules the next session's reminder
+
+## Expiry and recovery
+
+Packages approaching expiry with sessions remaining are surfaced in three places: the package list, the patient profile, and the [at-risk list](/features/at-risk) — where they rank high, because the patient has already paid.
+
+<Tip>
+  Filter packages by *"expiring within 30 days, sessions remaining"* and send the whole list an AI-drafted reminder. It is the highest-return five minutes available in the product.
+</Tip>
+
+## Refunds and part-cancellation
+
+Cancelling a package with sessions remaining computes the refundable amount as amount received minus earned value, with any adjustment your policy requires. The refund is recorded against the original invoice so the audit trail stays intact.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Sell and track a package" icon="list-check" href="/workflows/sell-and-track-a-package">
+    Step-by-step walkthrough.
+  </Card>
+  <Card title="Billing" icon="file-invoice-dollar" href="/features/billing">
+    Invoicing, split payments, and receipts.
+  </Card>
+</CardGroup>

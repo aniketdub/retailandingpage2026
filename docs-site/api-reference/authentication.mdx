@@ -1,0 +1,74 @@
+---
+title: "Authentication"
+description: "How API requests are authenticated and scoped."
+icon: "key"
+---
+
+## Session authentication
+
+The API authenticates with the same signed session cookie the web application uses. Requests from a signed-in browser session are authenticated automatically.
+
+| Property | Value |
+| --- | --- |
+| Mechanism | Signed JWT session cookie |
+| Idle lifetime | 8 hours |
+| Refresh | On activity |
+| Unauthenticated API request | `401` JSON |
+| Unauthenticated page request | `307` redirect to sign-in |
+
+## What a valid session means
+
+Authentication is not a single check at issue time. On each request:
+
+1. The session signature is verified
+2. The session must correspond to a **currently active** staff record
+3. Role and clinic are re-read from that staff record periodically, not trusted from the token for its full lifetime
+
+<Warning>
+  A deactivated staff member's session stops working within minutes, even though the token has not expired. A missing staff record grants nothing — the failure mode is closed, not open.
+</Warning>
+
+## Authorisation
+
+Two further checks after authentication:
+
+<Steps>
+  <Step title="Module access" icon="lock">
+    Endpoints belonging to a module require that module to be permitted for your role. See [Roles & permissions](/admin/roles-and-permissions).
+  </Step>
+  <Step title="Clinic scope" icon="building">
+    Every query is scoped to the clinic derived from your session. Clinic identity is **never** read from a parameter, body, or payload.
+  </Step>
+</Steps>
+
+## Self-authenticating endpoints
+
+Six endpoints are reachable without a session because they are called by external systems. Each authenticates itself:
+
+| Endpoint | Mechanism |
+| --- | --- |
+| `POST /api/whatsapp` | Cryptographic signature over URL and sorted parameters |
+| `GET /api/whatsapp` | Provider webhook verification token |
+| `POST /api/bolna/webhook` | Shared secret via header or query; **fails closed in production** when unconfigured |
+| `GET /api/cron/followups` | Secret header, compared in constant time |
+| `GET /api/cron/google-calendar-sync` | Secret header, compared in constant time |
+| `GET /api/integrations/google/callback` | HMAC-signed, 10-minute-lifetime authorisation state |
+
+<Warning>
+  These are matched **exactly**, never by prefix. `/api/whatsapp` is public; `/api/whatsapp/send` and `/api/whatsapp/inbox` are session-protected. A prefix rule here would expose both — which is exactly the kind of mistake this design exists to prevent.
+</Warning>
+
+## Machine-to-machine access
+
+There is no issued API key today. If you need server-to-server integration, contact us rather than automating a browser session — we will discuss a proper mechanism.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Errors" icon="triangle-exclamation" href="/api-reference/errors">
+    Status codes and error shapes.
+  </Card>
+  <Card title="Rate limits" icon="gauge-high" href="/api-reference/rate-limits">
+    Which endpoints are limited, and how.
+  </Card>
+</CardGroup>

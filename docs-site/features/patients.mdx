@@ -1,0 +1,96 @@
+---
+title: "All Patients"
+description: "The complete patient record — visits, treatments, photos, invoices, messages, and consent state in one place."
+icon: "users"
+---
+
+<Frame caption="A patient profile: history, active packages, photos, invoices, and conversation on one page.">
+  <img src="/images/features/patient-profile.png" alt="Patient profile page" />
+</Frame>
+
+## The patient list
+
+Search by name, phone, or email. Filter by:
+
+- **Status** — active, lapsed, at risk, new this month
+- **Last visit** — a date range
+- **Treatment** — everyone who has ever had a specific procedure
+- **Package state** — has sessions remaining, expiring soon, expired unused
+- **Assigned clinician**
+
+<Tip>
+  "Package expiring within 30 days with sessions remaining" is the highest-converting filter in the product. Those patients have already paid; they just need reminding.
+</Tip>
+
+## The patient profile
+
+Every profile has the same tabs.
+
+<AccordionGroup>
+  <Accordion title="Overview" icon="id-card" defaultOpen>
+    Contact details, date of birth, allergies and clinical flags, referral source, assigned clinician, lifetime value, and visit count. Clinical flags are pinned to the top of every tab — an allergy should not be something you have to go looking for.
+  </Accordion>
+
+  <Accordion title="Visits" icon="calendar-days">
+    Every past and upcoming appointment with service, clinician, status, and outcome. No-shows are marked; they feed at-risk scoring.
+  </Accordion>
+
+  <Accordion title="Treatments & packages" icon="box">
+    Active packages with sessions used and remaining, expiry dates, and the schedule of remaining sessions. Completed packages stay for history.
+  </Accordion>
+
+  <Accordion title="Photos" icon="images">
+    Before and after images bound to the session they were taken at, so the comparison is automatic rather than a manual curation chore. Marketing consent state is shown on every photo. See [Before & After](/features/gallery).
+  </Accordion>
+
+  <Accordion title="Consultations & prescriptions" icon="stethoscope">
+    Consultation notes from your clinic's templates, annotated diagrams, and every prescription issued, each downloadable as a PDF.
+  </Accordion>
+
+  <Accordion title="Billing" icon="file-invoice-dollar">
+    Every invoice, what was paid, what is outstanding, and the payment methods used. Retainer and credit balances show here.
+  </Accordion>
+
+  <Accordion title="Conversation" icon="comments">
+    The full WhatsApp thread, including every message Aisha sent on your behalf, and voice-call transcripts and outcomes. One timeline, one record of what the clinic said to this patient.
+  </Accordion>
+</AccordionGroup>
+
+## Editing a patient
+
+Click **Edit** on the overview tab. Changes are audited — who changed what and when is recorded.
+
+<Warning>
+  Changing a phone number rebinds that patient's WhatsApp identity. Existing message history stays attached, but future messages from the old number will no longer match this patient. Change it only when the patient has genuinely changed number.
+</Warning>
+
+## Merging duplicates
+
+Duplicates happen — a patient messages from a second number, or reception creates a second record for a walk-in.
+
+<Steps>
+  <Step title="Open the record you want to keep" />
+  <Step title="Actions → Merge patient" />
+  <Step title="Search for the duplicate and confirm">
+    Visits, invoices, photos, packages, and messages move to the surviving record. The duplicate is archived, not deleted, so the audit trail survives.
+  </Step>
+</Steps>
+
+## Downloadable patient summary
+
+**Actions → Download summary** produces a PDF with demographics, treatment history, active packages, and outstanding balance — the document to hand a patient who asks for their records, or to attach to a referral.
+
+<Note>
+  Patients have a right to their data under India's DPDP Act. This is the button that satisfies it. See [Data protection](/security/data-protection).
+</Note>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="At-Risk Patients" icon="heart-pulse" href="/features/at-risk">
+    Which of these patients is drifting away, and what to send them.
+  </Card>
+  <Card title="Data import" icon="database" href="/admin/data-import">
+    Bringing your existing patient list in.
+  </Card>
+</CardGroup>
