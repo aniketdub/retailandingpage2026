@@ -2,6 +2,8 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import docsData from "@/data/docsData.json";
 import {
   Search,
@@ -10,12 +12,11 @@ import {
   Shield,
   Layers,
   Code2,
-  Terminal,
   FileText,
   HelpCircle,
-  ExternalLink,
   Menu,
   X,
+  ExternalLink,
 } from "lucide-react";
 
 export default function HelpDocsViewer() {
@@ -57,16 +58,16 @@ export default function HelpDocsViewer() {
   }, [searchQuery]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 min-h-[85vh] flex flex-col">
-      {/* Top Docs Header & Mintlify-style Tabs */}
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 min-h-[85vh] flex flex-col font-sans">
+      {/* Top Docs Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/10">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#ffecd0] mb-1">
             <BookOpen className="w-4 h-4" />
-            <span>RetAI Knowledge Hub</span>
+            <span>RetAI Documentation</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-            Developer & Clinic Documentation
+            Clinic Platform & Developer Guides
           </h1>
         </div>
 
@@ -77,8 +78,8 @@ export default function HelpDocsViewer() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search RetAI docs (e.g., Aisha, GST, Calendar)..."
-            className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#141d13] border border-white/10 text-sm text-white focus:outline-none focus:border-[#ffecd0] transition"
+            placeholder="Search docs (Aisha, GST, WhatsApp, Calendar)..."
+            className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#141d13] border border-white/10 text-sm text-white focus:outline-none focus:border-[#ffecd0] transition placeholder:text-zinc-500"
           />
 
           {/* Quick Search Dropdown */}
@@ -112,16 +113,18 @@ export default function HelpDocsViewer() {
                 key={tab.tab}
                 onClick={() => {
                   setActiveTab(tab.tab);
-                  // pick first page of this tab
                   const firstGroup = tab.groups[0];
                   if (firstGroup) {
-                    const firstPage = typeof firstGroup.pages[0] === "string" ? firstGroup.pages[0] : firstGroup.pages[0].pages[0];
+                    const firstPage =
+                      typeof firstGroup.pages[0] === "string"
+                        ? firstGroup.pages[0]
+                        : firstGroup.pages[0].pages[0];
                     if (firstPage) setActivePageId(firstPage);
                   }
                 }}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 whitespace-nowrap ${
                   isTabActive
-                    ? "bg-[#34532b] text-[#ffecd0] font-semibold border border-[#ffecd0]/20"
+                    ? "bg-[#34532b] text-[#ffecd0] font-semibold border border-[#ffecd0]/25 shadow-sm"
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
                 }`}
               >
@@ -134,14 +137,14 @@ export default function HelpDocsViewer() {
         {/* Mobile Sidebar Toggle */}
         <button
           onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-          className="md:hidden flex items-center gap-1 text-xs text-zinc-300 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10"
+          className="md:hidden flex items-center gap-1.5 text-xs text-[#ffecd0] bg-[#1b2e15] px-3 py-1.5 rounded-lg border border-[#ffecd0]/20"
         >
           <Menu className="w-4 h-4" />
-          <span>Index</span>
+          <span>Modules</span>
         </button>
       </div>
 
-      {/* Main Layout: Sidebar + Content */}
+      {/* Main Layout: Sidebar + Clean Document */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-6 flex-1">
         {/* Left Sidebar */}
         <aside
@@ -153,7 +156,7 @@ export default function HelpDocsViewer() {
         >
           {mobileSidebarOpen && (
             <div className="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
-              <span className="text-sm font-bold text-[#ffecd0]">Navigation Topics</span>
+              <span className="text-sm font-bold text-[#ffecd0]">Topics</span>
               <button
                 onClick={() => setMobileSidebarOpen(false)}
                 className="text-zinc-400 hover:text-white"
@@ -166,16 +169,16 @@ export default function HelpDocsViewer() {
           <div className="space-y-6">
             {currentTabObj.groups.map((grp: any, gIdx: number) => {
               return (
-                <div key={gIdx} className="space-y-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#ffecd0]/80 px-2">
+                <div key={gIdx} className="space-y-1.5">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#ffecd0]/80 px-2 py-1">
                     {grp.group}
                   </h3>
-                  <div className="space-y-1">
+                  <div className="space-y-0.5">
                     {grp.pages.map((p: any, pIdx: number) => {
                       if (typeof p === "object" && p.group) {
                         return (
-                          <div key={pIdx} className="pl-2 pt-2 space-y-1">
-                            <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider block">
+                          <div key={pIdx} className="pl-2 pt-1.5 space-y-0.5">
+                            <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider block px-2">
                               {p.group}
                             </span>
                             {p.pages.map((nested: string) => {
@@ -191,7 +194,7 @@ export default function HelpDocsViewer() {
                                   className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition flex items-center justify-between ${
                                     isSelected
                                       ? "bg-[#1b2e15] text-[#ffecd0] font-semibold border-l-2 border-[#ffecd0]"
-                                      : "text-zinc-400 hover:text-white hover:bg-white/5"
+                                      : "text-zinc-400 hover:text-zinc-200 hover:bg-white/5"
                                   }`}
                                 >
                                   <span className="truncate">{docItem.title}</span>
@@ -215,7 +218,7 @@ export default function HelpDocsViewer() {
                           className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition flex items-center justify-between ${
                             isSelected
                               ? "bg-[#1b2e15] text-[#ffecd0] font-semibold border-l-2 border-[#ffecd0]"
-                              : "text-zinc-400 hover:text-white hover:bg-white/5"
+                              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/5"
                           }`}
                         >
                           <span className="truncate">{docItem.title}</span>
@@ -230,31 +233,120 @@ export default function HelpDocsViewer() {
           </div>
         </aside>
 
-        {/* Right Doc Article Content View */}
-        <main className="md:col-span-9 glass-card rounded-2xl p-6 sm:p-10 border border-white/10 min-h-[600px] flex flex-col justify-between">
+        {/* Right Article View with Clean Typography */}
+        <main className="md:col-span-9 rounded-2xl p-6 sm:p-10 border border-white/10 bg-[#121910]/70 backdrop-blur-xl min-h-[600px] flex flex-col justify-between">
           <div className="space-y-6">
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-xs text-zinc-500">
               <span>{activeTab}</span>
               <span>/</span>
-              <span className="text-[#ffecd0]">{activeDoc.title}</span>
+              <span className="text-[#ffecd0] font-medium">{activeDoc.title}</span>
             </div>
 
-            {/* Title & Description */}
-            <div className="space-y-2 border-b border-white/10 pb-6">
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            {/* Document Header */}
+            <div className="space-y-2.5 border-b border-white/10 pb-6">
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                 {activeDoc.title}
               </h2>
               {activeDoc.description && (
-                <p className="text-base text-zinc-300 leading-relaxed">
+                <p className="text-base text-[#ffecd0]/90 leading-relaxed font-normal">
                   {activeDoc.description}
                 </p>
               )}
             </div>
 
-            {/* Markdown rendered body */}
-            <div className="prose prose-invert max-w-none text-sm text-zinc-300 space-y-4 leading-relaxed font-sans">
-              <DocContentRenderer content={activeDoc.content} />
+            {/* High-fidelity Clean Markdown Rendering */}
+            <div className="markdown-doc text-sm text-zinc-300 leading-relaxed space-y-4">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({ children }) => (
+                    <h1 className="text-2xl font-bold text-white pt-6 pb-2 border-b border-white/10">
+                      {children}
+                    </h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 className="text-xl font-bold text-white pt-5 pb-1 border-b border-white/5">
+                      {children}
+                    </h2>
+                  ),
+                  h3: ({ children }) => (
+                    <h3 className="text-lg font-semibold text-[#ffecd0] pt-4">
+                      {children}
+                    </h3>
+                  ),
+                  h4: ({ children }) => (
+                    <h4 className="text-base font-semibold text-white pt-3">
+                      {children}
+                    </h4>
+                  ),
+                  p: ({ children }) => (
+                    <p className="leading-relaxed text-zinc-300">{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="space-y-1.5 pl-5 list-disc marker:text-[#ffecd0]">
+                      {children}
+                    </ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="space-y-1.5 pl-5 list-decimal marker:text-[#ffecd0]">
+                      {children}
+                    </ol>
+                  ),
+                  li: ({ children }) => (
+                    <li className="text-zinc-300 pl-1">{children}</li>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote className="border-l-4 border-[#4a753d] bg-[#162214]/80 px-4 py-3 rounded-r-xl text-xs text-zinc-200 my-4 shadow-sm">
+                      {children}
+                    </blockquote>
+                  ),
+                  table: ({ children }) => (
+                    <div className="overflow-x-auto my-6 rounded-xl border border-white/10 bg-[#0a0f09]">
+                      <table className="w-full text-left text-xs border-collapse">
+                        {children}
+                      </table>
+                    </div>
+                  ),
+                  thead: ({ children }) => (
+                    <thead className="bg-[#1b2e15] text-[#ffecd0] border-b border-white/10">
+                      {children}
+                    </thead>
+                  ),
+                  th: ({ children }) => (
+                    <th className="p-3 font-semibold">{children}</th>
+                  ),
+                  td: ({ children }) => (
+                    <td className="p-3 border-b border-white/5 text-zinc-300">
+                      {children}
+                    </td>
+                  ),
+                  code: ({ inline, className, children, ...props }: any) => {
+                    if (inline) {
+                      return (
+                        <code className="px-1.5 py-0.5 rounded bg-[#1b2e15] text-[#ffecd0] font-mono text-[12px] border border-[#ffecd0]/15">
+                          {children}
+                        </code>
+                      );
+                    }
+                    return (
+                      <div className="my-4 rounded-xl bg-[#090d08] border border-white/10 p-4 font-mono text-xs text-zinc-200 overflow-x-auto">
+                        <code>{children}</code>
+                      </div>
+                    );
+                  },
+                  a: ({ href, children }) => (
+                    <a
+                      href={href}
+                      className="text-[#ffecd0] underline underline-offset-2 decoration-[#ffecd0]/40 hover:decoration-[#ffecd0] transition"
+                    >
+                      {children}
+                    </a>
+                  ),
+                }}
+              >
+                {activeDoc.content}
+              </ReactMarkdown>
             </div>
           </div>
 
@@ -262,105 +354,13 @@ export default function HelpDocsViewer() {
           <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4">
             <span>RetAI Official Documentation</span>
             <div className="flex items-center gap-4">
-              <Link href="/contact" className="hover:text-[#ffecd0] transition">
-                Need Help? Ask Clinic Support
+              <Link href="/contact" className="text-[#ffecd0] hover:underline transition">
+                Need Live Support? Book a Clinic Demo
               </Link>
             </div>
           </div>
         </main>
       </div>
-    </div>
-  );
-}
-
-// Custom Markdown / Clean MDX content cleaner for presentation
-function DocContentRenderer({ content }: { content: string }) {
-  // Strip JSX frames or clean raw MDX custom tags cleanly
-  const cleaned = content
-    .replace(/<Frame.*?>[\s\S]*?<\/Frame>/g, "")
-    .replace(/<CardGroup[\s\S]*?>/g, "")
-    .replace(/<\/CardGroup>/g, "")
-    .replace(/<Card([\s\S]*?)<\/Card>/g, "")
-    .replace(/<Tabs[\s\S]*?>/g, "")
-    .replace(/<\/Tabs>/g, "")
-    .replace(/<Tab[\s\S]*?>/g, "")
-    .replace(/<\/Tab>/g, "")
-    .replace(/<Note>/g, "\n> **Note:** ")
-    .replace(/<\/Note>/g, "\n");
-
-  const lines = cleaned.split("\n");
-
-  return (
-    <div className="space-y-4">
-      {lines.map((line, idx) => {
-        const trimmed = line.trim();
-        if (!trimmed) return null;
-
-        // Headings
-        if (trimmed.startsWith("### ")) {
-          return (
-            <h4 key={idx} className="text-lg font-bold text-[#ffecd0] pt-4">
-              {trimmed.replace("### ", "")}
-            </h4>
-          );
-        }
-        if (trimmed.startsWith("## ")) {
-          return (
-            <h3 key={idx} className="text-xl font-bold text-white pt-6 border-b border-white/5 pb-2">
-              {trimmed.replace("## ", "")}
-            </h3>
-          );
-        }
-        if (trimmed.startsWith("# ")) {
-          return (
-            <h2 key={idx} className="text-2xl font-bold text-white pt-4">
-              {trimmed.replace("# ", "")}
-            </h2>
-          );
-        }
-
-        // Blockquotes
-        if (trimmed.startsWith("> ")) {
-          return (
-            <blockquote
-              key={idx}
-              className="border-l-4 border-[#34532b] bg-[#162214]/60 px-4 py-2.5 rounded-r-lg text-xs text-zinc-300 italic"
-            >
-              {trimmed.replace("> ", "")}
-            </blockquote>
-          );
-        }
-
-        // List item
-        if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
-          return (
-            <div key={idx} className="flex items-start gap-2 pl-2 text-zinc-300">
-              <span className="text-[#ffecd0]">•</span>
-              <span>{trimmed.slice(2)}</span>
-            </div>
-          );
-        }
-
-        // Code block indicator
-        if (trimmed.startsWith("```")) {
-          return null;
-        }
-
-        // Table lines
-        if (trimmed.startsWith("|")) {
-          return (
-            <div key={idx} className="font-mono text-xs bg-[#0b0f0a] p-1.5 rounded border border-white/5 text-zinc-400 overflow-x-auto">
-              {trimmed}
-            </div>
-          );
-        }
-
-        return (
-          <p key={idx} className="text-sm leading-relaxed text-zinc-300">
-            {trimmed}
-          </p>
-        );
-      })}
     </div>
   );
 }
